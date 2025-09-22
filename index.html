@@ -1,0 +1,74 @@
+<!doctype html>
+<div class="muted" style="margin-top:8px;word-break:break-all">Google AI Ads Certification ID: <strong>0xff7e3120f5b2ea106a4c1cd8f50613c0e58b557a046718d1dffb81a76490c7d8</strong></div>
+</div>
+
+
+<div class="bubble" id="contact">
+<h2>Contact Us</h2>
+<form name="contact" method="POST" data-netlify="true">
+<input type="hidden" name="form-name" value="contact" />
+<input required name="name" placeholder="Your name" />
+<input required type="email" name="email" placeholder="Email" />
+<textarea required name="message" placeholder="Tell us about your goals" style="min-height:120px"></textarea>
+<button class="btn">Send</button>
+</form>
+</div>
+</section>
+
+
+<footer>© 2025 300 Kings. All rights reserved.</footer>
+
+
+<!-- Three.js for 3D hero -->
+<script src="https://unpkg.com/three@0.159.0/build/three.min.js"></script>
+<script>
+// 3D rotating torus knot (blue glow)
+(function(){
+const el = document.getElementById('hero3d');
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(55, el.clientWidth / 300, 0.1, 100);
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setSize(el.clientWidth, 300);
+el.appendChild(renderer.domElement);
+
+
+const light = new THREE.DirectionalLight(0x66ccff, 1.2); light.position.set(3,4,5); scene.add(light);
+scene.add(new THREE.AmbientLight(0x334466, .5));
+
+
+const geo = new THREE.TorusKnotGeometry(1.1, 0.35, 220, 32);
+const mat = new THREE.MeshPhysicalMaterial({ color: 0x00aaff, metalness: .8, roughness: .2, clearcoat: 1, clearcoatRoughness: .1, emissive: 0x0066ff, emissiveIntensity: .15 });
+const mesh = new THREE.Mesh(geo, mat); scene.add(mesh);
+camera.position.z = 4;
+
+
+function onResize(){ renderer.setSize(el.clientWidth, 300); camera.aspect = el.clientWidth/300; camera.updateProjectionMatrix(); }
+window.addEventListener('resize', onResize);
+
+
+(function animate(){ requestAnimationFrame(animate); mesh.rotation.x += 0.0025; mesh.rotation.y += 0.004; renderer.render(scene, camera); })();
+})();
+</script>
+
+
+<!-- AI Content block -->
+<script>
+const ideasEl = document.getElementById('ideas');
+const noteEl = document.getElementById('ai-note');
+document.getElementById('gen').addEventListener('click', async () => {
+const topic = document.getElementById('topic').value || 'local business';
+ideasEl.innerHTML = '<li class="muted">Thinking…</li>';
+try {
+const r = await fetch('/.netlify/functions/ai', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ prompt: `Generate 5 punchy ad ideas for ${topic}.`, count: 5 }) });
+const j = await r.json();
+const list = (j.ideas || []).map(s => `<li>${s}</li>`).join('');
+ideasEl.innerHTML = list || '<li class="muted">No ideas returned.</li>';
+noteEl.textContent = j.source || '';
+} catch (e) {
+ideasEl.innerHTML = '<li>AI-Optimized Launch: 48‑Hour Conversion Sprint</li><li>Smart Budget: Double Leads, Same Spend</li><li>Hyperlocal Targeting: Own Your Postal Codes</li><li>Scroll‑Stopping Creative Series</li><li>Test → Learn → Scale Weekly</li>';
+noteEl.textContent = 'Demo ideas shown (no API key set).';
+}
+});
+</script>
+</body>
+</html>
