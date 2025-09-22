@@ -1,6 +1,3 @@
-'use client'
-
-
 import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls, Float } from '@react-three/drei'
 import { useRef } from 'react'
