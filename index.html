@@ -20,6 +20,11 @@
     .cta{background:var(--cta);color:#fff;border:0;padding:1rem 2rem;border-radius:2rem;cursor:pointer;font-weight:800}
     .cta:hover{filter:brightness(.95)}
 
+    /* CTA stack under hero */
+    .cta-stack{display:flex;flex-direction:column;gap:10px;align-items:center;margin-top:10px}
+    .cta.secondary{background:transparent;border:1px solid rgba(255,255,255,.3);color:#fff}
+    .cta.secondary:hover{filter:none;background:rgba(255,255,255,.06)}
+
     header{background:#000;padding:2.6rem 2rem 2rem;text-align:center;position:relative;overflow:hidden}
     header h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(2.1rem,5vw,3.2rem);margin:0;color:var(--blue)}
     header p{font-size:1.15rem;margin:.75rem 0 1.2rem;color:#cdd9ea}
@@ -70,16 +75,18 @@
     .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
     @media (max-width: 760px){ .grid-2{grid-template-columns:1fr} }
     #brand .revealcard{position:relative;border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,.12);background:radial-gradient(600px 220px at 20% 0%, rgba(98,167,255,.12), transparent 60%);min-height:190px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
-    #brand .revealcard .cover{position:absolute;inset:0;display:grid;place-items:center;font:800 1.25rem/1 'Space Grotesk',system-ui;letter-spacing:.08em;color:#cfe4ff;background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));backdrop-filter:blur(2px);transition:opacity .3s ease, transform .3s ease}
+    #brand .revealcard .cover{position:absolute;inset:0;display:grid;place-items:center;font:800 1.25rem/1 'Space Grotesk',system-ui;letter-spacing:.08em;color:#cfe4ff;background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));backdrop-filter:blur(2px);transition:opacity .3s ease, transform .3s ease;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
     /* Back design texture */
     #brand .revealcard .cover::before{content:"";position:absolute;inset:-30%;background:
         repeating-conic-gradient(from 0deg, rgba(255,255,255,.06) 0 6deg, transparent 6deg 12deg),
         radial-gradient(600px 220px at 20% 0%, rgba(98,167,255,.18), transparent 60%);
       mix-blend-mode:screen;opacity:.55;filter:contrast(1.1) brightness(1.05);}
     
-    #brand .revealcard .content{position:relative;padding:18px;opacity:0;transform:translateY(6px);transition:opacity .35s ease .05s, transform .35s ease .05s;min-height:190px;display:flex;flex-direction:column;justify-content:center}
+    #brand .revealcard .content{position:relative;padding:18px;opacity:0;transform:translateY(6px);transition:opacity .35s ease .05s, transform .35s ease .05s;min-height:190px;display:flex;flex-direction:column;justify-content:center;-webkit-user-select:none;user-select:none}
     #brand .revealcard:hover .cover{opacity:0;transform:scale(1.03)}
+    #brand .revealcard.open .cover{opacity:0;transform:scale(1.03)}
     #brand .revealcard:hover .content{opacity:1;transform:none}
+    #brand .revealcard.open .content{opacity:1;transform:none}
     #brand .revealcard h3{margin:0 0 10px;font:800 1.18rem/1.2 'Space Grotesk',system-ui;color:#eaf2ff}
     #brand .revealcard p{margin:0;color:#cdd9ea}
     #brand .revealcard small{display:none}
@@ -93,6 +100,14 @@
     header{padding:1.6rem 1rem 1.2rem}
     header p{font-size:1rem}
     .cta{padding:.9rem 1.2rem}
+    .fomo{display:grid;grid-template-columns:1fr;justify-items:center;gap:10px;padding:.7rem 1rem}
+    .fomo strong{white-space:nowrap}
+    .cta-small{width:100%;text-align:center}
+    #lepbg{opacity:.18}
+  }
+    header{padding:1.6rem 1rem 1.2rem}
+    header p{font-size:1rem}
+    .cta{padding:.9rem 1.2rem}
     .fomo{flex-wrap:wrap;gap:8px;justify-content:center}
     .cta-small{width:100%;text-align:center}
     #lepbg{opacity:.18}
@@ -102,6 +117,9 @@
     .shine{animation:none}
   }
 </style>
+  <!-- Calendly widget assets -->
+  <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+  <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
 </head>
 <body>
   <canvas id="lepbg" aria-hidden="true"></canvas>
@@ -113,7 +131,10 @@
       <span class="pill">Deployed on Netlify</span>
       <h1>Jumping on the AI wave has never been easier!</h1>
       <p>I let Google’s AI stalk your customers… legally.</p>
-      <a href="#contact" class="cta">Book a Meeting</a>
+      <div class="cta-stack">
+        <a href="#" class="cta" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/kevincacheiro93/30-min-meeting'}); return false;">Schedule a Call</a>
+        <a href="#contact" class="cta secondary">Contact Us Now</a>
+      </div>
 
       <div class="fomo" aria-live="polite">
         <strong>Founder Offer:</strong> 90% off for the first 5 clients —
@@ -196,8 +217,7 @@
 
     <section class="bubble" id="contact">
       <h2>Contact Us</h2>
-      <form name="contact" method="POST" data-netlify="true">
-        <input type="hidden" name="form-name" value="contact" />
+      <form action="https://formspree.io/f/xqaykddn" method="POST" accept-charset="UTF-8">
         <input required name="name" placeholder="Your name" />
         <input required type="email" name="email" placeholder="Email" />
         <textarea required name="message" placeholder="Tell us about your goals" style="min-height:120px"></textarea>
@@ -373,6 +393,19 @@ const knot = new THREE.Group(); knot.add(loop1); knot.add(loop2); scene.add(knot
     })();
   </script>
 
+  <!-- Touch-friendly card toggles -->
+  <script>
+    (function(){
+      const isTouch = matchMedia('(pointer:coarse)').matches;
+      if(!isTouch) return;
+      document.querySelectorAll('#brand .revealcard').forEach(card=>{
+        const toggle = (e)=>{ if(e.target.closest('a')) return; e.preventDefault(); card.classList.toggle('open'); };
+        card.addEventListener('touchstart', toggle, {passive:false});
+        card.addEventListener('click', toggle);
+      });
+    })();
+  </script>
+
   <!-- Leprechaun background runner (click to explode into coins; 35s respawn) -->
   <script>
     (function(){
@@ -489,20 +522,31 @@ const knot = new THREE.Group(); knot.add(loop1); knot.add(loop2); scene.add(knot
     })();
   </script>
 
-  <!-- FOMO logic (spots only) -->
+  <!-- FOMO logic (spots + Calendly) -->
   <script>
     (function(){
       const el = document.getElementById('spots');
       const claim = document.getElementById('claim');
-      if(!el) return;
+      if(!el || !claim) return;
       const KEY = 'founder_spots_left_v1';
       let spots = parseInt(localStorage.getItem(KEY) || '5', 10);
       if (Number.isNaN(spots) || spots < 1 || spots > 5) spots = 5;
       const render = () => el.textContent = `( ${spots} of 5 left )`;
       render();
-      claim?.addEventListener('click', () => {
+      function openCalendly(){
+        const url = 'https://calendly.com/kevincacheiro93/30-min-meeting';
+        if (window.Calendly && typeof Calendly.initPopupWidget === 'function') {
+          Calendly.initPopupWidget({ url });
+        } else {
+          window.open(url, '_blank', 'noopener');
+        }
+      }
+      claim.addEventListener('click', (e) => {
+        e.preventDefault();
+        openCalendly();
         if (spots > 1) { spots -= 1; localStorage.setItem(KEY, String(spots)); render(); }
-      });
+      }, { passive:false });
+      claim.dataset.boundCalendly = '1';
     })();
   </script>
 
@@ -518,6 +562,7 @@ const knot = new THREE.Group(); knot.add(loop1); knot.add(loop2); scene.add(knot
       test('At least one brand CTA exists', ()=>{ const ctas=[...document.querySelectorAll('#brand .revealcard .content a.cta')]; if(ctas.length<1) throw 'no brand CTA'; });
       test('Services copy updated', ()=>{ const s=document.getElementById('services').innerText.toLowerCase(); if(!/ai-powered ads/.test(s)) throw 'ai-powered ads missing'; if(!/smaller cac/.test(s)) throw 'lead gen missing'; if(!/custom websites tailored/.test(s)) throw 'landing copy missing'; });
       test('Shader patched once', ()=>{ if(!window.__shaderPatched) throw 'shader not patched'; });
+      test('Claim Calendly bound', ()=>{ const c=document.getElementById('claim'); if(!c) throw 'missing claim'; if(c.dataset.boundCalendly!=='1') throw 'calendly not bound'; });
     })();
   </script>
 </body>
