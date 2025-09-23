@@ -4,66 +4,108 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>300 Kings – AI-Powered Ad Campaigns</title>
-  <meta name="description" content="Montreal-based agency combining AI with creative strategy to scale your ads." />
+  <meta name="description" content="AI + creative to scale your ads fast, safely, and profitably." />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Manrope:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    :root{--blue:#00aaff;--black:#0a0a0a;--red:#ff2a2a;--bg:radial-gradient(1000px 600px at 10% 10%, #0b1220, #0a0a0a 60%)}
+    :root{
+      --bg: radial-gradient(1400px 800px at 15% 12%, #0a0d12, #000000 70%);
+      --ink:#e8f1ff; --muted:#9fb4d1; --blue:#5ecbff; --vio:#7a5cff; --hot:#ff2a64; --cta:#ff2a2a;
+    }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{margin:0;background:var(--bg);color:#fff;font-family:'Manrope',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:'Manrope',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
     a{color:inherit;text-decoration:none}
     .container{max-width:1100px;margin:0 auto;padding:3rem 2rem}
-    .pill{display:inline-block;padding:.35rem .65rem;border-radius:999px;background:#0a1a28;color:#7dd3fc;border:1px solid #1e3a5f;font-weight:700}
-    .cta{background:var(--red);color:#fff;border:0;padding:1rem 2rem;border-radius:2rem;cursor:pointer;font-weight:800}
+    .pill{display:inline-flex;align-items:center;gap:.5rem;padding:.35rem .7rem;border-radius:999px;background:#0b1a2c;color:#9dd7ff;border:1px solid #14344f;font-weight:700}
+    .cta{background:var(--cta);color:#fff;border:0;padding:1rem 2rem;border-radius:2rem;cursor:pointer;font-weight:800}
     .cta:hover{filter:brightness(.95)}
-    header{background:#000;padding:2rem;text-align:center;position:relative;overflow:hidden}
-    header h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(2rem,5vw,3rem);margin:0;color:var(--blue)}
-    header p{font-size:1.1rem;margin:.6rem 0 1.2rem;color:#ddd}
+
+    header{background:#000;padding:2.6rem 2rem 2rem;text-align:center;position:relative;overflow:hidden}
+    header h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(2.1rem,5vw,3.2rem);margin:0;color:var(--blue)}
+    header p{font-size:1.15rem;margin:.75rem 0 1.2rem;color:#cdd9ea}
     #hero3d{position:absolute;inset:0;z-index:0}
     header .content{position:relative;z-index:1}
-    .bubble{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:1.5rem;padding:2rem;margin-bottom:2rem;backdrop-filter:blur(10px)}
-    h2{font-family:'Space Grotesk',sans-serif;font-size:2rem;margin:0 0 1rem;color:var(--blue)}
+
+    .bubble{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:1.5rem;padding:2rem;margin-bottom:2rem;backdrop-filter:blur(10px)}
+    h2{font-family:'Space Grotesk',sans-serif;font-size:1.9rem;margin:0 0 1rem;color:var(--blue)}
     ul{list-style:none;padding:0;margin:0}
-    li{padding:.6rem 0;border-bottom:1px solid rgba(255,255,255,.1)}
+    li{padding:.65rem 0;border-bottom:1px solid rgba(255,255,255,.08)}
     .grid{display:grid;gap:16px}
     .grid-3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
     img{max-width:100%;display:block;border-radius:16px;border:1px solid rgba(255,255,255,.1)}
     input,textarea{width:100%;padding:12px 14px;margin:8px 0;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.4);color:#fff}
-    button.btn{background:var(--red);color:#fff;padding:12px 18px;border:0;border-radius:14px;cursor:pointer}
-    .muted{color:#9ab}
-    footer{background:#111;padding:2rem;text-align:center;color:#aaa}
+    button.btn{background:var(--cta);color:#fff;padding:12px 18px;border:0;border-radius:14px;cursor:pointer}
+    .muted{color:var(--muted)}
+    footer{background:#111;padding:2rem;text-align:center;color:#9ab}
 
-    /* Rotating Google-like badge */
-    .badge{display:inline-flex;align-items:center;gap:12px;margin-top:12px}
-    .spin{animation:spin 12s linear infinite}
-    @keyframes spin{to{transform:rotate(360deg)}}
+    /* FOMO CTA */
+    .fomo{display:inline-flex;align-items:center;gap:12px;margin-top:12px;padding:.55rem .85rem;border:1px solid rgba(255,255,255,.15);border-radius:999px;background:rgba(255,42,42,.08);box-shadow:0 0 0 0 rgba(255,42,42,.35);animation:pulse 2s infinite}
+    .cta-small{padding:.5rem .9rem;border-radius:999px;font-size:.92rem}
+    .spots{opacity:.95;font-weight:800}
+    @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,42,42,.35)}70%{box-shadow:0 0 0 12px rgba(255,42,42,0)}100%{box-shadow:0 0 0 0 rgba(255,42,42,0)}}
 
-    /* Helper for small screens */
-    @media (max-width: 640px){ .container{padding:2rem 1.25rem} }
+    /* Star badge (header preview only; the 3D version orbits the hero) */
+    .badge{position:relative;display:inline-flex;align-items:center;gap:12px;margin-top:12px;padding:.75rem 1.1rem;color:#2a2000}
+    .badge .pill{background:rgba(255,255,255,.18);color:#352700;border-color:rgba(0,0,0,.12)}
+    .star{clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 56%, 79% 91%, 50% 70%, 21% 91%, 32% 56%, 2% 35%, 39% 35%);background: radial-gradient(60% 60% at 50% 40%, #fff5c8, #ffd54d 60%, #f6b73c 100%);border:1px solid rgba(255,220,120,.7);box-shadow: 0 10px 34px rgba(255,204,0,.28), inset 0 0 14px rgba(255,255,255,.4)}
+    .shine{position:absolute;inset:-2px;background:linear-gradient(120deg,transparent,rgba(255,255,255,.7),transparent);transform:translateX(-110%);animation:shimmer 2.8s linear infinite;pointer-events:none;clip-path:inherit}
+    @keyframes shimmer{to{transform:translateX(110%)}}
+    .g-icon{width:36px;height:36px;flex:0 0 auto}
+
+    /* Cert lines */
+    .footer-cert{display:inline-flex;align-items:center;gap:8px;margin-left:10px;padding:.3rem .6rem;border:1px solid rgba(255,255,255,.12);border-radius:999px;background:rgba(255,255,255,.06)}
+    .footer-cert .g{width:16px;height:16px}
+
+    /* Cursor pop words */
+    #trail{position:fixed;inset:0;z-index:1;pointer-events:none}
+    #pops{position:fixed;inset:0;z-index:2;pointer-events:none}
+    .pop{position:absolute;transform:translate(-50%,-50%) scale(.86);opacity:0;animation:pop 1.35s ease-out forwards}
+    .pop.badge{background:rgba(0,0,0,.7);color:#fff;padding:.32rem .6rem;border-radius:.6rem;border:1px solid rgba(255,255,255,.2);font-weight:800;font-size:.8rem;letter-spacing:.3px}
+    .pop.badge.gold{background:rgba(255,215,0,.15);color:#ffd44d;border-color:rgba(255,200,0,.45);text-shadow:0 0 8px rgba(255,205,0,.35)}
+    @keyframes pop{0%{opacity:0;transform:translate(-50%,-40%) scale(.8)}12%{opacity:1;transform:translate(-50%,-60%) scale(1)}100%{opacity:0;transform:translate(-50%,-120%) scale(1.05)}}
+
+    /* Reveal cards */
+    #brand{padding:0;margin-bottom:2rem}
+    #brand .grid.bare{gap:16px}
+    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    @media (max-width: 760px){ .grid-2{grid-template-columns:1fr} }
+    #brand .revealcard{position:relative;border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,.12);background:radial-gradient(600px 220px at 20% 0%, rgba(98,167,255,.12), transparent 60%);min-height:190px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+    #brand .revealcard .cover{position:absolute;inset:0;display:grid;place-items:center;font:800 1.25rem/1 'Space Grotesk',system-ui;letter-spacing:.08em;color:#cfe4ff;background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));backdrop-filter:blur(2px);transition:opacity .3s ease, transform .3s ease}
+    /* Back design texture */
+    #brand .revealcard .cover::before{content:"";position:absolute;inset:-30%;background:
+        repeating-conic-gradient(from 0deg, rgba(255,255,255,.06) 0 6deg, transparent 6deg 12deg),
+        radial-gradient(600px 220px at 20% 0%, rgba(98,167,255,.18), transparent 60%);
+      mix-blend-mode:screen;opacity:.55;filter:contrast(1.1) brightness(1.05);}
+    
+    #brand .revealcard .content{position:relative;padding:18px;opacity:0;transform:translateY(6px);transition:opacity .35s ease .05s, transform .35s ease .05s;min-height:190px;display:flex;flex-direction:column;justify-content:center}
+    #brand .revealcard:hover .cover{opacity:0;transform:scale(1.03)}
+    #brand .revealcard:hover .content{opacity:1;transform:none}
+    #brand .revealcard h3{margin:0 0 10px;font:800 1.18rem/1.2 'Space Grotesk',system-ui;color:#eaf2ff}
+    #brand .revealcard p{margin:0;color:#cdd9ea}
+    #brand .revealcard small{display:none}
+
+    /* Background leprechaun canvas */
+    #lepbg{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.28}
+    /* Keep content above background canvas */
+    header .content, .container, footer{position:relative;z-index:1}
   </style>
 </head>
 <body>
+  <canvas id="lepbg" aria-hidden="true"></canvas>
+  <canvas id="trail" aria-hidden="true"></canvas>
+  <div id="pops" aria-hidden="true"></div>
   <header>
     <div id="hero3d" aria-hidden="true"></div>
     <div class="content">
       <span class="pill">Deployed on Netlify</span>
       <h1>Jumping on the AI wave has never been easier!</h1>
-      <p>We use Google’s AI to maximize Ad Campaigns, paired with top creative minds.</p>
+      <p>I let Google’s AI stalk your customers… legally.</p>
       <a href="#contact" class="cta">Book a Meeting</a>
-      <div class="badge" aria-label="Google Ads Certified">
-        <svg class="spin" width="42" height="42" viewBox="0 0 100 100" role="img" aria-hidden="true">
-          <defs>
-            <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#4285F4"/>
-              <stop offset="45%" stop-color="#34A853"/>
-              <stop offset="85%" stop-color="#FBBC05"/>
-              <stop offset="100%" stop-color="#EA4335"/>
-            </linearGradient>
-          </defs>
-          <circle cx="50" cy="50" r="44" fill="none" stroke="url(#g)" stroke-width="10"/>
-          <circle cx="50" cy="50" r="6" fill="#fff"/>
-        </svg>
-        <span class="pill">Google Ads Certified</span>
+
+      <div class="fomo" aria-live="polite">
+        <strong>Founder Offer:</strong> 90% off for the first 5 clients —
+        <a href="#contact" id="claim" class="cta cta-small">Claim a spot</a>
+        <span class="spots" id="spots">( 5 of 5 left )</span>
       </div>
     </div>
   </header>
@@ -72,50 +114,70 @@
     <section class="bubble" id="services">
       <h2>Our Services</h2>
       <ul>
-        <li><strong>AI-powered Google Ads</strong> – Optimize budget, maximize results.</li>
-        <li><strong>Lead Generation</strong> – Turn clicks into qualified calls or clients.</li>
-        <li><strong>Creative Ad Production</strong> – Engaging visuals and copy that convert.</li>
-        <li><strong>Landing Page Creation</strong> – Custom pages designed to capture leads.</li>
+        <li><strong>AI-powered Ads</strong> — Simply, the best way to use AI.</li>
+        <li><strong>Lead Generation</strong> — The best way to get a smaller CAC is with AI.</li>
+        <li><strong>Landing Page Creation</strong> — Custom websites tailored to your needs.</li>
       </ul>
       <p class="muted"><em>Special Offer: First 5 clients get 90% off for the first two months.</em></p>
     </section>
 
-    <section class="bubble">
-      <h2>Our Process</h2>
-      <ul>
-        <li><strong>Step 1:</strong> Quick Call – Learn about your business goals.</li>
-        <li><strong>Step 2:</strong> Setup & Launch – Campaigns and creatives deployed.</li>
-        <li><strong>Step 3:</strong> Optimize – Weekly adjustments for better targeting.</li>
-        <li><strong>Step 4:</strong> Scale – Expand campaigns as results grow.</li>
-      </ul>
+    <section id="brand">
+      <div class="grid grid-2 bare">
+        <figure class="revealcard" aria-label="AI adoption growth">
+          <div class="cover">READ ME</div>
+          <div class="content">
+            <h3>AI is mainstream in 2025</h3>
+            <p>Most teams already use AI. Late adopters pay more and learn slower—move early.</p>
+          </div>
+        </figure>
+        <figure class="revealcard" aria-label="FOMO: founders deal">
+          <div class="cover">READ ME</div>
+          <div class="content">
+            <h3>Late costs more</h3>
+            <p>Move now to compound ROAS. Hesitation raises costs and loses ground.</p>
+          </div>
+        </figure>
+        <figure class="revealcard" aria-label="AI in advertising ROAS">
+          <div class="cover">READ ME</div>
+          <div class="content">
+            <h3>Winners lock ROAS</h3>
+            <p>Early adopters learn faster and buy cheaper clicks, compounding returns.</p>
+          </div>
+        </figure>
+        <figure class="revealcard" aria-label="Late tax">
+          <div class="cover">READ ME</div>
+          <div class="content">
+            <h3>Don’t pay the late tax</h3>
+            <p>Ship AI this week. Lower CPC, faster learning, better ROAS.</p>
+          </div>
+        </figure>
+        <figure class="revealcard" aria-label="Niche learning FOMO">
+          <div class="cover">READ ME</div>
+          <div class="content">
+            <h3>Don’t get left behind</h3>
+            <p>Your competitors are already training AI on your niche. Every week you wait widens their lead.</p>
+          </div>
+        </figure>
+        <figure class="revealcard" aria-label="Urgent CTA">
+          <div class="cover">READ ME</div>
+          <div class="content" style="text-align:center">
+            <h3>90% off — first two months</h3>
+            <p>Only 5 founder spots. When they’re gone, the deal is gone.</p>
+            <a href="#contact" class="cta cta-small">Claim 90% Off</a>
+          </div>
+        </figure>
+      </div>
     </section>
 
-    <section class="bubble">
-      <h2>AI Content Ideas</h2>
-      <div class="grid" style="grid-template-columns:minmax(200px,1fr) auto; align-items:center; gap:12px">
-        <input id="topic" placeholder="Your niche (e.g., dental clinic, SaaS, real estate)" value="local gym in Montreal" />
-        <button id="gen" class="btn">Generate ideas</button>
-      </div>
-      <ul id="ideas" style="margin-top:12px"></ul>
-      <p class="muted" id="ai-note"></p>
-    </section>
-
-    <section class="bubble">
-      <h2>Work & Culture</h2>
-      <div class="grid grid-3">
-        <img alt="blue tech" src="https://images.unsplash.com/photo-1545235617-9465d2a55698?q=80&w=1600&auto=format&fit=crop" />
-        <img alt="blue tech" src="https://images.unsplash.com/photo-1529336953121-4f3f5a5d0c37?q=80&w=1600&auto=format&fit=crop" />
-        <img alt="blue tech" src="https://images.unsplash.com/photo-1523961131990-5ea7c61b2107?q=80&w=1600&auto=format&fit=crop" />
-      </div>
-    </section>
+    
 
     <section class="bubble">
       <h2>FAQ</h2>
       <ul>
-        <li><strong>Do I need a big budget?</strong> No, we work with small to medium budgets and scale as results come in.</li>
-        <li><strong>How soon will I see results?</strong> Many campaigns generate leads in weeks, with stable performance in 2–3 months.</li>
+        <li><strong>Do I need a big budget?</strong> No, we work with small to medium budgets and scale as you grow.</li>
+        <li><strong>How soon will I see results?</strong> Many campaigns generate leads in the first week.</li>
         <li><strong>Do I need a website?</strong> Not required—we can create a landing page for you.</li>
-        <li><strong>What if it doesn’t work?</strong> If you’re not satisfied after 60 days, you can walk away.</li>
+        <li><strong>What if it doesn’t work?</strong> If you’re not satisfied with the results, I can refer you to a bigger, better marketing agency.</li>
       </ul>
     </section>
 
@@ -131,75 +193,316 @@
     </section>
   </main>
 
-  <footer>© 2025 300 Kings. All rights reserved.</footer>
+  <footer>© 2025 300 Kings. All rights reserved.
+    <span class="footer-cert" aria-label="Google Certified">
+      <svg class="g" viewBox="0 0 48 48" aria-hidden="true" focusable="false" style="vertical-align:middle">
+        <clipPath id="g-clip-footer"><path d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"></path></clipPath>
+        <g clip-path="url(#g-clip-footer)">
+          <path fill="#FBBC05" d="M0 37V11l17 13z"></path>
+          <path fill="#EA4335" d="M0 11l17 13 7-6.1L48 14V0H0z"></path>
+          <path fill="#34A853" d="M0 37l30-23 7.9 1L48 0v48H0z"></path>
+          <path fill="#4285F4" d="M48 48L17 24l-4-3 35-10z"></path>
+        </g>
+      </svg>
+      <span>Google Certified</span>
+      <svg width="16" height="16" viewBox="0 0 100 100" role="img" aria-label="star" style="vertical-align:middle;margin-left:8px">
+        <defs>
+          <linearGradient id="gs" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#fff6c5"/><stop offset="60%" stop-color="#ffd24a"/><stop offset="100%" stop-color="#f2a538"/>
+          </linearGradient>
+        </defs>
+        <polygon points="50,5 61,38 95,38 68,58 78,92 50,72 22,92 32,58 5,38 39,38" fill="url(#gs)"></polygon>
+      </svg>
+    </span>
+  </footer>
 
-  <!-- Three.js for 3D hero -->
+  <!-- Three.js for the 3D hero -->
   <script src="https://unpkg.com/three@0.159.0/build/three.min.js"></script>
   <script>
-    // 3D rotating torus knot with parallax
+    // Infinity hero + THREE (3 stars in even orbit)
     (function(){
       const el = document.getElementById('hero3d');
-      let w = el.clientWidth || window.innerWidth;
-      let h = Math.max(280, Math.min(420, Math.round(w * 0.35)));
+      let w = el.clientWidth || window.innerWidth; const H = 300;
       const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(55, w/h, 0.1, 100);
-      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-      renderer.setPixelRatio(window.devicePixelRatio);
-      renderer.setSize(w, h);
-      el.appendChild(renderer.domElement);
-      const dl = new THREE.DirectionalLight(0x66ccff, 1.2); dl.position.set(3,4,5); scene.add(dl);
-      scene.add(new THREE.AmbientLight(0x334466, .5));
-      const geo = new THREE.TorusKnotGeometry(1.1, 0.35, 220, 32);
-      const mat = new THREE.MeshPhysicalMaterial({ color: 0x00aaff, metalness: .8, roughness: .2, clearcoat: 1, clearcoatRoughness: .1, emissive: 0x0066ff, emissiveIntensity: .15 });
-      const mesh = new THREE.Mesh(geo, mat); scene.add(mesh);
-      camera.position.z = 4;
-      let targetX = 0, targetY = 0;
+      const camera = new THREE.PerspectiveCamera(55, w/H, 0.1, 100);
+      const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+      renderer.setPixelRatio(window.devicePixelRatio); renderer.setSize(w,H); el.appendChild(renderer.domElement);
+
+      // Lights
+      const dir = new THREE.DirectionalLight(0x89d5ff, 1.25); dir.position.set(3.2,4.2,5.6); scene.add(dir);
+      scene.add(new THREE.AmbientLight(0x2c3f66, .55));
+      const warm = new THREE.DirectionalLight(0xffe9a3, 0.7); warm.position.set(-3,2,2); scene.add(warm);
+      const sparkle = new THREE.PointLight(0xfff2aa, 1.0, 10); scene.add(sparkle);
+
+      // Hero infinity loops (double lemniscate, knotted)
+      class InfinityCurve extends THREE.Curve {
+        constructor(a=1.0, phase=0.0, lift=0.35){ super(); this.a=a; this.phase=phase; this.lift=lift; }
+        getPoint(t, target=new THREE.Vector3()){
+          const A=this.a; const ang=t*Math.PI*2 + this.phase; const s=Math.sin(ang), c=Math.cos(ang);
+          const denom = 1 + s*s + 1e-6; // stabilize near poles
+          const x = (A * c) / denom;
+          const z = (A * s * c) / denom * 1.35;
+          const y = this.lift * Math.sin(2*ang) + 0.12 * Math.sin(ang*3.0);
+          return target.set(x,y,z);
+        }
+      }
+      const curve1 = new InfinityCurve(1.25, 0.0, 0.35);
+      const curve2 = new InfinityCurve(1.25, Math.PI, 0.35);
+      const tubeSegments = 620, tubeRadius = 0.22, tubeRadSeg=64;
+
+      const mat = new THREE.MeshPhysicalMaterial({ color: 0x134a9c, metalness: 1.0, roughness: 0.08, clearcoat: 1, clearcoatRoughness: 0.02, ior: 1.45, emissive: 0x0a3d89, emissiveIntensity: 0.22, sheen: 1, sheenColor: new THREE.Color(0xbfd6ff), sheenRoughness: 0.18 });
+      // Glossy camo + fresnel
+      mat.onBeforeCompile = (shader)=>{
+        window.__shaderPatched = true;
+        shader.vertexShader = `varying vec3 vPos;\nvarying vec3 vNrm;\n` + shader.vertexShader.replace('#include <begin_vertex>', `vPos = position;\nvNrm = normalize(normalMatrix * normal);\n#include <begin_vertex>`);
+        const CAMO_PREFIX = `
+          varying vec3 vPos;
+          varying vec3 vNrm;
+          float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453123); }
+          float noise(vec2 p){ vec2 i=floor(p); vec2 f=fract(p); float a=hash(i); float b=hash(i+vec2(1.0,0.0)); float c=hash(i+vec2(0.0,1.0)); float d=hash(i+vec2(1.0,1.0)); vec2 u=f*f*(3.0-2.0*f); return mix(a,b,u.x)+ (c-a)*u.y*(1.0-u.x) + (d-b)*u.x*u.y; }
+          float fbm(vec2 p){ float v=0.0; float a=0.5; for(int i=0;i<5;i++){ v+=a*noise(p); p*=2.0; a*=0.5; } return v; }
+        `;
+        shader.fragmentShader = CAMO_PREFIX + shader.fragmentShader.replace('#include <dithering_fragment>', `
+          vec3 c1 = vec3(0.02,0.02,0.03);
+          vec3 c2 = vec3(0.10,0.15,0.22);
+          vec3 c3 = vec3(0.16,0.28,0.46);
+          vec3 c4 = vec3(0.06,0.18,0.34);
+          vec2 uvA = vPos.xy*3.0; vec2 uvB = vPos.zy*2.0; vec2 uvC = vPos.xz*1.6;
+          float n = fbm(uvA) * 0.6 + fbm(uvB*1.3) * 0.4;
+          float m = fbm(uvC*1.1);
+          vec3 camo = c3;
+          if(n>0.55) camo = mix(c3,c4,0.6);
+          if(n>0.72) camo = mix(c4,c2,0.75);
+          if(m>0.80) camo = c1;
+          float darkMask = smoothstep(0.8,0.95,m);
+          vec3 baseCol = gl_FragColor.rgb;
+          vec3 mixed = mix(baseCol, camo, 0.28);
+          mixed = mix(mixed, mixed*0.5, darkMask);
+          vec3 V = normalize(vViewPosition);
+          float fres = pow(1.0 - max(dot(normalize(vNrm), V), 0.0), 3.0);
+          mixed += vec3(1.0) * fres * 0.25;
+          gl_FragColor.rgb = mixed;
+          #include <dithering_fragment>
+        `);
+      };
+      const loop1 = new THREE.Mesh(new THREE.TubeGeometry(curve1, tubeSegments, tubeRadius, tubeRadSeg, true), mat);
+const loop2 = new THREE.Mesh(new THREE.TubeGeometry(curve2, tubeSegments, tubeRadius, tubeRadSeg, true), mat);
+const knot = new THREE.Group(); knot.add(loop1); knot.add(loop2); scene.add(knot);
+      camera.position.z = 4.6;
+
+      // Cursor mapping (360°)
+      let aimX=0.5, aimY=0.5; let targetX=0, targetY=0; let energy=0;
       function onMove(e){
-        const x = (e.clientX ?? e.touches?.[0]?.clientX ?? 0) / window.innerWidth;
-        const y = (e.clientY ?? e.touches?.[0]?.clientY ?? 0) / window.innerHeight;
-        targetX = (x - 0.5) * 0.6;
-        targetY = (y - 0.5) * 0.6;
+        const clientX = (e.clientX ?? e.touches?.[0]?.clientX ?? 0);
+        const clientY = (e.clientY ?? e.touches?.[0]?.clientY ?? 0);
+        const x = clientX / window.innerWidth; const y = clientY / window.innerHeight;
+        const dx = x - aimX, dy = y - aimY;
+        aimX = x; aimY = y; targetX = (x - 0.5) * 2.7; targetY = (y - 0.5) * 2.7;
+        energy = Math.min(1, energy + Math.hypot(dx, dy) * 2.2);
       }
       window.addEventListener('mousemove', onMove);
-      window.addEventListener('touchmove', onMove, { passive: true });
-      function onResize(){
-        w = el.clientWidth || window.innerWidth; h = Math.max(280, Math.min(420, Math.round(w*0.35)));
-        renderer.setSize(w, h); camera.aspect = w/h; camera.updateProjectionMatrix();
-      }
-      window.addEventListener('resize', onResize);
-      (function animate(){ requestAnimationFrame(animate);
-        mesh.rotation.x += 0.004 + (targetY - mesh.rotation.x) * 0.02;
-        mesh.rotation.y += 0.006 + (targetX - mesh.rotation.y) * 0.02;
+      window.addEventListener('touchmove', onMove, {passive:true});
+      window.addEventListener('resize', ()=>{ w=el.clientWidth||window.innerWidth; renderer.setSize(w,H); camera.aspect=w/H; camera.updateProjectionMatrix(); });
+
+      // Gold star factory
+      function makeStarShape(R=1, r=0.45, spikes=5){ const s=new THREE.Shape(); const step=Math.PI/spikes; s.moveTo(0,-R); for(let i=1;i<spikes*2;i++){ const rad=(i%2===0)?R:r*R; const a=-Math.PI/2+i*step; s.lineTo(Math.cos(a)*rad, Math.sin(a)*rad);} s.closePath(); return s; }
+      const gold = new THREE.MeshPhysicalMaterial({ color: 0xFFD978, metalness: 1, roughness: 0.1, clearcoat: 1, clearcoatRoughness: 0.05, emissive: 0xFFC95E, emissiveIntensity: 0.1 });
+      const depth = 0.32; const starGeom = new THREE.ExtrudeGeometry(makeStarShape(1.0, 0.42, 5), { depth, bevelEnabled:true, bevelSize:0.06, bevelThickness:0.06, bevelSegments:3 }); starGeom.translate(0,0,-depth/2);
+      function makeBadgeTexture(){ const S=512; const c=document.createElement('canvas'); c.width=S; c.height=S; const ctx=c.getContext('2d'); function drawG(cx,cy,size){ const s=size/48; ctx.save(); ctx.translate(cx-size/2,cy-size/2); ctx.scale(s,s); const gPath=new Path2D("M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"); ctx.save(); ctx.clip(gPath); ctx.fillStyle='#FBBC05'; ctx.fill(new Path2D('M0 37V11l17 13z')); ctx.fillStyle='#EA4335'; ctx.fill(new Path2D('M0 11l17 13 7-6.1L48 14V0H0z')); ctx.fillStyle='#34A853'; ctx.fill(new Path2D('M0 37l30-23 7.9 1L48 0v48H0z')); ctx.fillStyle='#4285F4'; ctx.fill(new Path2D('M48 48L17 24l-4-3 35-10z')); ctx.restore(); ctx.restore(); }
+        ctx.fillStyle='rgba(0,0,0,0.25)'; ctx.beginPath(); ctx.arc(S/2,S/2,S*0.46,0,Math.PI*2); ctx.fill(); drawG(S/2,S/2-50,200); ctx.fillStyle='rgba(255,255,255,0.95)'; let fs=64; const text='CERTIFIED'; do { ctx.font=`800 ${fs}px Manrope, system-ui, sans-serif`; } while (ctx.measureText(text).width > S*0.78 && (fs-=2)>28); ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(text,S/2,S/2+100); return c; }
+      const badgeTex = new THREE.CanvasTexture(makeBadgeTexture());
+      function createStarGroup(){ const star = new THREE.Mesh(starGeom, gold); const badge = new THREE.Mesh(new THREE.CircleGeometry(0.62,64), new THREE.MeshBasicMaterial({ map: badgeTex, transparent:true })); badge.position.z = depth/2 + 0.02; const g=new THREE.Group(); g.add(star); g.add(badge); g.rotation.set(Math.random()*0.6, Math.random()*Math.PI, Math.random()*0.6); return g; }
+
+      const ORBIT_R = 2.4; const ORBIT_SPEED = 0.104; // uniform speed
+      const stars = [
+        { group: createStarGroup(), r: ORBIT_R, vy: 0.0, speed: ORBIT_SPEED, scale: 0.34, phase: 0.0,              spin: 0.03  },
+        { group: createStarGroup(), r: ORBIT_R, vy: 0.0, speed: ORBIT_SPEED, scale: 0.34, phase: Math.PI*2/3,   spin: 0.035 },
+        { group: createStarGroup(), r: ORBIT_R, vy: 0.0, speed: ORBIT_SPEED, scale: 0.34, phase: Math.PI*4/3,   spin: 0.04  }
+      ];
+      stars.forEach(s=>scene.add(s.group));
+
+      let t=0; (function animate(){ requestAnimationFrame(animate); t+=0.016;
+        const targetRX = (aimY - 0.5) * Math.PI; // tilt
+        const targetRY = (aimX - 0.5) * Math.PI * 2; // spin 360
+        knot.rotation.x += (targetRX - knot.rotation.x) * 0.09;
+        knot.rotation.y += (targetRY - knot.rotation.y) * 0.09;
+        sparkle.position.x += ((targetX*2.2) - sparkle.position.x) * 0.12;
+        sparkle.position.y += ((-targetY*1.6) + 0.6 - sparkle.position.y) * 0.12;
+        sparkle.position.z += ((2.2) - sparkle.position.z) * 0.05;
+
+        const basePos = new THREE.Vector3(Math.cos(0)*ORBIT_R, 0, Math.sin(0)*ORBIT_R);
+        const baseDist = camera.position.distanceTo(basePos);
+        stars.forEach((s)=>{
+          const a = t * s.speed + s.phase;
+          s.group.position.set(Math.cos(a)*s.r, 0, Math.sin(a)*s.r);
+          s.group.rotation.y += s.spin;
+          const dist = camera.position.distanceTo(s.group.position);
+          const sc = s.scale * (dist / baseDist);
+          s.group.scale.set(sc, sc, sc);
+        });
+
+        energy *= 0.92;
+        mat.emissiveIntensity = 0.2 + energy*0.8;
+        mat.clearcoatRoughness = Math.max(0.01, 0.04 - energy*0.02);
         renderer.render(scene, camera);
       })();
     })();
   </script>
 
-  <!-- AI Content block logic -->
+  <!-- Cursor-triggered marketing words (no trail) -->
   <script>
-    const ideasEl = document.getElementById('ideas');
-    const noteEl = document.getElementById('ai-note');
-    document.getElementById('gen').addEventListener('click', async () => {
-      const topic = document.getElementById('topic').value || 'local business';
-      ideasEl.innerHTML = '<li class="muted">Thinking…</li>';
-      try {
-        // If you later add a Netlify Function at /.netlify/functions/ai, this will use it.
-        const r = await fetch('/.netlify/functions/ai', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ prompt: `Generate 5 punchy ad ideas for ${topic}.`, count: 5 }) });
-        if (!r.ok) throw new Error('Function not available');
-        const j = await r.json();
-        const list = (j.ideas || []).map(s => `<li>${s}</li>`).join('');
-        ideasEl.innerHTML = list || '<li class="muted">No ideas returned.</li>';
-        noteEl.textContent = j.source || '';
-      } catch (e) {
-        // Safe demo fallback (no API keys required)
-        ideasEl.innerHTML = '<li>AI-Optimized Launch: 48‑Hour Conversion Sprint</li>'+
-                             '<li>Smart Budget: Double Leads, Same Spend</li>'+
-                             '<li>Hyperlocal Targeting: Own Your Postal Codes</li>'+
-                             '<li>Scroll‑Stopping Creative Series</li>'+
-                             '<li>Test → Learn → Scale Weekly</li>';
-        noteEl.textContent = 'Demo ideas shown (no server function detected).';
+    (function(){
+      const pops=document.getElementById('pops'); if(!pops) return;
+      const words=['CPC','CAC','ROAS'];
+      let i=0; let last=0; const MIN_DELAY=120; // ~25% faster
+      function spawn(x,y){ const d=document.createElement('div'); d.className='pop badge'; const w = words[i++ % words.length]; if(w==='ROAS') d.classList.add('gold'); d.textContent=w; d.style.left=x+'px'; d.style.top=y+'px'; pops.appendChild(d); setTimeout(()=>d.remove(), 1700); }
+      addEventListener('pointermove', (e)=>{ const now=performance.now(); if(now-last < MIN_DELAY) return; last=now; const x=e.clientX, y=e.clientY; setTimeout(()=>spawn(x,y), 80); });
+    })();
+  </script>
+
+  <!-- Leprechaun background runner (click to explode into coins; 35s respawn) -->
+  <script>
+    (function(){
+      const cvs = document.getElementById('lepbg'); if(!cvs) return; const ctx = cvs.getContext('2d');
+      function resize(){ const dpr=window.devicePixelRatio||1; cvs.width=innerWidth*dpr; cvs.height=innerHeight*dpr; cvs.style.width='100%'; cvs.style.height='100%'; ctx.setTransform(dpr,0,0,dpr,0,0);} resize(); addEventListener('resize', resize);
+
+      // Fancy coin particles
+      class Coin{ constructor(x,y,baseVX){ this.x=x; this.y=y; const a=Math.random()*Math.PI*2; const s=Math.random()*4+2.5; this.vx=Math.cos(a)*s + (baseVX||0)*0.5; this.vy=Math.sin(a)*s - 1.2; this.r=Math.random()*3+2.2; this.a=1; this.rot=Math.random()*Math.PI*2; this.vrot=(Math.random()-0.5)*0.5; }
+        step(){ this.x+=this.vx; this.y+=this.vy; this.vy+=0.06; this.a-=0.016; this.rot+=this.vrot; }
+        draw(ctx){ ctx.save(); ctx.translate(this.x,this.y); ctx.rotate(this.rot); const R=this.r; const g=ctx.createRadialGradient(0,0,0,0,0,R*2.2); g.addColorStop(0,'#fff9d6'); g.addColorStop(0.5,'#ffd34d'); g.addColorStop(1,'rgba(255,180,0,0)'); ctx.globalAlpha=Math.max(0,this.a); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(0,0,R*2,0,Math.PI*2); ctx.fill();
+          ctx.globalAlpha=Math.max(0,this.a*0.9); ctx.strokeStyle='rgba(160,120,20,0.8)'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.arc(0,0,R*1.6,0,Math.PI*2); ctx.stroke();
+          ctx.globalAlpha=Math.max(0,this.a*0.7); ctx.fillStyle='rgba(255,223,120,0.9)'; ctx.beginPath();
+          for(let i=0;i<5;i++){ const ang=i*2*Math.PI/5 - Math.PI/2; const ro=i%2?R*0.7:R*1.2; const x=Math.cos(ang)*ro, y=Math.sin(ang)*ro; i?ctx.lineTo(x,y):ctx.moveTo(x,y); }
+          ctx.closePath(); ctx.fill();
+          ctx.globalAlpha=Math.max(0,this.a*0.8); ctx.fillStyle='rgba(255,255,255,0.6)'; ctx.beginPath(); ctx.ellipse(-R*0.6,-R*0.2,R*0.6,R*0.2,0,0,Math.PI*2); ctx.fill();
+          ctx.restore(); }
       }
-    });
+
+      // Subtle dust while running
+      class Dust{ constructor(x,y,baseVX){ this.x=x; this.y=y; this.vx=(Math.random()*0.8+0.2)+(baseVX||0)*0.2; this.vy=-(Math.random()*1.4+0.6); this.r=Math.random()*2+1.4; this.a=1; }
+        step(){ this.x+=this.vx; this.y+=this.vy; this.vy+=0.05; this.a-=0.02; }
+        draw(ctx){ ctx.save(); ctx.globalAlpha=Math.max(0,this.a); const g=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r*2.2); g.addColorStop(0,'#fff9d6'); g.addColorStop(0.5,'#ffd34d'); g.addColorStop(1,'rgba(255,180,0,0)'); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(this.x,this.y,this.r*2,0,Math.PI*2); ctx.fill(); ctx.restore(); }
+      }
+
+      function drawLeprechaun(x,y,phase,scale=1){
+        ctx.save(); ctx.translate(x,y); ctx.scale(scale,scale);
+        ctx.globalAlpha=0.25; ctx.fillStyle='#000'; ctx.beginPath(); ctx.ellipse(0,26,22,6,0,0,Math.PI*2); ctx.fill(); ctx.globalAlpha=1;
+
+        const t=phase; const bob=Math.sin(t*2)*1.6; const legA=Math.sin(t)*0.75; const legB=-Math.sin(t)*0.75; const armA=-Math.sin(t+0.3)*0.7; const armB=Math.sin(t+0.3)*0.7;
+        ctx.translate(0,bob);
+
+        function shoe(xo,ang){ ctx.save(); ctx.translate(xo,22); ctx.rotate(ang*0.45); ctx.fillStyle='#1b1b1b'; ctx.beginPath(); ctx.moveTo(-8,-1); ctx.quadraticCurveTo(2,-3,8,0); ctx.lineTo(8,3); ctx.quadraticCurveTo(2,4,-8,2); ctx.closePath(); ctx.fill(); ctx.restore(); }
+        function leg(xo,ang){ ctx.save(); ctx.translate(xo,14); ctx.rotate(ang); ctx.strokeStyle='#114d1d'; ctx.lineWidth=6; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(0,8); ctx.stroke(); ctx.translate(0,8); ctx.rotate(ang*0.6); ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(0,8); ctx.stroke(); ctx.restore(); }
+
+        ctx.save();
+          const jg=ctx.createLinearGradient(0,0,0,18); jg.addColorStop(0,'#218a33'); jg.addColorStop(1,'#156b24'); ctx.fillStyle=jg; ctx.fillRect(-14,0,28,18);
+          ctx.fillStyle='#135c1e'; ctx.beginPath(); ctx.moveTo(-14,0); ctx.lineTo(-2,0); ctx.lineTo(-6,8); ctx.lineTo(-14,8); ctx.closePath(); ctx.fill();
+          ctx.beginPath(); ctx.moveTo(14,0); ctx.lineTo(2,0); ctx.lineTo(6,8); ctx.lineTo(14,8); ctx.closePath(); ctx.fill();
+          ctx.fillStyle='#f9d45a'; for(let i=0;i<3;i++){ ctx.beginPath(); ctx.arc(0,4+i*5,1.2,0,Math.PI*2); ctx.fill(); }
+          ctx.fillStyle='#0f0f0f'; ctx.fillRect(-14,8,28,4); ctx.fillStyle='#f2c23f'; ctx.fillRect(-2,8,4,4);
+        ctx.restore();
+
+        leg(-8,legA); leg(8,legB); shoe(-10,legA); shoe(10,legB);
+
+        function arm(xo,ang,withPot=false){ ctx.save(); ctx.translate(xo,4); ctx.rotate(ang); ctx.strokeStyle='#1e7f2e'; ctx.lineWidth=5; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(withPot? 10:16, withPot? 2: 6); ctx.stroke(); if(withPot){ ctx.translate(10,2); ctx.save(); ctx.rotate(-0.2+Math.sin(t)*0.05);
+            const pg=ctx.createLinearGradient(0,0,0,16); pg.addColorStop(0,'#1c160d'); pg.addColorStop(1,'#0c0a07'); ctx.fillStyle=pg; ctx.beginPath(); ctx.ellipse(0,6,10,8,0,0,Math.PI*2); ctx.fill();
+            ctx.fillStyle='#0f0c07'; ctx.beginPath(); ctx.ellipse(0,0,12,6,0,0,Math.PI*2); ctx.fill();
+            const grd = ctx.createRadialGradient(0,-1,2,0,0,12); grd.addColorStop(0,'#fff6c5'); grd.addColorStop(0.6,'#ffd24a'); grd.addColorStop(1,'#caa023'); ctx.fillStyle=grd; ctx.beginPath(); ctx.ellipse(0,-2,10,5,0,0,Math.PI*2); ctx.fill();
+            ctx.globalAlpha=0.55; ctx.fillStyle='rgba(255,255,255,0.45)'; ctx.beginPath(); ctx.ellipse(-2,-3,4,1.6,0,0,Math.PI*2); ctx.fill(); ctx.globalAlpha=1;
+          ctx.restore(); const m = ctx.getTransform(); ctx.restore(); return {x:m.e, y:m.f-4}; } ctx.restore(); return null; }
+
+        ctx.save();
+          const fg=ctx.createRadialGradient(0,-10,2,0,-8,16); fg.addColorStop(0,'#ffe7cf'); fg.addColorStop(1,'#f2d0aa'); ctx.fillStyle=fg; ctx.beginPath(); ctx.arc(0,-8,8,0,Math.PI*2); ctx.fill();
+          ctx.fillStyle='#eec6a0'; ctx.beginPath(); ctx.arc(-8,-8,2,0,Math.PI*2); ctx.arc(8,-8,2,0,Math.PI*2); ctx.fill();
+          ctx.fillStyle='#111'; ctx.beginPath(); ctx.arc(-3,-9,1.2,0,Math.PI*2); ctx.arc(3,-9,1.2,0,Math.PI*2); ctx.fill();
+          ctx.strokeStyle='#5a2a08'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(-5,-11); ctx.quadraticCurveTo(-3,-12,-1,-11); ctx.moveTo(1,-11); ctx.quadraticCurveTo(3,-12,5,-11); ctx.stroke();
+          ctx.fillStyle='#eab999'; ctx.beginPath(); ctx.arc(0,-6,1.6,0,Math.PI*2); ctx.fill();
+          ctx.fillStyle='#de8326'; ctx.beginPath(); ctx.moveTo(-6,-4); ctx.quadraticCurveTo(0,2,6,-4); ctx.quadraticCurveTo(0,6,-6,-4); ctx.fill();
+          ctx.strokeStyle='rgba(120,60,10,0.5)'; ctx.lineWidth=1; for(let k=-5;k<=5;k+=2){ ctx.beginPath(); ctx.moveTo(k,-2); ctx.quadraticCurveTo(k+0.5,0,k+1.5,1.8); ctx.stroke(); }
+          const hg=ctx.createLinearGradient(0,-20,0,-8); hg.addColorStop(0,'#1aa542'); hg.addColorStop(1,'#147b31'); ctx.fillStyle=hg; ctx.fillRect(-11,-20,22,8); ctx.fillRect(-16,-12,32,4);
+          ctx.fillStyle='#0e0e0e'; ctx.fillRect(-11,-17,22,3); ctx.fillStyle='#f2c23f'; ctx.fillRect(-2,-17,4,3);
+          ctx.fillStyle='#29c35a'; for(let k=0;k<3;k++){ ctx.beginPath(); ctx.arc(-10 + k*3, -22, 2, 0, Math.PI*2); ctx.fill(); } ctx.strokeStyle='#189a40'; ctx.lineWidth=0.8; ctx.beginPath(); ctx.moveTo(-9,-22); ctx.lineTo(-9,-18); ctx.stroke();
+        ctx.restore();
+
+        const spill = arm(12, armA, true);
+        arm(-12, armB, false);
+
+        ctx.restore();
+        return spill;
+      }
+
+      const dust=[];
+      const coins=[];
+      const leps=[
+        { x:-120, y: innerHeight*0.72, vx:1.8, phase:0, scale:1.0, alpha:0.28, exploded:false, respawnAt:0 },
+        { x:-220, y: innerHeight*0.78, vx:1.2, phase:0, scale:0.7, alpha:0.18, exploded:false, respawnAt:0 }
+      ];
+
+      function explode(L){
+        const base = L.scale*1;
+        const N = 120 * base;
+        for(let i=0;i<N;i++) coins.push(new Coin(L.x + (Math.random()*6-3), L.y-8 + (Math.random()*6-3), L.vx));
+        L.exploded = true; L.respawnAt = performance.now() + 35000;
+        window.__lep_last_explosion = Date.now();
+      }
+
+      addEventListener('click', (e)=>{
+        const px=e.clientX, py=e.clientY; const now=performance.now();
+        for(const L of leps){ if(L.exploded && now < L.respawnAt) continue; const R=28*L.scale; const dx=px-L.x, dy=py-L.y; if(dx*dx+dy*dy < R*R){ explode(L); } }
+      });
+
+      function tick(){
+        ctx.clearRect(0,0,innerWidth,innerHeight);
+        const now=performance.now();
+        for(const L of leps){
+          if(L.exploded){ if(now>=L.respawnAt){ L.exploded=false; L.x = -120 - Math.random()*100; L.phase=Math.random()*Math.PI*2; } }
+          if(!L.exploded){
+            L.phase += 0.25 * (L.vx/1.6);
+            L.x += L.vx * (1 + Math.sin(L.phase*0.1)*0.15);
+            L.y = (L.scale>0.9? innerHeight*0.72 : innerHeight*0.78) + Math.sin(L.phase*0.5)*6;
+            ctx.save(); ctx.globalAlpha=L.alpha; const spill=drawLeprechaun(L.x, L.y, L.phase, L.scale); ctx.restore();
+            if(spill && Math.random()<0.20){ dust.push(new Dust(spill.x, spill.y, L.vx)); }
+            if(L.x > innerWidth+120){ L.x=-120 - Math.random()*100; L.phase=Math.random()*Math.PI*2; }
+          }
+        }
+        for(let i=dust.length-1;i>=0;i--){ const s=dust[i]; s.step(); s.draw(ctx); if(s.a<=0) dust.splice(i,1); }
+        for(let i=coins.length-1;i>=0;i--){ const c=coins[i]; c.step(); c.draw(ctx); if(c.a<=0) coins.splice(i,1); }
+        requestAnimationFrame(tick);
+      }
+      tick();
+    })();
+  </script>
+
+  <!-- FOMO logic (spots only) -->
+  <script>
+    (function(){
+      const el = document.getElementById('spots');
+      const claim = document.getElementById('claim');
+      if(!el) return;
+      const KEY = 'founder_spots_left_v1';
+      let spots = parseInt(localStorage.getItem(KEY) || '5', 10);
+      if (Number.isNaN(spots) || spots < 1 || spots > 5) spots = 5;
+      const render = () => el.textContent = `( ${spots} of 5 left )`;
+      render();
+      claim?.addEventListener('click', () => {
+        if (spots > 1) { spots -= 1; localStorage.setItem(KEY, String(spots)); render(); }
+      });
+    })();
+  </script>
+
+  <!-- Dev tests (non-blocking) -->
+  <script>
+    (function(){
+      function test(name, fn){ try{ const r=fn(); if(r?.then){ r.then(()=>console.log('✅',name)).catch(e=>console.warn('❌',name,e)); } else { console.log('✅',name); } } catch(e){ console.warn('❌',name,e); } }
+      test('Footer send button text', ()=>{ const btn=document.querySelector('#contact button.btn'); if(!btn) throw 'missing'; if(btn.textContent.trim()!=='Send') throw 'wrong label'; });
+      test('Hero WebGL renderer attached', ()=>{ const el=document.getElementById('hero3d'); if(!el || el.children.length===0) throw 'no canvas'; });
+      test('Leprechaun canvas present', ()=>{ const c=document.getElementById('lepbg'); if(!c) throw 'missing'; const w=c.width||0; if(w===0) throw 'no size'; });
+      test('Brand has 6 READ ME covers', ()=>{ const covers=[...document.querySelectorAll('#brand .revealcard .cover')].map(n=>n.textContent.trim()); if(covers.length!==6) throw 'need 6'; if(covers.some(v=>v!=='READ ME')) throw 'covers mismatch'; });
+      test('Brand headings include key three', ()=>{ const heads=[...document.querySelectorAll('#brand .revealcard h3')].map(n=>n.textContent.trim().toLowerCase()); const expect=['ai is mainstream in 2025','late costs more','winners lock roas']; for(const e of expect){ if(!heads.includes(e)) throw 'missing '+e; } });
+      test('At least one brand CTA exists', ()=>{ const ctas=[...document.querySelectorAll('#brand .revealcard .content a.cta')]; if(ctas.length<1) throw 'no brand CTA'; });
+      test('Services copy updated', ()=>{ const s=document.getElementById('services').innerText.toLowerCase(); if(!/ai-powered ads/.test(s)) throw 'ai-powered ads missing'; if(!/smaller cac/.test(s)) throw 'lead gen missing'; if(!/custom websites tailored/.test(s)) throw 'landing copy missing'; });
+      test('Shader patched once', ()=>{ if(!window.__shaderPatched) throw 'shader not patched'; });
+    })();
   </script>
 </body>
 </html>
