@@ -25,6 +25,19 @@
     .cta.secondary{background:transparent;border:1px solid rgba(255,255,255,.3);color:#fff}
     .cta.secondary:hover{filter:none;background:rgba(255,255,255,.06)}
 
+    /* Center CTA (middle of page) */
+    .center-cta{margin-top:12px;text-align:center}
+
+    /* Modal contact (Formspree) */
+    .modal{position:fixed;inset:0;display:none;z-index:9999}
+    .modal.open{display:block}
+    .modal__overlay{position:absolute;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(3px)}
+    .modal__card{position:relative;margin:6vh auto 0;max-width:520px;background:#0b0f18;border:1px solid rgba(255,255,255,.12);border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.6);padding:22px}
+    .modal__card h3{margin:0 0 10px;font:800 1.35rem/1.2 'Space Grotesk',system-ui;color:#eaf2ff}
+    .modal__close{position:absolute;top:10px;right:10px;border:0;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;width:34px;height:34px;border-radius:10px;cursor:pointer}
+    @media(max-width:520px){.modal__card{margin:10vh 10px;padding:18px}}
+
+
     header{background:#000;padding:2.6rem 2rem 2rem;text-align:center;position:relative;overflow:hidden}
     header h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(2.1rem,5vw,3.2rem);margin:0;color:var(--blue)}
     header p{font-size:1.15rem;margin:.75rem 0 1.2rem;color:#cdd9ea}
@@ -133,7 +146,7 @@
       <p>I let Google’s AI stalk your customers… legally.</p>
       <div class="cta-stack">
         <a href="#" class="cta" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/kevincacheiro93/30-min-meeting'}); return false;">Schedule a Call</a>
-        <a href="#contact" class="cta secondary">Contact Us Now</a>
+        <a href="#" class="cta secondary" data-open="contact-modal">Contact Us Now</a>
       </div>
 
       <div class="fomo" aria-live="polite">
@@ -153,6 +166,9 @@
         <li><strong>Landing Page Creation</strong> — Custom websites tailored to your needs.</li>
       </ul>
       <p class="muted"><em>Special Offer: First 5 clients get 90% off for the first two months.</em></p>
+      <div class="center-cta">
+        <a href="#" class="cta secondary" data-open="contact-modal">Contact Us Now</a>
+      </div>
     </section>
 
     <section id="brand">
@@ -220,11 +236,28 @@
       <form action="https://formspree.io/f/xqaykddn" method="POST" accept-charset="UTF-8">
         <input required name="name" placeholder="Your name" />
         <input required type="email" name="email" placeholder="Email" />
+        <input type="tel" name="phone" placeholder="Phone (optional)" />
         <textarea required name="message" placeholder="Tell us about your goals" style="min-height:120px"></textarea>
         <button class="btn">Send</button>
       </form>
     </section>
   </main>
+
+  <!-- Contact modal -->
+  <div id="contact-modal" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle">
+    <div class="modal__overlay" data-close="contact-modal"></div>
+    <div class="modal__card" role="document">
+      <button class="modal__close" aria-label="Close contact form" data-close="contact-modal">✕</button>
+      <h3 id="contactModalTitle">Contact Us</h3>
+      <form action="https://formspree.io/f/xqaykddn" method="POST" accept-charset="UTF-8">
+        <input required name="name" placeholder="Your name" />
+        <input required type="email" name="email" placeholder="Email" />
+        <input type="tel" name="phone" placeholder="Phone (optional)" />
+        <textarea required name="message" placeholder="Tell us about your goals" style="min-height:120px"></textarea>
+        <button class="btn" style="width:100%">Send</button>
+      </form>
+    </div>
+  </div>
 
   <footer>© 2025 300 Kings. All rights reserved.
     <span class="footer-cert" aria-label="Google Certified">
@@ -406,6 +439,24 @@ const knot = new THREE.Group(); knot.add(loop1); knot.add(loop2); scene.add(knot
     })();
   </script>
 
+  <!-- Modal open/close -->
+  <script>
+    (function(){
+      const body = document.body;
+      function openModal(id){ const m=document.getElementById(id); if(!m) return; m.classList.add('open'); m.setAttribute('aria-hidden','false'); body.style.overflow='hidden'; }
+      function closeModal(id){ const m=document.getElementById(id); if(!m) return; m.classList.remove('open'); m.setAttribute('aria-hidden','true'); body.style.overflow=''; }
+      document.querySelectorAll('[data-open]')?.forEach(btn=>{
+        btn.addEventListener('click', (e)=>{ e.preventDefault(); openModal(btn.getAttribute('data-open')); });
+      });
+      document.addEventListener('click', (e)=>{
+        const t=e.target; const id=t?.getAttribute?.('data-close'); if(id) closeModal(id);
+      });
+      document.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ const m=document.querySelector('.modal.open'); if(m) closeModal(m.id); }});
+      // Expose for tests
+      window.__contactModalReady = !!document.getElementById('contact-modal');
+    })();
+  </script>
+
   <!-- Leprechaun background runner (click to explode into coins; 35s respawn) -->
   <script>
     (function(){
@@ -554,16 +605,4 @@ const knot = new THREE.Group(); knot.add(loop1); knot.add(loop2); scene.add(knot
   <script>
     (function(){
       function test(name, fn){ try{ const r=fn(); if(r?.then){ r.then(()=>console.log('✅',name)).catch(e=>console.warn('❌',name,e)); } else { console.log('✅',name); } } catch(e){ console.warn('❌',name,e); } }
-      test('Footer send button text', ()=>{ const btn=document.querySelector('#contact button.btn'); if(!btn) throw 'missing'; if(btn.textContent.trim()!=='Send') throw 'wrong label'; });
-      test('Hero WebGL renderer attached', ()=>{ const el=document.getElementById('hero3d'); if(!el || el.children.length===0) throw 'no canvas'; });
-      test('Leprechaun canvas present', ()=>{ const c=document.getElementById('lepbg'); if(!c) throw 'missing'; const w=c.width||0; if(w===0) throw 'no size'; });
-      test('Brand has 6 READ ME covers', ()=>{ const covers=[...document.querySelectorAll('#brand .revealcard .cover')].map(n=>n.textContent.trim()); if(covers.length!==6) throw 'need 6'; if(covers.some(v=>v!=='READ ME')) throw 'covers mismatch'; });
-      test('Brand headings include key three', ()=>{ const heads=[...document.querySelectorAll('#brand .revealcard h3')].map(n=>n.textContent.trim().toLowerCase()); const expect=['ai is mainstream in 2025','late costs more','winners lock roas']; for(const e of expect){ if(!heads.includes(e)) throw 'missing '+e; } });
-      test('At least one brand CTA exists', ()=>{ const ctas=[...document.querySelectorAll('#brand .revealcard .content a.cta')]; if(ctas.length<1) throw 'no brand CTA'; });
-      test('Services copy updated', ()=>{ const s=document.getElementById('services').innerText.toLowerCase(); if(!/ai-powered ads/.test(s)) throw 'ai-powered ads missing'; if(!/smaller cac/.test(s)) throw 'lead gen missing'; if(!/custom websites tailored/.test(s)) throw 'landing copy missing'; });
-      test('Shader patched once', ()=>{ if(!window.__shaderPatched) throw 'shader not patched'; });
-      test('Claim Calendly bound', ()=>{ const c=document.getElementById('claim'); if(!c) throw 'missing claim'; if(c.dataset.boundCalendly!=='1') throw 'calendly not bound'; });
-    })();
-  </script>
-</body>
-</html>
+      test('Footer send button text', ()=>{ const btn=document.querySelector('#contact button.btn'); if(!btn) throw 
