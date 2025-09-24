@@ -1,9 +1,3 @@
- (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
-diff --git a//dev/null b/assets/js/interactions.js
-index 0000000000000000000000000000000000000000..41e48beec868d051222af0122463fc7bbf57b754 100644
---- a//dev/null
-+++ b/assets/js/interactions.js
-@@ -0,0 +1,189 @@
 +const prefersReducedMotion = window.matchMedia(
 +  "(prefers-reduced-motion: reduce)",
 +).matches;
@@ -193,6 +187,3 @@ index 0000000000000000000000000000000000000000..41e48beec868d051222af0122463fc7b
 +    });
 +  }
 +}
- 
-EOF
-)
