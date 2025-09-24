@@ -590,45 +590,140 @@
     })();
   </script>
 
-  <!-- Leprechaun background runner (click to explode into coins; 35s respawn) -->
-  <script>
-    (function(){
-      const cvs = document.getElementById('lepbg'); if(!cvs) return; const ctx = cvs.getContext('2d');
-      function resize(){ const dpr = matchMedia('(pointer:coarse)').matches ? 1 : (window.devicePixelRatio||1); cvs.width=innerWidth*dpr; cvs.height=innerHeight*dpr; cvs.style.width='100%'; cvs.style.height='100%'; ctx.setTransform(dpr,0,0,dpr,0,0);} resize(); addEventListener('resize', resize);
+ <!-- Leprechaun background runner (click to explode into coins; 35s respawn) -->
+<script>
+  (function(){
+    const cvs = document.getElementById('lepbg'); if(!cvs) return;
+    const ctx = cvs.getContext('2d');
 
-      // --- Dynamic nerdy background: soft network of nodes + lines ---
-      const isCoarse = matchMedia('(pointer:coarse)').matches;
-      const NODES = isCoarse ? 32 : 72; const LINK_DIST = isCoarse ? 120 : 150;
-      const nodes = Array.from({length:NODES}, ()=>({
-        x: Math.random()*innerWidth,
-        y: Math.random()*innerHeight,
-        vx: (Math.random()*1.2-0.6)*(isCoarse?0.5:1),
-        vy: (Math.random()*1.2-0.6)*(isCoarse?0.5:1),
-        r: Math.random()*1.2 + 0.8
-      }));
+    // Retina-safe canvas
+    function resize(){
+      const dpr = (window.devicePixelRatio||1);
+      cvs.width = innerWidth * dpr;
+      cvs.height = innerHeight * dpr;
+      cvs.style.width = '100%';
+      cvs.style.height = '100%';
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+    }
+    resize();
+    addEventListener('resize', resize);
 
-      function stepNodes(){
-        for(const n of nodes){ n.x+=n.vx; n.y+=n.vy; if(n.x<0||n.x>innerWidth) n.vx*=-1; if(n.y<0||n.y>innerHeight) n.vy*=-1; }
+    // --- Coins & dust (for explosion)
+    class Coin{
+      constructor(x,y,baseVX){
+        this.x=x; this.y=y;
+        const a=Math.random()*Math.PI*2, s=Math.random()*4+2.5;
+        this.vx=Math.cos(a)*s + (baseVX||0)*0.5;
+        this.vy=Math.sin(a)*s - 1.2;
+        this.r=Math.random()*3+2.2;
+        this.a=1; this.rot=Math.random()*Math.PI*2;
+        this.vrot=(Math.random()-0.5)*0.5;
       }
-      function drawNodes(){
-        ctx.save();
-        ctx.lineWidth=1; ctx.strokeStyle='rgba(90,170,255,0.12)';
-        for(let i=0;i<nodes.length;i++){
-          const a=nodes[i];
-          for(let j=i+1;j<nodes.length;j++){
-            const b=nodes[j]; const dx=a.x-b.x, dy=a.y-b.y; const d=Math.hypot(dx,dy);
-            if(d<LINK_DIST){ ctx.globalAlpha = (1 - d/LINK_DIST)*0.6; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); }
-          }
-        }
-        ctx.globalAlpha=1; ctx.fillStyle='rgba(140,210,255,0.5)';
-        for(const n of nodes){ ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,Math.PI*2); ctx.fill(); }
+      step(){ this.x+=this.vx; this.y+=this.vy; this.vy+=0.06; this.a-=0.016; this.rot+=this.vrot; }
+      draw(){
+        ctx.save(); ctx.translate(this.x,this.y); ctx.rotate(this.rot);
+        const R=this.r;
+        const g=ctx.createRadialGradient(0,0,0,0,0,R*2.2);
+        g.addColorStop(0,'#fff9d6'); g.addColorStop(0.5,'#ffd34d'); g.addColorStop(1,'rgba(255,180,0,0)');
+        ctx.globalAlpha=Math.max(0,this.a); ctx.fillStyle=g;
+        ctx.beginPath(); ctx.arc(0,0,R*2,0,Math.PI*2); ctx.fill();
+        ctx.globalAlpha=Math.max(0,this.a*0.9); ctx.strokeStyle='rgba(160,120,20,0.8)'; ctx.lineWidth=1.2;
+        ctx.beginPath(); ctx.arc(0,0,R*1.6,0,Math.PI*2); ctx.stroke();
+        ctx.globalAlpha=Math.max(0,this.a*0.7); ctx.fillStyle='rgba(255,223,120,0.9)';
+        ctx.beginPath();
+        for(let i=0;i<5;i++){ const ang=i*2*Math.PI/5 - Math.PI/2; const ro=i%2?R*0.7:R*1.2; const x=Math.cos(ang)*ro, y=Math.sin(ang)*ro; i?ctx.lineTo(x,y):ctx.moveTo(x,y); }
+        ctx.closePath(); ctx.fill();
+        ctx.globalAlpha=Math.max(0,this.a*0.8); ctx.fillStyle='rgba(255,255,255,0.6)';
+        ctx.beginPath(); ctx.ellipse(-R*0.6,-R*0.2,R*0.6,R*0.2,0,0,Math.PI*2); ctx.fill();
         ctx.restore();
       }
-
-      // --- Coin particles for explosions ---
-      class Coin{ constructor(x,y,baseVX){ this.x=x; this.y=y; const a=Math.random()*Math.PI*2; const s=Math.random()*4+2.5; this.vx=Math.cos(a)*s + (baseVX||0)*0.5; this.vy=Math.sin(a)*s - 1.2; this.r=Math.random()*3+2.2; this.a=1; this.rot=Math.random()*Math.PI*2; this.vrot=(Math.random()-0.5)*0.5; }
-        step(){ this.x+=this.vx; this.y+=this.vy; this.vy+=0.06; this.a-=0.016; this.rot+=this.vrot; }
-        draw(){ ctx.save(); ctx.translate(this.x,this.y); ctx.rotate(this.rot); const R=this.r; const g=ctx.createRadialGradient(0,0,0,0,0,R*2.2); g.addColorStop(0,'#fff9d6'); g.addColorStop(0.5,'#ffd34d'); g.addColorStop(1,'rgba(255,180,0,0)'); ctx.globalAlpha=Math.max(0,this.a); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(0,0,R*2,0,Math.PI*2); ctx.fill(); ctx.globalAlpha=Math.max(0,this.a*0.9); ctx.strokeStyle='rgba(160,120,20,0.8)'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.arc(0,0,R*1.6,0,Math.PI*2); ctx.stroke(); ctx.globalAlpha=Math.max(0,this.a*0.7); ctx.fillStyle='rgba(255,223,120,0.9)'; ctx.beginPath(); for(let i=0;i<5;i++){ const ang=i*2*Math.PI/5 - Math.PI/2; const ro=i%2?R*0.7:R*1.2; const x=Math.cos(ang)*ro, y=Math.sin(ang)*ro; i?ctx.lineTo(x,y):ctx.moveTo(x,y);} ctx.closePath(); ctx.fill(); ctx.globalAlpha=Math.max(0,this.a*0.8); ctx.fillStyle='rgba(255,255,255,0.6)'; ctx.beginPath(); ctx.ellipse(-R*0.6,-R*0.2,R*0.6,R*0.2,0,0,Math.PI*2); ctx.fill(); ctx.restore(); }
+    }
+    class Dust{
+      constructor(x,y,baseVX){ this.x=x; this.y=y; this.vx=(Math.random()*0.8+0.2)+(baseVX||0)*0.2; this.vy=-(Math.random()*1.4+0.6); this.r=Math.random()*2+1.4; this.a=1; }
+      step(){ this.x+=this.vx; this.y+=this.vy; this.vy+=0.05; this.a-=0.02; }
+      draw(){
+        ctx.save(); ctx.globalAlpha=Math.max(0,this.a);
+        const g=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r*2.2);
+        g.addColorStop(0,'#fff9d6'); g.addColorStop(0.5,'#ffd34d'); g.addColorStop(1,'rgba(255,180,0,0)');
+        ctx.fillStyle=g; ctx.beginPath(); ctx.arc(this.x,this.y,this.r*2,0,Math.PI*2); ctx.fill(); ctx.restore();
       }
-      class Dust{ constructor(x,y,baseVX){ this.x=x; this.y=y; this.vx=(Math.random()*0.8+0.2)+(baseVX||0)*0.2; this.vy=-(Math.random()*1.4+0.6); this.r=Math.random()*2+1.4; this.a=1; }
-        step(){ this.
+    }
+
+    // --- Leprechaun state
+    const coins=[]; const dust=[];
+    const lep = { x:-120, y: innerHeight*0.76, vx: 1.6, phase: 0, exploded:false, respawnAt:0 };
+
+    // Draw a detailed leprechaun
+    function drawLeprechaun(x,y,phase,scale=1){
+      ctx.save(); ctx.translate(x,y); ctx.scale(scale,scale);
+      // shadow
+      ctx.globalAlpha=0.25; ctx.fillStyle='#000'; ctx.beginPath(); ctx.ellipse(0,26,22,6,0,0,Math.PI*2); ctx.fill(); ctx.globalAlpha=1;
+      const bob=Math.sin(phase*2)*1.6; const legA=Math.sin(phase)*0.75; const legB=-Math.sin(phase)*0.75; const armA=-Math.sin(phase+0.3)*0.7; const armB=Math.sin(phase+0.3)*0.7;
+      ctx.translate(0,bob);
+      // shoes
+      function shoe(xo,ang){ ctx.save(); ctx.translate(xo,22); ctx.rotate(ang*0.45); ctx.fillStyle='#1b1b1b'; ctx.beginPath(); ctx.moveTo(-8,-1); ctx.quadraticCurveTo(2,-3,8,0); ctx.lineTo(8,3); ctx.quadraticCurveTo(2,4,-8,2); ctx.closePath(); ctx.fill(); ctx.restore(); }
+      // legs
+      function leg(xo,ang){ ctx.save(); ctx.translate(xo,14); ctx.rotate(ang); ctx.fillStyle='#0e5a1e'; ctx.fillRect(-2,0,4,10); ctx.restore(); }
+      // body
+      ctx.fillStyle='#0f7a24'; ctx.strokeStyle='#0a4c18'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.roundRect(-10,-2,20,18,6); ctx.fill(); ctx.stroke();
+      // arms
+      function arm(xo,ang){ ctx.save(); ctx.translate(xo,6); ctx.rotate(ang); ctx.fillStyle='#0f7a24'; ctx.fillRect(-2,0,4,10); ctx.restore(); }
+      // head
+      ctx.save(); ctx.translate(0,-6); ctx.fillStyle='#f1c27d'; ctx.beginPath(); ctx.ellipse(0,0,8,8,0,0,Math.PI*2); ctx.fill();
+        ctx.fillStyle='#000'; ctx.beginPath(); ctx.arc(-3,-2,1.2,0,Math.PI*2); ctx.arc(3,-2,1.2,0,Math.PI*2); ctx.fill();
+        ctx.strokeStyle='#3a2a18'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(-5,-4); ctx.quadraticCurveTo(-3,-5,-1,-4); ctx.moveTo(1,-4); ctx.quadraticCurveTo(3,-5,5,-4); ctx.stroke();
+        // smile
+        ctx.lineWidth=1.2; ctx.fillStyle='#d46a2a'; ctx.beginPath(); ctx.moveTo(-7,2); ctx.quadraticCurveTo(0,8,7,2); ctx.quadraticCurveTo(0,10,-7,2); ctx.closePath(); ctx.fill();
+        ctx.globalAlpha=0.85; ctx.fillStyle='rgba(255,255,255,0.9)'; ctx.beginPath(); ctx.ellipse(0,2,5,1.2,0,0,Math.PI); ctx.fill(); ctx.globalAlpha=1;
+      ctx.restore();
+      // hat
+      ctx.save(); ctx.translate(0,-16); ctx.fillStyle = '#0b4d16'; ctx.beginPath(); ctx.ellipse(0,0,12,3,0,0,Math.PI*2); ctx.fill(); ctx.fillStyle='#106c20'; ctx.fillRect(-8,-7,16,7); ctx.fillStyle='#0b4d16'; ctx.fillRect(-8,-2,16,2); ctx.fillStyle='#c99c2e'; ctx.fillRect(-4,-4,8,3); ctx.restore();
+      // pot of gold
+      ctx.save(); ctx.translate(16,8); ctx.rotate(0.2); ctx.fillStyle='#1a1a1a'; ctx.beginPath(); ctx.ellipse(0,0,8,6,0,0,Math.PI*2); ctx.fill(); ctx.fillStyle='#111'; ctx.beginPath(); ctx.ellipse(0,-2,9,4,0,0,Math.PI*2); ctx.fill(); ctx.fillStyle='#ffd34d'; for(let i=0;i<6;i++){ ctx.beginPath(); ctx.arc((Math.random()*6-3), -3+(Math.random()*2-1), 1.6, 0, Math.PI*2); ctx.fill(); } ctx.restore();
+      // limbs & shoes
+      leg(-6,legA); leg(6,legB); arm(-10,armA); arm(10,armB);
+      shoe(-6,legA); shoe(6,legB);
+      ctx.restore();
+    }
+
+    function explode(x,y){
+      for(let i=0;i<60;i++) coins.push(new Coin(x,y,lep.vx));
+      for(let i=0;i<30;i++) dust.push(new Dust(x,y,lep.vx));
+    }
+
+    // Click near leprechaun to explode -> respawn in 35s
+    addEventListener('click', (e)=>{
+      const rect=cvs.getBoundingClientRect();
+      const x=e.clientX-rect.left, y=e.clientY-rect.top;
+      const dx=x-lep.x, dy=y-lep.y;
+      if(!lep.exploded && Math.hypot(dx,dy) < 40){
+        lep.exploded=true; lep.respawnAt=performance.now()+35000; explode(lep.x, lep.y);
+      }
+    });
+
+    function step(){
+      if(!lep.exploded){
+        lep.phase+=0.15;
+        lep.x+=lep.vx;
+        if(Math.random()<0.15) dust.push(new Dust(lep.x-10, lep.y+18, lep.vx));
+        if(lep.x>innerWidth+60){ lep.x=-120; }
+      }else if(performance.now()>lep.respawnAt){
+        lep.exploded=false; lep.x=-120; lep.y= innerHeight*0.76; lep.vx=1.6;
+      }
+      for(const c of coins) c.step();
+      for(const d of dust) d.step();
+      for(let i=coins.length-1;i>=0;i--) if(coins[i].a<=0) coins.splice(i,1);
+      for(let i=dust.length-1;i>=0;i--) if(dust[i].a<=0) dust.splice(i,1);
+    }
+
+    function draw(){
+      ctx.clearRect(0,0,cvs.width,cvs.height);
+      step();
+      if(!lep.exploded) drawLeprechaun(lep.x, lep.y, lep.phase, 1);
+      for(const c of coins) c.draw();
+      for(const d of dust) d.draw();
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+</script>
