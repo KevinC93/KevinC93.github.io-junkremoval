@@ -1,1087 +1,1359 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>300 Kings – AI-Powered Ad Campaigns</title>
-  <meta name="description" content="AI + creative to scale your ads fast, safely, and profitably." />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Manrope:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg: radial-gradient(1400px 800px at 15% 12%, #0a0d12, #000000 70%);
-      --ink:#e8f1ff; --muted:#9fb4d1; --blue:#5ecbff; --vio:#7a5cff; --hot:#ff2a64; --cta:#ff2a2a;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0;background:var(--bg);color:var(--ink);font-family:'Manrope',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
-    a{color:inherit;text-decoration:none}
-    .container{max-width:1100px;margin:0 auto;padding:3rem 2rem}
-    .pill{display:inline-flex;align-items:center;gap:.5rem;padding:.35rem .7rem;border-radius:999px;background:#0b1a2c;color:#9dd7ff;border:1px solid #14344f;font-weight:700}
-    .cta{background:var(--cta);color:#fff;border:0;padding:1rem 2rem;border-radius:2rem;cursor:pointer;font-weight:800}
-    .cta:hover{filter:brightness(.95)}
-
-    /* CTA stack under hero */
-    .cta-stack{display:flex;flex-direction:column;gap:10px;align-items:center;margin-top:10px}
-    .cta.secondary{background:transparent;border:1px solid rgba(255,255,255,.3);color:#fff}
-    .cta.secondary:hover{filter:none;background:rgba(255,255,255,.06)}
-
-    /* Center CTA (middle of page) */
-    .center-cta{margin-top:12px;text-align:center}
-
-    /* Modal contact (Formspree) */
-    .modal{position:fixed;inset:0;display:none;z-index:9999}
-    .modal.open{display:block}
-    .modal__overlay{position:absolute;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(3px)}
-    .modal__card{position:relative;margin:6vh auto 0;max-width:520px;background:#0b0f18;border:1px solid rgba(255,255,255,.12);border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.6);padding:22px}
-    .modal__card h3{margin:0 0 10px;font:800 1.35rem/1.2 'Space Grotesk',system-ui;color:#eaf2ff}
-    .modal__close{position:absolute;top:10px;right:10px;border:0;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;width:34px;height:34px;border-radius:10px;cursor:pointer}
-    @media(max-width:520px){.modal__card{margin:10vh 10px;padding:18px}}
-
-
-    header{background:#000;padding:2.6rem 2rem 2rem;text-align:center;position:relative;overflow:hidden}
-    header h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(2.1rem,5vw,3.2rem);margin:0;color:var(--blue)}
-    header p{font-size:1.15rem;margin:.75rem 0 1.2rem;color:#cdd9ea}
-    #hero3d{position:absolute;inset:0;z-index:0}
-    header .content{position:relative;z-index:1}
-
-    .bubble{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:1.5rem;padding:2rem;margin-bottom:2rem;backdrop-filter:blur(10px)}
-    h2{font-family:'Space Grotesk',sans-serif;font-size:1.9rem;margin:0 0 1rem;color:var(--blue)}
-    ul{list-style:none;padding:0;margin:0}
-    li{padding:.65rem 0;border-bottom:1px solid rgba(255,255,255,.08)}
-    .grid{display:grid;gap:16px}
-    .grid-3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
-    img{max-width:100%;display:block;border-radius:16px;border:1px solid rgba(255,255,255,.1)}
-    input,textarea{width:100%;padding:12px 14px;margin:8px 0;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.4);color:#fff}
-    button.btn{background:var(--cta);color:#fff;padding:12px 18px;border:0;border-radius:14px;cursor:pointer}
-    .muted{color:var(--muted)}
-    footer{background:#111;padding:2rem;text-align:center;color:#9ab}
-
-    /* FOMO CTA */
-    .fomo{display:inline-flex;align-items:center;gap:12px;margin-top:12px;padding:.55rem .85rem;border:1px solid rgba(255,255,255,.15);border-radius:999px;background:rgba(255,42,42,.08);box-shadow:0 0 0 0 rgba(255,42,42,.35);animation:pulse 2s infinite}
-    .cta-small{padding:.5rem .9rem;border-radius:999px;font-size:.92rem}
-    .spots{opacity:.95;font-weight:800}
-    @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,42,42,.35)}70%{box-shadow:0 0 0 12px rgba(255,42,42,0)}100%{box-shadow:0 0 0 0 rgba(255,42,42,0)}}
-
-    /* Star badge (header preview only; the 3D version orbits the hero) */
-    .badge{position:relative;display:inline-flex;align-items:center;gap:12px;margin-top:12px;padding:.75rem 1.1rem;color:#2a2000}
-    .badge .pill{background:rgba(255,255,255,.18);color:#352700;border-color:rgba(0,0,0,.12)}
-    .star{clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 56%, 79% 91%, 50% 70%, 21% 91%, 32% 56%, 2% 35%, 39% 35%);background: radial-gradient(60% 60% at 50% 40%, #fff5c8, #ffd54d 60%, #f6b73c 100%);border:1px solid rgba(255,220,120,.7);box-shadow: 0 10px 34px rgba(255,204,0,.28), inset 0 0 14px rgba(255,255,255,.4)}
-    .shine{position:absolute;inset:-2px;background:linear-gradient(120deg,transparent,rgba(255,255,255,.7),transparent);transform:translateX(-110%);animation:shimmer 2.8s linear infinite;pointer-events:none;clip-path:inherit}
-    @keyframes shimmer{to{transform:translateX(110%)}}
-    .g-icon{width:36px;height:36px;flex:0 0 auto}
-
-    /* Cert lines */
-    .footer-cert{display:inline-flex;align-items:center;gap:8px;margin-left:10px;padding:.3rem .6rem;border:1px solid rgba(255,255,255,.12);border-radius:999px;background:rgba(255,255,255,.06)}
-    .footer-cert .g{width:16px;height:16px}
-
-    /* Cursor pop words */
-    #trail{position:fixed;inset:0;z-index:1;pointer-events:none}
-    #pops{position:fixed;inset:0;z-index:2;pointer-events:none}
-    .pop{position:absolute;transform:translate(-50%,-50%) scale(.86);opacity:0;animation:pop 1.35s ease-out forwards}
-    .pop.badge{background:rgba(0,0,0,.7);color:#fff;padding:.32rem .6rem;border-radius:.6rem;border:1px solid rgba(255,255,255,.2);font-weight:800;font-size:.8rem;letter-spacing:.3px}
-    .pop.badge.gold{background:rgba(255,215,0,.15);color:#ffd44d;border-color:rgba(255,200,0,.45);text-shadow:0 0 8px rgba(255,205,0,.35)}
-    @keyframes pop{0%{opacity:0;transform:translate(-50%,-40%) scale(.8)}12%{opacity:1;transform:translate(-50%,-60%) scale(1)}100%{opacity:0;transform:translate(-50%,-120%) scale(1.05)}}
-
-    /* Reveal cards */
-    #brand{padding:0;margin-bottom:2rem}
-    #brand .grid.bare{gap:16px}
-    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
-    @media (max-width: 760px){ .grid-2{grid-template-columns:1fr} }
-    #brand .revealcard{position:relative;border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,.12);background:radial-gradient(600px 220px at 20% 0%, rgba(98,167,255,.12), transparent 60%);min-height:190px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
-    #brand .revealcard .cover{position:absolute;inset:0;display:grid;place-items:center;font:800 1.25rem/1 'Space Grotesk',system-ui;letter-spacing:.08em;color:#cfe4ff;background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));backdrop-filter:blur(2px);transition:opacity .3s ease, transform .3s ease;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
-    /* Back design texture */
-    #brand .revealcard .cover::before{content:"";position:absolute;inset:-30%;background:
-        repeating-conic-gradient(from 0deg, rgba(255,255,255,.06) 0 6deg, transparent 6deg 12deg),
-        radial-gradient(600px 220px at 20% 0%, rgba(98,167,255,.18), transparent 60%);
-      mix-blend-mode:screen;opacity:.55;filter:contrast(1.1) brightness(1.05);}
-    
-    #brand .revealcard .content{position:relative;padding:18px;opacity:0;transform:translateY(6px);transition:opacity .35s ease .05s, transform .35s ease .05s;min-height:190px;display:flex;flex-direction:column;justify-content:center;-webkit-user-select:none;user-select:none}
-    #brand .revealcard:hover .cover{opacity:0;transform:scale(1.03)}
-    #brand .revealcard.open .cover{opacity:0;transform:scale(1.03)}
-    #brand .revealcard:hover .content{opacity:1;transform:none}
-    #brand .revealcard.open .content{opacity:1;transform:none}
-    #brand .revealcard h3{margin:0 0 10px;font:800 1.18rem/1.2 'Space Grotesk',system-ui;color:#eaf2ff}
-    #brand .revealcard p{margin:0;color:#cdd9ea}
-    #brand .revealcard small{display:none}
-
-    /* Background leprechaun canvas */
-    #lepbg{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.28}
-    /* Keep content above background canvas */
-    header .content, .container, footer{position:relative;z-index:1}
-    @media (max-width: 520px){
-    .container{padding:1.25rem 1rem}
-    header{padding:1.6rem 1rem 1.2rem}
-    header p{font-size:1rem}
-    .cta{padding:.9rem 1.2rem}
-    .fomo{display:grid;grid-template-columns:1fr;justify-items:center;gap:10px;padding:.7rem 1rem}
-    .fomo strong{white-space:nowrap}
-    .cta-small{width:100%;text-align:center}
-    #lepbg{opacity:.18}
-  }
-  @media (prefers-reduced-motion: reduce){
-    .fomo{animation:none}
-    .shine{animation:none}
-  }
-  /* Interactive services */
-    #services li.svc{position:relative;background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px;transition:transform .25s ease, box-shadow .25s ease}
-    #services li.svc strong{display:block;margin-bottom:6px}
-    #services li.svc::after{content:"";position:absolute;inset:-1px;background:radial-gradient(120px 80px at var(--mx,50%) var(--my,50%), rgba(94,203,255,.18), transparent 60%);pointer-events:none;opacity:0;transition:opacity .25s}
-    #services li.svc:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(0,0,0,.25)}
-    #services li.svc:hover::after{opacity:1}
-  /* Channels row */
-    .channels{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:12px 0 14px}
-    .channels>div{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02))}
-    .channels span{font-weight:700;color:#cfe4ff}
-    .channels svg{color:#8acbff}
-</style>
-  <!-- Calendly widget assets -->
-  <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
-  <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
-</head>
-<body>
-  <canvas id="lepbg" aria-hidden="true"></canvas>
-  <canvas id="trail" aria-hidden="true"></canvas>
-  <div id="pops" aria-hidden="true"></div>
-  <header>
-    <div id="hero3d" aria-hidden="true"></div>
-    <div class="content">
-      <span class="pill">Deployed on Netlify</span>
-      <h1>Jumping on the AI wave has never been easier!</h1>
-      <p>I let Google’s AI stalk your customers… legally.</p>
-      <div class="cta-stack">
-        <a href="#" class="cta" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/kevincacheiro93/30-min-meeting'}); return false;">Schedule a Call</a>
-        <a href="#" class="cta secondary" data-open="contact-modal">Contact Us Now</a>
-      </div>
-
-      <div class="fomo" aria-live="polite">
-        <strong>Founder Offer:</strong> 90% off for the first 5 clients —
-        <a href="#contact" id="claim" class="cta cta-small">Claim a spot</a>
-        <span class="spots" id="spots">( 5 of 5 left )</span>
-      </div>
-    </div>
-  </header>
-
-  <main class="container">
-    <section class="bubble" id="services">
-      <h2>Our Services</h2>
-      <p class="muted" style="margin-top:-4px">We plan, write, and ship performance campaigns that reach customers across <strong>Search</strong>, <strong>Display</strong>, <strong>YouTube</strong>, <strong>Maps</strong>, <strong>Gmail</strong>, and <strong>Discover</strong>—coordinated by multi‑network machine learning so every impression improves the next.</p>
-      <div class="channels" aria-label="Where your ads show">
-        <!-- Google Search (multi‑color G) -->
-        <div>
-          <svg viewBox="0 0 48 48" width="24" height="24" aria-hidden="true" focusable="false">
-            <clipPath id="g-clip-channels"><path d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"></path></clipPath>
-            <g clip-path="url(#g-clip-channels)">
-              <path fill="#FBBC05" d="M0 37V11l17 13z"></path>
-              <path fill="#EA4335" d="M0 11l17 13 7-6.1L48 14V0H0z"></path>
-              <path fill="#34A853" d="M0 37l30-23 7.9 1L48 0v48H0z"></path>
-              <path fill="#4285F4" d="M48 48L17 24l-4-3 35-10z"></path>
-            </g>
-          </svg>
-          <span>Search</span>
-        </div>
-        
-        <!-- Google Display Ads style (blue & green bars + yellow dot) -->
-        <div>
-          <svg viewBox="0 0 64 48" width="26" height="24" aria-hidden="true" focusable="false">
-            <defs>
-              <linearGradient id="adsB" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0" stop-color="#1A73E8"/><stop offset="1" stop-color="#1967D2"/>
-              </linearGradient>
-              <linearGradient id="adsG" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0" stop-color="#34A853"/><stop offset="1" stop-color="#188038"/>
-              </linearGradient>
-            </defs>
-            <rect x="10" y="10" rx="10" ry="10" width="14" height="34" fill="url(#adsB)" transform="rotate(-20 17 27)"/>
-            <rect x="32" y="6" rx="10" ry="10" width="14" height="34" fill="url(#adsG)" transform="rotate(20 39 23)"/>
-            <circle cx="47" cy="38" r="6" fill="#FBBC04"/>
-          </svg>
-          <span>Display</span>
-        </div>
-        
-        <!-- YouTube (red play) -->
-        <div>
-          <svg viewBox="0 0 100 70" width="28" height="20" aria-hidden="true" focusable="false">
-            <rect x="5" y="8" width="90" height="54" rx="12" fill="#FF0000"/>
-            <polygon points="42,22 42,48 66,35" fill="#FFFFFF"/>
-          </svg>
-          <span>YouTube</span>
-        </div>
-        
-        <!-- Gmail (multi‑color M) -->
-        <div>
-          <svg viewBox="0 0 256 192" width="28" height="21" aria-hidden="true" focusable="false">
-            <path d="M32 32h192a16 16 0 0 1 16 16v96a16 16 0 0 1-16 16H32a16 16 0 0 1-16-16V48a16 16 0 0 1 16-16z" fill="#FFFFFF"/>
-            <path d="M32 48v96l64-48V72L32 48z" fill="#34A853"/>
-            <path d="M224 48v96l-64-48V72l64-24z" fill="#4285F4"/>
-            <path d="M32 48l96 72 96-72v-8a16 16 0 0 0-16-16H48a16 16 0 0 0-16 16v8z" fill="#EA4335"/>
-            <path d="M96 72v24l32 24 32-24V72l-32 24-32-24z" fill="#FBBC05"/>
-          </svg>
-          <span>Gmail &amp; Discover</span>
-        </div>
-        
-        <!-- Google Maps (multi‑color pin) -->
-        <div>
-          <svg viewBox="0 0 256 256" width="22" height="22" aria-hidden="true" focusable="false">
-            <path d="M128 236s76-67 76-130a76 76 0 0 0-152 0c0 63 76 130 76 130z" fill="#4285F4"/>
-            <path d="M128 236s76-67 76-130c0-21.2-7.8-40.6-20.7-55.3L128 128V236z" fill="#34A853"/>
-            <circle cx="128" cy="112" r="32" fill="#FBBC05"/>
-            <path d="M83 59l45 69 55-79c-14.5-10.2-32.2-16.2-51-16.2-20.3 0-39 6.6-54 17.7z" fill="#EA4335"/>
-          </svg>
-          <span>Maps</span>
-        </div>
-        
-        <!-- Google Shopping (bag with multi‑color G) -->
-        <div>
-          <svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true" focusable="false">
-            <rect x="10" y="18" width="44" height="36" rx="6" fill="#F1F3F4" stroke="#DADCE0"/>
-            <path d="M22 18c0-6 4-10 10-10s10 4 10 10" fill="none" stroke="#5F6368" stroke-width="3"/>
-            <g transform="translate(8,6) scale(0.42)">
-              <clipPath id="g-clip-shop"><path d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"></path></clipPath>
-              <g clip-path="url(#g-clip-shop)">
-                <path fill="#FBBC05" d="M0 37V11l17 13z"></path>
-                <path fill="#EA4335" d="M0 11l17 13 7-6.1L48 14V0H0z"></path>
-                <path fill="#34A853" d="M0 37l30-23 7.9 1L48 0v48H0z"></path>
-                <path fill="#4285F4" d="M48 48L17 24l-4-3 35-10z"></path>
-              </g>
-            </g>
-          </svg>
-          <span>Shopping</span>
-        </div>
-      </div>
-      <ul>
-        <li class="svc"><strong>AI-powered Ads</strong> — Simply, the best way to use AI.</li>
-        <li class="svc"><strong>Landing Page Creation</strong> — Custom websites tailored to your needs.</li>
-      </ul>
-      <p class="muted"><em>Special Offer: First 5 clients get 90% off for the first two months.</em></p>
-    </section>
-
-    <section id="brand">
-      <div class="grid grid-2 bare">
-        <figure class="revealcard" aria-label="AI adoption growth">
-          <div class="cover">READ ME</div>
-          <div class="content">
-            <h3>AI is mainstream in 2025</h3>
-            <p>Most teams already use AI. Late adopters pay more and learn slower—move early.</p>
-          </div>
-        </figure>
-        <figure class="revealcard" aria-label="FOMO: founders deal">
-          <div class="cover">READ ME</div>
-          <div class="content">
-            <h3>Late costs more</h3>
-            <p>Move now to compound ROAS. Hesitation raises costs and loses ground.</p>
-          </div>
-        </figure>
-        <figure class="revealcard" aria-label="AI CAC FOMO">
-          <div class="cover">READ ME</div>
-          <div class="content">
-            <h3>Shrink CAC with AI</h3>
-            <p>The best way to get a smaller CAC is with AI.</p>
-          </div>
-        </figure>
-        <figure class="revealcard" aria-label="Late tax">
-          <div class="cover">READ ME</div>
-          <div class="content">
-            <h3>Don’t pay the late tax</h3>
-            <p>Ship AI this week. Lower CPC, faster learning, better ROAS.</p>
-          </div>
-        </figure>
-        <figure class="revealcard" aria-label="Niche learning FOMO">
-          <div class="cover">READ ME</div>
-          <div class="content">
-            <h3>Don’t get left behind</h3>
-            <p>Your competitors are already training AI on your niche. Every week you wait widens their lead.</p>
-          </div>
-        </figure>
-        <figure class="revealcard" aria-label="Urgent CTA">
-          <div class="cover">READ ME</div>
-          <div class="content" style="text-align:center">
-            <h3>90% off — first two months</h3>
-            <p>Only 5 founder spots. When they’re gone, the deal is gone.</p>
-            <a href="#" class="cta cta-small" data-open="contact-modal">Claim 90% Off</a>
-          </div>
-        </figure>
-      </div>
-    </section>
-
-    <section class="bubble" id="about">
-      <h2>About Us</h2>
-      <p>We’re a team of creative minds who put real passion into every ad campaign. We keep things simple: we let computers do computer stuff, while our team crafts the creative copy. With Google’s AI built specifically for ad campaigns, there’s no stopping your company’s growth!</p>
-    </section>
-
-    <section class="bubble"><h2>FAQ</h2>
-      <ul>
-        <li><strong>Do I need a big budget?</strong> No, we work with small to medium budgets and scale as you grow.</li>
-        <li><strong>How soon will I see results?</strong> Many campaigns generate leads in the first week.</li>
-        <li><strong>Do I need a website?</strong> Not required—we can create a landing page for you.</li>
-        <li><strong>What if it doesn’t work?</strong> If you’re not satisfied with the results, I can refer you to a bigger, better marketing agency.</li>
-      </ul>
-    </section>
-
-    <section class="bubble" id="contact">
-      <h2>Contact Us</h2>
-      <form action="https://formspree.io/f/xqaykddn" method="POST" accept-charset="UTF-8">
-        <input required name="name" placeholder="Your name" />
-        <input required type="email" name="email" placeholder="Email" />
-        <input type="tel" name="phone" placeholder="Phone (optional)" />
-        <textarea required name="message" placeholder="Tell us about your goals" style="min-height:120px"></textarea>
-        <button class="btn">Send</button>
-      </form>
-    </section>
-  </main>
-
-  <!-- Contact modal -->
-  <div id="contact-modal" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle">
-    <div class="modal__overlay" data-close="contact-modal"></div>
-    <div class="modal__card" role="document">
-      <button class="modal__close" aria-label="Close contact form" data-close="contact-modal">✕</button>
-      <h3 id="contactModalTitle">Contact Us</h3>
-      <form action="https://formspree.io/f/xqaykddn" method="POST" accept-charset="UTF-8">
-        <input required name="name" placeholder="Your name" />
-        <input required type="email" name="email" placeholder="Email" />
-        <input type="tel" name="phone" placeholder="Phone (optional)" />
-        <textarea required name="message" placeholder="Tell us about your goals" style="min-height:120px"></textarea>
-        <button class="btn" style="width:100%">Send</button>
-      </form>
-    </div>
-  </div>
-
-  <footer>© 2025 300 Kings. All rights reserved.
-    <span class="footer-cert" aria-label="Google Certified">
-      <svg class="g" viewBox="0 0 48 48" aria-hidden="true" focusable="false" style="vertical-align:middle">
-        <clipPath id="g-clip-footer"><path d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"></path></clipPath>
-        <g clip-path="url(#g-clip-footer)">
-          <path fill="#FBBC05" d="M0 37V11l17 13z"></path>
-          <path fill="#EA4335" d="M0 11l17 13 7-6.1L48 14V0H0z"></path>
-          <path fill="#34A853" d="M0 37l30-23 7.9 1L48 0v48H0z"></path>
-          <path fill="#4285F4" d="M48 48L17 24l-4-3 35-10z"></path>
-        </g>
-      </svg>
-      <span>Google Certified</span>
-      <svg width="16" height="16" viewBox="0 0 100 100" role="img" aria-label="star" style="vertical-align:middle;margin-left:8px">
-        <defs>
-          <linearGradient id="gs" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#fff6c5"/><stop offset="60%" stop-color="#ffd24a"/><stop offset="100%" stop-color="#f2a538"/>
-          </linearGradient>
-        </defs>
-        <polygon points="50,5 61,38 95,38 68,58 78,92 50,72 22,92 32,58 5,38 39,38" fill="url(#gs)"></polygon>
-      </svg>
-    </span>
-  </footer>
-
-  <!-- Three.js for the 3D hero -->
-  <script src="https://unpkg.com/three@0.159.0/build/three.min.js"></script>
-  <script>
-    // Infinity hero + THREE (3 stars in even orbit)
-    (function(){
-      const el = document.getElementById('hero3d');
-      let w = el.clientWidth || window.innerWidth; const isCoarse = matchMedia('(pointer:coarse)').matches; const H = isCoarse ? Math.max(200, Math.min(320, Math.round(window.innerWidth*0.45))) : 300;
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(55, w/H, 0.1, 100);
-      const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
-      renderer.setPixelRatio(isCoarse ? 1.2 : Math.min(2, window.devicePixelRatio)); renderer.setSize(w,H); el.appendChild(renderer.domElement);
-
-      // Lights
-      const dir = new THREE.DirectionalLight(0x89d5ff, 1.25); dir.position.set(3.2,4.2,5.6); scene.add(dir);
-      scene.add(new THREE.AmbientLight(0x2c3f66, .55));
-      const warm = new THREE.DirectionalLight(0xffe9a3, 0.7); warm.position.set(-3,2,2); scene.add(warm);
-      const sparkle = new THREE.PointLight(0xfff2aa, 1.0, 10); scene.add(sparkle);
-
-      // Hero infinity loops (double lemniscate, knotted)
-      class InfinityCurve extends THREE.Curve {
-        constructor(a=1.0, phase=0.0, lift=0.35){ super(); this.a=a; this.phase=phase; this.lift=lift; }
-        getPoint(t, target=new THREE.Vector3()){
-          const A=this.a; const ang=t*Math.PI*2 + this.phase; const s=Math.sin(ang), c=Math.cos(ang);
-          const denom = 1 + s*s + 1e-6; // stabilize near poles
-          const x = (A * c) / denom;
-          const z = (A * s * c) / denom * 1.35;
-          const y = this.lift * Math.sin(2*ang) + 0.12 * Math.sin(ang*3.0);
-          return target.set(x,y,z);
-        }
-      }
-      const curve1 = new InfinityCurve(1.25, 0.0, 0.35);
-      const curve2 = new InfinityCurve(1.25, Math.PI, 0.35);
-      const tubeSegments = isCoarse ? 320 : 620, tubeRadius = isCoarse ? 0.20 : 0.22, tubeRadSeg = isCoarse ? 36 : 64;
-
-      const mat = new THREE.MeshPhysicalMaterial({ color: 0x134a9c, metalness: 1.0, roughness: 0.08, clearcoat: 1, clearcoatRoughness: 0.02, ior: 1.45, emissive: 0x0a3d89, emissiveIntensity: 0.22, sheen: 1, sheenColor: new THREE.Color(0xbfd6ff), sheenRoughness: 0.18 });
-      // Glossy camo + fresnel
-      mat.onBeforeCompile = (shader)=>{
-        window.__shaderPatched = true;
-        shader.vertexShader = `varying vec3 vPos;\nvarying vec3 vNrm;\n` + shader.vertexShader.replace('#include <begin_vertex>', `vPos = position;\nvNrm = normalize(normalMatrix * normal);\n#include <begin_vertex>`);
-        const CAMO_PREFIX = `
-          varying vec3 vPos;
-          varying vec3 vNrm;
-          float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453123); }
-          float noise(vec2 p){ vec2 i=floor(p); vec2 f=fract(p); float a=hash(i); float b=hash(i+vec2(1.0,0.0)); float c=hash(i+vec2(0.0,1.0)); float d=hash(i+vec2(1.0,1.0)); vec2 u=f*f*(3.0-2.0*f); return mix(a,b,u.x)+ (c-a)*u.y*(1.0-u.x) + (d-b)*u.x*u.y; }
-          float fbm(vec2 p){ float v=0.0; float a=0.5; for(int i=0;i<5;i++){ v+=a*noise(p); p*=2.0; a*=0.5; } return v; }
-        `;
-        shader.fragmentShader = CAMO_PREFIX + shader.fragmentShader.replace('#include <dithering_fragment>', `
-          vec3 c1 = vec3(0.02,0.02,0.03);
-          vec3 c2 = vec3(0.10,0.15,0.22);
-          vec3 c3 = vec3(0.16,0.28,0.46);
-          vec3 c4 = vec3(0.06,0.18,0.34);
-          vec2 uvA = vPos.xy*3.0; vec2 uvB = vPos.zy*2.0; vec2 uvC = vPos.xz*1.6;
-          float n = fbm(uvA) * 0.6 + fbm(uvB*1.3) * 0.4;
-          float m = fbm(uvC*1.1);
-          vec3 camo = c3;
-          if(n>0.55) camo = mix(c3,c4,0.6);
-          if(n>0.72) camo = mix(c4,c2,0.75);
-          if(m>0.80) camo = c1;
-          float darkMask = smoothstep(0.8,0.95,m);
-          vec3 baseCol = gl_FragColor.rgb;
-          vec3 mixed = mix(baseCol, camo, 0.28);
-          mixed = mix(mixed, mixed*0.5, darkMask);
-          vec3 V = normalize(vViewPosition);
-          float fres = pow(1.0 - max(dot(normalize(vNrm), V), 0.0), 3.0);
-          mixed += vec3(1.0) * fres * 0.25;
-          gl_FragColor.rgb = mixed;
-          #include <dithering_fragment>
-        `);
-      };
-      const loop1 = new THREE.Mesh(new THREE.TubeGeometry(curve1, tubeSegments, tubeRadius, tubeRadSeg, true), mat);
-      const loop2 = new THREE.Mesh(new THREE.TubeGeometry(curve2, tubeSegments, tubeRadius, tubeRadSeg, true), mat);
-      const knot = new THREE.Group(); knot.add(loop1); knot.add(loop2); scene.add(knot);
-      camera.position.z = 4.6;
-
-      // Cursor mapping (360°)
-      let aimX=0.5, aimY=0.5; let targetX=0, targetY=0; let energy=0;
-      function onMove(e){
-        const clientX = (e.clientX ?? e.touches?.[0]?.clientX ?? 0);
-        const clientY = (e.clientY ?? e.touches?.[0]?.clientY ?? 0);
-        const x = clientX / window.innerWidth; const y = clientY / window.innerHeight;
-        const dx = x - aimX, dy = y - aimY;
-        aimX = x; aimY = y; targetX = (x - 0.5) * 2.7; targetY = (y - 0.5) * 2.7;
-        energy = Math.min(1, energy + Math.hypot(dx, dy) * 2.2);
-      }
-      window.addEventListener('mousemove', onMove);
-      window.addEventListener('touchmove', onMove, {passive:true});
-      window.addEventListener('resize', ()=>{ w=el.clientWidth||window.innerWidth; renderer.setSize(w,H); camera.aspect=w/H; camera.updateProjectionMatrix(); });
-
-      // Gold star factory
-      function makeStarShape(R=1, r=0.45, spikes=5){ const s=new THREE.Shape(); const step=Math.PI/spikes; s.moveTo(0,-R); for(let i=1;i<spikes*2;i++){ const rad=(i%2===0)?R:r*R; const a=-Math.PI/2+i*step; s.lineTo(Math.cos(a)*rad, Math.sin(a)*rad);} s.closePath(); return s; }
-      const gold = new THREE.MeshPhysicalMaterial({ color: 0xFFD978, metalness: 1, roughness: 0.1, clearcoat: 1, clearcoatRoughness: 0.05, emissive: 0xFFC95E, emissiveIntensity: 0.1 });
-      const depth = 0.32; const starGeom = new THREE.ExtrudeGeometry(makeStarShape(1.0, 0.42, 5), { depth, bevelEnabled:true, bevelSize:0.06, bevelThickness:0.06, bevelSegments:3 }); starGeom.translate(0,0,-depth/2);
-      function makeBadgeTexture(){ const S=512; const c=document.createElement('canvas'); c.width=S; c.height=S; const ctx=c.getContext('2d'); function drawG(cx,cy,size){ const s=size/48; ctx.save(); ctx.translate(cx-size/2,cy-size/2); ctx.scale(s,s); const gPath=new Path2D("M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"); ctx.save(); ctx.clip(gPath); ctx.fillStyle='#FBBC05'; ctx.fill(new Path2D('M0 37V11l17 13z')); ctx.fillStyle='#EA4335'; ctx.fill(new Path2D('M0 11l17 13 7-6.1L48 14V0H0z')); ctx.fillStyle='#34A853'; ctx.fill(new Path2D('M0 37l30-23 7.9 1L48 0v48H0z')); ctx.fillStyle='#4285F4'; ctx.fill(new Path2D('M48 48L17 24l-4-3 35-10z')); ctx.restore(); ctx.restore(); }
-        ctx.fillStyle='rgba(0,0,0,0.25)'; ctx.beginPath(); ctx.arc(S/2,S/2,S*0.46,0,Math.PI*2); ctx.fill(); drawG(S/2,S/2-50,200); ctx.fillStyle='rgba(255,255,255,0.95)'; let fs=64; const text='CERTIFIED'; do { ctx.font=`800 ${fs}px Manrope, system-ui, sans-serif`; } while (ctx.measureText(text).width > S*0.78 && (fs-=2)>28); ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(text,S/2,S/2+100); return c; }
-      const badgeTex = new THREE.CanvasTexture(makeBadgeTexture());
-      function createStarGroup(){ const star = new THREE.Mesh(starGeom, gold); const badge = new THREE.Mesh(new THREE.CircleGeometry(0.62,64), new THREE.MeshBasicMaterial({ map: badgeTex, transparent:true })); badge.position.z = depth/2 + 0.02; const g=new THREE.Group(); g.add(star); g.add(badge); g.rotation.set(Math.random()*0.6, Math.random()*Math.PI, Math.random()*0.6); return g; }
-
-      const ORBIT_R = 2.4; const ORBIT_SPEED = 0.104; // uniform speed
-      const stars = [
-        { group: createStarGroup(), r: ORBIT_R, vy: 0.0, speed: ORBIT_SPEED, scale: 0.34, phase: 0.0,              spin: 0.03  },
-        { group: createStarGroup(), r: ORBIT_R, vy: 0.0, speed: ORBIT_SPEED, scale: 0.34, phase: Math.PI*2/3,   spin: 0.035 },
-        { group: createStarGroup(), r: ORBIT_R, vy: 0.0, speed: ORBIT_SPEED, scale: 0.34, phase: Math.PI*4/3,   spin: 0.04  }
-      ];
-      stars.forEach(s=>scene.add(s.group));
-
-      let t=0; (function animate(){ requestAnimationFrame(animate); t+=0.016;
-        const targetRX = (aimY - 0.5) * Math.PI; // tilt
-        const targetRY = (aimX - 0.5) * Math.PI * 2; // spin 360
-        knot.rotation.x += (targetRX - knot.rotation.x) * 0.09;
-        knot.rotation.y += (targetRY - knot.rotation.y) * 0.09;
-        sparkle.position.x += ((targetX*2.2) - sparkle.position.x) * 0.12;
-        sparkle.position.y += ((-targetY*1.6) + 0.6 - sparkle.position.y) * 0.12;
-        sparkle.position.z += ((2.2) - sparkle.position.z) * 0.05;
-
-        const basePos = new THREE.Vector3(Math.cos(0)*ORBIT_R, 0, Math.sin(0)*ORBIT_R);
-        const baseDist = camera.position.distanceTo(basePos);
-        stars.forEach((s)=>{
-          const a = t * s.speed + s.phase;
-          s.group.position.set(Math.cos(a)*s.r, 0, Math.sin(a)*s.r);
-          s.group.rotation.y += s.spin;
-          const dist = camera.position.distanceTo(s.group.position);
-          const sc = s.scale * (dist / baseDist);
-          s.group.scale.set(sc, sc, sc);
-        });
-
-        energy *= 0.92;
-        mat.emissiveIntensity = 0.2 + energy*0.8;
-        mat.clearcoatRoughness = Math.max(0.01, 0.04 - energy*0.02);
-        renderer.render(scene, camera);
-      })();
-    })();
-  </script>
-
-  <!-- Cursor-triggered marketing words (no trail) -->
-  <script>
-    (function(){
-      const pops=document.getElementById('pops'); if(!pops) return;
-      const words=['CPC','CAC','ROAS','A/B','CRM','SEM'];
-      let i=0; let last=0; const MIN_DELAY= (matchMedia('(pointer:coarse)').matches ? 260 : 120); // ~15% faster
-      function spawn(x,y){ const d=document.createElement('div'); d.className='pop badge'; const w = words[i++ % words.length]; if(w==='ROAS') d.classList.add('gold'); d.textContent=w; d.style.left=x+'px'; d.style.top=y+'px'; pops.appendChild(d); setTimeout(()=>d.remove(), 1700); }
-      addEventListener('pointermove', (e)=>{ const now=performance.now(); if(now-last < MIN_DELAY) return; last=now; const x=e.clientX, y=e.clientY; setTimeout(()=>spawn(x,y), 80); });
-    })();
-  </script>
-
-  <!-- Services hover interaction -->
-  <script>
-    (function(){
-      const items = document.querySelectorAll('#services li.svc');
-      items.forEach(li=>{
-        li.addEventListener('pointermove', (e)=>{
-          const r = li.getBoundingClientRect();
-          const x = e.clientX - r.left; const y = e.clientY - r.top;
-          li.style.setProperty('--mx', x+'px');
-          li.style.setProperty('--my', y+'px');
-        });
-        li.addEventListener('pointerleave', ()=>{
-          li.style.removeProperty('--mx'); li.style.removeProperty('--my');
-        });
-      });
-    })();
-  </script>
-
-  <!-- Touch-friendly card toggles -->
-  <script>
-    (function(){
-      const isTouch = matchMedia('(pointer:coarse)').matches;
-      if(!isTouch) return;
-      document.querySelectorAll('#brand .revealcard').forEach(card=>{
-        const toggle = (e)=>{ if(e.target.closest('a')) return; e.preventDefault(); card.classList.toggle('open'); };
-        card.addEventListener('touchstart', toggle, {passive:false});
-        card.addEventListener('click', toggle);
-      });
-    })();
-  </script>
-
-  <!-- Modal open/close -->
-  <script>
-    (function(){
-      const body = document.body;
-      function openModal(id){ const m=document.getElementById(id); if(!m) return; m.classList.add('open'); m.setAttribute('aria-hidden','false'); body.style.overflow='hidden'; }
-      function closeModal(id){ const m=document.getElementById(id); if(!m) return; m.classList.remove('open'); m.setAttribute('aria-hidden','true'); body.style.overflow=''; }
-      document.querySelectorAll('[data-open]')?.forEach(btn=>{
-        btn.addEventListener('click', (e)=>{ e.preventDefault(); openModal(btn.getAttribute('data-open')); });
-      });
-      document.addEventListener('click', (e)=>{
-        const t=e.target; const id=t?.getAttribute?.('data-close'); if(id) closeModal(id);
-      });
-      document.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ const m=document.querySelector('.modal.open'); if(m) closeModal(m.id); }});
-      // Expose for tests
-      window.__contactModalReady = !!document.getElementById('contact-modal');
-    })();
-  </script>
-
-  <!-- FOMO logic (single source of truth; safe against multiple bindings) -->
-  <script>
-    (function(){
-      const el = document.getElementById('spots');
-      const claim = document.getElementById('claim');
-      if(!el || !claim || claim.dataset.boundCalendly === '1') return;
-
-      const KEY = 'founder_spots_left_v1';
-      let spots = parseInt(localStorage.getItem(KEY) || '5', 10);
-      if (Number.isNaN(spots) || spots < 1 || spots > 5) spots = 5;
-
-      const render = () => el.textContent = `( ${spots} of 5 left )`;
-      render();
-
-      function openCalendly(){
-        const url = 'https://calendly.com/kevincacheiro93/30-min-meeting';
-        if (window.Calendly && typeof Calendly.initPopupWidget === 'function') {
-          Calendly.initPopupWidget({ url });
-        } else {
-          window.open(url, '_blank', 'noopener');
-        }
-      }
-
-      claim.addEventListener('click', (e) => {
-        e.preventDefault();
-        openCalendly();
-        if (spots > 1) { spots -= 1; localStorage.setItem(KEY, String(spots)); render(); }
-      }, { passive:false });
-
-      claim.dataset.boundCalendly = '1';
-    })();
-  </script>
-
-  <!-- Leprechaun background runner (Enhanced) -->
-  <script>
-  /* Leprechaun Background (Enhanced)
-     - Detailed sprite: beard, legs (with knees), eyes + blink
-     - Pot of gold with coins & shine; trail dust
-     - Mario-like coin shards in explosion (rim ridges + star emboss)
-     - Two-click logic:
-          1st click: jump, mouth "O", speed +35% (keeps running faster)
-          2nd click: explode
-     - Per-leprechaun 20s respawn, independent
-     - Mobile aware: fewer particles, lower DPR; animation paused on tab hidden
-  */
-  (function(){
-    const cvs = document.getElementById('lepbg'); if(!cvs) return;
-    const ctx = cvs.getContext('2d');
-
-    // --- setup & DPR ---
-    const isCoarse = matchMedia('(pointer:coarse)').matches;
-    let dpr = isCoarse ? 1 : Math.min(2, window.devicePixelRatio || 1);
-    function resize(){
-      dpr = isCoarse ? 1 : Math.min(2, window.devicePixelRatio || 1);
-      cvs.width  = innerWidth * dpr;
-      cvs.height = innerHeight * dpr;
-      cvs.style.width = '100%';
-      cvs.style.height = '100%';
-      ctx.setTransform(dpr,0,0,dpr,0,0);
-    }
-    resize(); addEventListener('resize', resize);
-
-    // --- utils ---
-    const TAU = Math.PI*2;
-    const clamp = (n,a,b)=>Math.max(a,Math.min(b,n));
-    const rnd = (a=1,b=0)=>Math.random()*(a-b)+b;
-    const now = ()=>performance.now();
-
-    // --- particles ---
-    const coins=[]; const sparks=[]; const rings=[]; const dust=[];
-
-    class Ring {
-      constructor(x,y){
-        this.x=x; this.y=y; this.r=8; this.a=0.5; this.v=4.8;
-      }
-      step(){
-        this.r += this.v;
-        this.a -= 0.015;
-        return this.a > 0;
-      }
-      draw(c){
-        c.save();
-        c.globalAlpha = Math.max(0,this.a);
-        c.strokeStyle = 'rgba(255,220,120,0.9)';
-        c.lineWidth = 2;
-        c.beginPath(); c.arc(this.x, this.y, this.r, 0, TAU); c.stroke();
-        c.restore();
-      }
-    }
-
-    class Spark {
-      constructor(x,y,baseVX){
-        this.x=x; this.y=y;
-        const ang = Math.random()*TAU;
-        const spd = rnd(3.5,1.5);
-        this.vx = Math.cos(ang)*spd + (baseVX||0)*0.3;
-        this.vy = Math.sin(ang)*spd - 0.8;
-        this.a=1; this.r=rnd(2,1);
-        this.g=0.08; this.f=0.985;
-      }
-      step(){
-        this.x+=this.vx; this.y+=this.vy;
-        this.vy+=this.g; this.vx*=this.f; this.vy*=this.f;
-        this.a-=0.02;
-        return this.a>0;
-      }
-      draw(c){
-        c.save();
-        c.globalAlpha = Math.max(0,this.a);
-        c.fillStyle='rgba(255,245,200,0.95)';
-        c.beginPath(); c.arc(this.x,this.y,this.r,0,TAU); c.fill();
-        c.restore();
-      }
-    }
-
-    function drawCoinShape(c,x,y,R,spin=0){
-      c.save();
-      c.translate(x,y); c.rotate(spin);
-
-      // body gradient
-      const g = c.createRadialGradient(0,0,0, 0,0,R*1.1);
-      g.addColorStop(0,'#fff7cf');
-      g.addColorStop(0.45,'#ffd34d');
-      g.addColorStop(1,'#c8951b');
-      c.fillStyle = g;
-      c.beginPath(); c.arc(0,0,R,0,TAU); c.fill();
-
-      // rim
-      c.lineWidth = 2;
-      c.strokeStyle = 'rgba(160,110,20,0.9)';
-      c.beginPath(); c.arc(0,0,R*0.86,0,TAU); c.stroke();
-
-      // ridges
-      c.strokeStyle = 'rgba(255,220,120,0.7)';
-      for(let i=0;i<14;i++){
-        const a = (i/14)*TAU;
-        const rx = Math.cos(a)*R*0.98, ry=Math.sin(a)*R*0.98;
-        const ix = Math.cos(a)*R*0.75, iy=Math.sin(a)*R*0.75;
-        c.beginPath(); c.moveTo(ix,iy); c.lineTo(rx,ry); c.stroke();
-      }
-
-      // embossed star
-      c.save();
-        c.globalAlpha=0.9;
-        c.fillStyle='rgba(255,255,255,0.25)';
-        c.beginPath();
-        for(let i=0;i<5;i++){
-          const a=i*TAU/5 - Math.PI/2;
-          const ro=(i%2? R*0.36 : R*0.18);
-          const px=Math.cos(a)*ro, py=Math.sin(a)*ro;
-          if(i===0) c.moveTo(px,py); else c.lineTo(px,py);
-        }
-        c.closePath(); c.fill();
-      c.restore();
-
-      // highlight
-      c.globalAlpha=0.65;
-      c.beginPath(); c.ellipse(-R*0.45,-R*0.25,R*0.5,R*0.2,0,0,TAU); c.fillStyle='rgba(255,255,255,0.7)'; c.fill();
-      c.restore();
-    }
-
-    class Coin {
-      constructor(x,y,baseVX){
-        this.x=x; this.y=y;
-        const a=Math.random()*TAU;
-        const s=isCoarse ? rnd(4,2.2) : rnd(6,3.2);
-        this.vx=Math.cos(a)*s + (baseVX||0)*0.4;
-        this.vy=Math.sin(a)*s - 1.4;
-        this.r=rnd(7,5);
-        this.a=1;
-        this.spin = Math.random()*TAU;
-        this.vspin = (Math.random()-0.5)*0.25;
-        this.g=0.1; this.f=0.987;
-      }
-      step(){
-        this.x+=this.vx; this.y+=this.vy;
-        this.vy+=this.g; this.vx*=this.f; this.vy*=this.f;
-        this.spin += this.vspin;
-        this.a-=0.016;
-        return this.a>0;
-      }
-      draw(c){
-        c.save(); c.globalAlpha=Math.max(0,this.a);
-        drawCoinShape(c,this.x,this.y,this.r,this.spin);
-        c.restore();
-      }
-    }
-
-    class Dust {
-      constructor(x,y,baseVX){
-        this.x=x; this.y=y;
-        this.vx=(Math.random()*0.6+0.2)+(baseVX||0)*0.12;
-        this.vy=-(Math.random()*1.2+0.4);
-        this.r=Math.random()*1.6+1.0;
-        this.a=0.9;
-        this.g=0.05;
-      }
-      step(){
-        this.x+=this.vx; this.y+=this.vy; this.vy+=this.g; this.a-=0.018;
-        return this.a>0;
-      }
-      draw(c){
-        const g=c.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r*2.2);
-        g.addColorStop(0,'#fff9d6'); g.addColorStop(0.5,'#ffd34d'); g.addColorStop(1,'rgba(255,180,0,0)');
-        c.save(); c.globalAlpha=Math.max(0,this.a); c.fillStyle=g; c.beginPath(); c.arc(this.x,this.y,this.r*2,0,TAU); c.fill(); c.restore();
-      }
-    }
-
-    // --- leprechaun state ---
-    function makeLep(scale, yBase){
-      return {
-        x: -120 - Math.random()*200,
-        y: yBase,
-        baseY: yBase,
-        scale,
-        alpha: scale>0.9?0.28:0.2,
-        speed: rnd(1.6,1.2) * (isCoarse?0.9:1),
-        vx: 0,
-        phase: Math.random()*TAU,
-        exploded:false,
-        respawnAt:0,
-        // interactions
-        alerted:false,
-        mouthTimer:0,
-        jumpVy:0,
-        jumping:false,
-        // wander
-        wobbleA: rnd(40,20),
-        wobbleB: rnd(0.9,0.5),
-        // eye blink
-        blinkAt: now() + rnd(2600,1200),
-        eyeWide:0
-      };
-    }
-
-    const leps = isCoarse
-      ? [ makeLep(0.95, innerHeight*0.76) ]
-      : [ makeLep(1.0, innerHeight*0.70), makeLep(0.82, innerHeight*0.78), makeLep(0.66, innerHeight*0.82) ];
-
-    // --- drawing the character ---
-    function drawPotOfGold(c, surprised=false){
-      // pot body
-      const pg=c.createLinearGradient(0,0,0,22);
-      pg.addColorStop(0,'#1b140b'); pg.addColorStop(1,'#0c0a07');
-      c.fillStyle=pg;
-      c.beginPath(); c.ellipse(0,8,12,8,0,0,TAU); c.fill();
-      c.fillStyle='#0f0c07'; c.beginPath(); c.ellipse(0,1,14,6,0,0,TAU); c.fill();
-
-      // gold pile
-      const grd = c.createRadialGradient(0,-1,2, 0,0,12);
-      grd.addColorStop(0,'#fff6c5'); grd.addColorStop(0.6,'#ffd24a'); grd.addColorStop(1,'#caa023');
-      c.fillStyle=grd; c.beginPath(); c.ellipse(0,-1,10.5,5,0,0,TAU); c.fill();
-
-      // coins peeking
-      for(let i=0;i<4;i++){
-        c.save(); c.translate(rnd(5,-5), rnd(1,-1)); drawCoinShape(c, rnd(4,-4), rnd(-3,-5), rnd(2.6,2.0)); c.restore();
-      }
-
-      // highlight
-      c.globalAlpha=0.6; c.fillStyle='rgba(255,255,255,0.5)'; c.beginPath();
-      c.ellipse(-4,-2,4,1.4,0,0,TAU); c.fill(); c.globalAlpha=1;
-
-      // subtle shimmer when surprised
-      if(surprised){
-        c.globalAlpha=0.35;
-        c.strokeStyle='rgba(255,235,150,0.9)'; c.lineWidth=1;
-        c.beginPath(); c.arc(0,8,13.5,0,TAU); c.stroke();
-        c.globalAlpha=1;
-      }
-    }
-
-    function drawLep(c, L, t){
-      c.save();
-      c.translate(L.x, L.y);
-      c.scale(L.scale, L.scale);
-
-      // shadow
-      c.globalAlpha = 0.25; c.fillStyle='#000';
-      c.beginPath(); c.ellipse(0,26,22,6,0,0,TAU); c.fill();
-      c.globalAlpha = 1;
-
-      // bob + anim
-      const bob = Math.sin(L.phase*2)*1.6;
-      const legA = Math.sin(L.phase)*0.9;
-      const legB = -Math.sin(L.phase)*0.9;
-      const armA = -Math.sin(L.phase+0.3)*0.8;
-      const armB =  Math.sin(L.phase+0.3)*0.8;
-      c.translate(0, bob + (L.jumping? -4:0));
-
-      // legs (with knees)
-      function shoe(xo, ang){ c.save(); c.translate(xo,22); c.rotate(ang*0.45); c.fillStyle='#1b1b1b';
-        c.beginPath(); c.moveTo(-8,-1); c.quadraticCurveTo(2,-3,8,0); c.lineTo(8,3); c.quadraticCurveTo(2,4,-8,2); c.closePath(); c.fill(); c.restore(); }
-      function leg(xo, ang){
-        c.save(); c.translate(xo,14); c.rotate(ang);
-        c.strokeStyle='#114d1d'; c.lineWidth=6; c.lineCap='round';
-        c.beginPath(); c.moveTo(0,0); c.lineTo(0,8); c.stroke(); // thigh
-        c.translate(0,8); c.rotate(ang*0.6);
-        c.beginPath(); c.moveTo(0,0); c.lineTo(0,8); c.stroke(); // shin
-        c.restore();
-      }
-      leg(-8,legA); leg(8,legB); shoe(-10,legA); shoe(10,legB);
-
-      // torso
-      c.save();
-        const jg=c.createLinearGradient(0,0,0,18); jg.addColorStop(0,'#218a33'); jg.addColorStop(1,'#156b24');
-        c.fillStyle=jg; c.fillRect(-14,0,28,18);
-        c.fillStyle='#135c1e';
-        c.beginPath(); c.moveTo(-14,0); c.lineTo(-2,0); c.lineTo(-6,8); c.lineTo(-14,8); c.closePath(); c.fill();
-        c.beginPath(); c.moveTo(14,0); c.lineTo(2,0); c.lineTo(6,8); c.lineTo(14,8); c.closePath(); c.fill();
-        // buttons
-        c.fillStyle='#f9d45a'; for(let i=0;i<3;i++){ c.beginPath(); c.arc(0,4+i*5,1.2,0,TAU); c.fill(); }
-        // belt
-        c.fillStyle='#0f0f0f'; c.fillRect(-14,8,28,4); c.fillStyle='#f2c23f'; c.fillRect(-2,8,4,4);
-      c.restore();
-
-      // arms
-      function arm(xo, ang, withPot=false, surprised=false){
-        c.save(); c.translate(xo,4); c.rotate(ang);
-        c.strokeStyle='#1e7f2e'; c.lineWidth=5; c.lineCap='round';
-        c.beginPath(); c.moveTo(0,0); c.lineTo(withPot? 10:16, withPot? 2: 6); c.stroke();
-        if(withPot){
-          c.translate(10,2); c.save(); c.rotate(-0.2+Math.sin(L.phase)*0.05);
-          drawPotOfGold(c, surprised);
-          c.restore();
-          const m = c.getTransform(); c.restore();
-          return {x:m.e, y:m.f-4};
-        }
-        c.restore(); return null;
-      }
-      const surprised = L.mouthTimer>0;
-      const spill = arm(12, armA, true, surprised);
-      arm(-12, armB, false, false);
-
-      // head
-      c.save();
-        // face
-        const fg=c.createRadialGradient(0,-10,2,0,-8,16); fg.addColorStop(0,'#ffe7cf'); fg.addColorStop(1,'#f2d0aa');
-        c.fillStyle=fg; c.beginPath(); c.arc(0,-8,8.5,0,TAU); c.fill();
-
-        // ears
-        c.fillStyle='#eec6a0'; c.beginPath(); c.arc(-8.8,-8,2,0,TAU); c.arc(8.8,-8,2,0,TAU); c.fill();
-
-        // eyes (white + pupil; widen when surprised)
-        const wide = surprised ? 1.25 : 1;
-        const blink = (L.blinkAt - t) < 120 ? 0.15 : 1;
-        c.fillStyle='#fff';
-        c.beginPath(); c.ellipse(-3.2,-9,1.9,1.9*blink,0,0,TAU); c.ellipse(3.2,-9,1.9,1.9*blink,0,0,TAU); c.fill();
-        c.fillStyle='#111';
-        c.beginPath(); c.arc(-3.2,-9,0.9*wide*blink,0,TAU); c.arc(3.2,-9,0.9*wide*blink,0,TAU); c.fill();
-
-        // brows
-        c.strokeStyle='#5a2a08'; c.lineWidth=1.2;
-        c.beginPath(); c.moveTo(-5,-11); c.quadraticCurveTo(-3,-12,-1,-11); c.moveTo(1,-11); c.quadraticCurveTo(3,-12,5,-11); c.stroke();
-
-        // nose
-        c.fillStyle='#eab999'; c.beginPath(); c.arc(0,-6,1.6,0,TAU); c.fill();
-
-        // beard (fuller, ginger)
-        c.fillStyle='#de7e22';
-        c.beginPath();
-        c.moveTo(-7,-4); c.quadraticCurveTo(0,4,7,-4); // moustache base
-        c.quadraticCurveTo(0,8,-7,-4); c.fill();
-        // chin beard
-        c.beginPath();
-        c.moveTo(-6,-3); c.quadraticCurveTo(0,7,6,-3); c.quadraticCurveTo(0,12,-6,-3); c.fill();
-        c.strokeStyle='rgba(120,60,10,0.5)'; c.lineWidth=1;
-        for(let k=-5;k<=5;k+=2){ c.beginPath(); c.moveTo(k,-1); c.quadraticCurveTo(k+0.5,1,k+1.5,2.6); c.stroke(); }
-
-        // mouth
-        c.fillStyle='#0b0b0b';
-        if (surprised) { // "oh"
-          c.beginPath(); c.ellipse(0,-4,1.6,2.0,0,0,TAU); c.fill();
-        } else {
-          c.beginPath(); c.moveTo(-6,-4); c.quadraticCurveTo(0,2,6,-4); c.quadraticCurveTo(0,6,-6,-4); c.fill();
-        }
-
-        // hat
-        const hg=c.createLinearGradient(0,-20,0,-8); hg.addColorStop(0,'#1aa542'); hg.addColorStop(1,'#147b31');
-        c.fillStyle=hg; c.fillRect(-11,-20,22,8); c.fillRect(-16,-12,32,4);
-        c.fillStyle='#0e0e0e'; c.fillRect(-11,-17,22,3); c.fillStyle='#f2c23f'; c.fillRect(-2,-17,4,3);
-        // clover
-        c.fillStyle='#29c35a'; for(let k=0;k<3;k++){ c.beginPath(); c.arc(-10 + k*3, -22, 2, 0, TAU); c.fill(); }
-        c.strokeStyle='#189a40'; c.lineWidth=0.8; c.beginPath(); c.moveTo(-9,-22); c.lineTo(-9,-18); c.stroke();
-      c.restore();
-
-      c.restore();
-      return spill;
-    }
-
-    // --- interactions ---
-    function explode(L){
-      const base = L.scale*1;
-      const N = (isCoarse ? 70 : 120) * base;
-      for(let i=0;i<N;i++) coins.push(new Coin(L.x + rnd(6,-6), L.y-8 + rnd(6,-6), L.speed));
-      for(let i=0;i<N*0.6;i++) sparks.push(new Spark(L.x, L.y-8, L.speed));
-      rings.push(new Ring(L.x, L.y-6));
-      L.exploded = true;
-      L.respawnAt = now() + 20000; // 20s per lep
-      window.__lep_last_explosion = Date.now();
-    }
-
-    addEventListener('click', (e)=>{
-      const px=e.clientX, py=e.clientY;
-      const t=now();
-      for(const L of leps){
-        if(L.exploded && t < L.respawnAt) continue;
-        const R=28*L.scale;
-        const dx=px-L.x, dy=py-L.y;
-        if(dx*dx+dy*dy < R*R){
-          // first click -> alert
-          if(!L.alerted){
-            L.alerted = true;
-            L.mouthTimer = 900;   // "oh" duration ms
-            if(!L.jumping){ L.jumping = true; L.jumpVy = -7.2*L.scale; }
-            L.speed *= 1.35; // permanent boost
-            // little sparkle pop
-            for(let i=0;i<10;i++) sparks.push(new Spark(L.x, L.y-10, L.speed));
-          } else {
-            // second click -> boom
-            explode(L);
-          }
-          break;
-        }
-      }
-    }, { passive:true });
-
-    // --- main loop ---
-    let last = now();
-    let paused = false;
-    document.addEventListener('visibilitychange', ()=>{ paused = document.hidden; last = now(); });
-
-    function tick(){
-      if(!paused){
-        const t = now();
-        const dt = clamp((t - last)/16.666, 0.2, 2.5); // normalize to ~60fps units
-        last = t;
-
-        ctx.clearRect(0,0,innerWidth,innerHeight);
-
-        // leps
-        for(const L of leps){
-          if(L.exploded){
-            if(t>=L.respawnAt){
-              // respawn
-              L.exploded=false;
-              L.alerted=false;
-              L.jumping=false;
-              L.mouthTimer=0;
-              L.x = -120 - Math.random()*200;
-              L.phase = Math.random()*TAU;
-              // reset speed (fresh run)
-              L.speed = rnd(1.6,1.2) * (isCoarse?0.9:1);
-            }
-          } else {
-            // advance
-            L.phase += 0.25 * (L.speed/1.6) * dt;
-            // move
-            const wobble = Math.sin(L.phase*L.wobbleB)*L.wobbleA;
-            L.vx = L.speed * (1 + Math.sin(L.phase*0.1)*0.12);
-            L.x += L.vx * dt;
-            L.y = L.baseY + Math.sin(L.phase*0.5)*6 + wobble*0.02;
-
-            // jump physics
-            if(L.jumping){
-              L.y += L.jumpVy * dt;
-              L.jumpVy += 0.6 * dt; // gravity
-              if(L.y >= L.baseY){ L.y = L.baseY; L.jumping=false; }
-            }
-
-            // timers
-            if(L.mouthTimer>0){ L.mouthTimer -= (16.666*dt); if(L.mouthTimer<0) L.mouthTimer=0; }
-            if(t >= L.blinkAt){ L.blinkAt = t + rnd(2600,1200); }
-
-            // draw
-            ctx.save(); ctx.globalAlpha=L.alpha;
-            const spill=drawLep(ctx, L, t);
-            ctx.restore();
-
-            // dust trail from pot if available
-            if(spill && Math.random()<0.18){ dust.push(new Dust(spill.x, spill.y, L.vx)); }
-
-            // wrap
-            if(L.x > innerWidth+140){ L.x = -140 - Math.random()*140; L.phase = Math.random()*TAU; }
-          }
-        }
-
-        // particles
-        for(let i=dust.length-1;i>=0;i--){ if(!dust[i].step()){ dust.splice(i,1); } else dust[i].draw(ctx); }
-        for(let i=coins.length-1;i>=0;i--){ if(!coins[i].step()){ coins.splice(i,1); } else coins[i].draw(ctx); }
-        for(let i=sparks.length-1;i>=0;i--){ if(!sparks[i].step()){ sparks.splice(i,1); } else sparks[i].draw(ctx); }
-        for(let i=rings.length-1;i>=0;i--){ if(!rings[i].step()){ rings.splice(i,1); } else rings[i].draw(ctx); }
-      }
-      requestAnimationFrame(tick);
-    }
-    tick();
-  })();
-  </script>
-
-  <!-- Dev-only test harness: intercept external calls locally -->
-  <script>
-    (function(){
-      const DEV = ['localhost','127.0.0.1'].includes(location.hostname);
-      if(!DEV) return;
-      // Intercept Formspree so you don't send test emails
-      document.addEventListener('submit',(e)=>{
-        const form = e.target;
-        if(form.matches('form[action^="https://formspree.io/"]')){
-          e.preventDefault();
-          const data = Object.fromEntries(new FormData(form).entries());
-          console.log('[DEV] Captured form submission:', data);
-          alert('DEV MODE: form captured. Check console.');
-        }
-      });
-      // Stub Calendly popup if the SDK hasn't loaded yet
-      if(!(window.Calendly && typeof Calendly.initPopupWidget==='function')){
-        window.Calendly = { initPopupWidget: ({url})=>{ console.log('[DEV] Calendly popup would open:', url); alert('DEV MODE: Calendly popup stub'); } };
-      }
-      console.info('[DEV] Dynamic-feature test harness is active.');
-    })();
-  </script>
-</body>
-</html>
+ (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
+diff --git a/index.html b/index.html
+index a0554ffe392e87be1ffbf4db15618ef71acbb7da..56889740ec8b9b86a47c24344659334242889e54 100644
+--- a/index.html
++++ b/index.html
+@@ -1,1087 +1,277 @@
+ <!doctype html>
+ <html lang="en">
+-<head>
+-  <meta charset="utf-8" />
+-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+-  <title>300 Kings – AI-Powered Ad Campaigns</title>
+-  <meta name="description" content="AI + creative to scale your ads fast, safely, and profitably." />
+-  <link rel="preconnect" href="https://fonts.googleapis.com">
+-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Manrope:wght@400;700&display=swap" rel="stylesheet">
+-  <style>
+-    :root{
+-      --bg: radial-gradient(1400px 800px at 15% 12%, #0a0d12, #000000 70%);
+-      --ink:#e8f1ff; --muted:#9fb4d1; --blue:#5ecbff; --vio:#7a5cff; --hot:#ff2a64; --cta:#ff2a2a;
+-    }
+-    *{box-sizing:border-box}
+-    html,body{height:100%}
+-    body{margin:0;background:var(--bg);color:var(--ink);font-family:'Manrope',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+-    a{color:inherit;text-decoration:none}
+-    .container{max-width:1100px;margin:0 auto;padding:3rem 2rem}
+-    .pill{display:inline-flex;align-items:center;gap:.5rem;padding:.35rem .7rem;border-radius:999px;background:#0b1a2c;color:#9dd7ff;border:1px solid #14344f;font-weight:700}
+-    .cta{background:var(--cta);color:#fff;border:0;padding:1rem 2rem;border-radius:2rem;cursor:pointer;font-weight:800}
+-    .cta:hover{filter:brightness(.95)}
+-
+-    /* CTA stack under hero */
+-    .cta-stack{display:flex;flex-direction:column;gap:10px;align-items:center;margin-top:10px}
+-    .cta.secondary{background:transparent;border:1px solid rgba(255,255,255,.3);color:#fff}
+-    .cta.secondary:hover{filter:none;background:rgba(255,255,255,.06)}
+-
+-    /* Center CTA (middle of page) */
+-    .center-cta{margin-top:12px;text-align:center}
+-
+-    /* Modal contact (Formspree) */
+-    .modal{position:fixed;inset:0;display:none;z-index:9999}
+-    .modal.open{display:block}
+-    .modal__overlay{position:absolute;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(3px)}
+-    .modal__card{position:relative;margin:6vh auto 0;max-width:520px;background:#0b0f18;border:1px solid rgba(255,255,255,.12);border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.6);padding:22px}
+-    .modal__card h3{margin:0 0 10px;font:800 1.35rem/1.2 'Space Grotesk',system-ui;color:#eaf2ff}
+-    .modal__close{position:absolute;top:10px;right:10px;border:0;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;width:34px;height:34px;border-radius:10px;cursor:pointer}
+-    @media(max-width:520px){.modal__card{margin:10vh 10px;padding:18px}}
+-
+-
+-    header{background:#000;padding:2.6rem 2rem 2rem;text-align:center;position:relative;overflow:hidden}
+-    header h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(2.1rem,5vw,3.2rem);margin:0;color:var(--blue)}
+-    header p{font-size:1.15rem;margin:.75rem 0 1.2rem;color:#cdd9ea}
+-    #hero3d{position:absolute;inset:0;z-index:0}
+-    header .content{position:relative;z-index:1}
+-
+-    .bubble{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:1.5rem;padding:2rem;margin-bottom:2rem;backdrop-filter:blur(10px)}
+-    h2{font-family:'Space Grotesk',sans-serif;font-size:1.9rem;margin:0 0 1rem;color:var(--blue)}
+-    ul{list-style:none;padding:0;margin:0}
+-    li{padding:.65rem 0;border-bottom:1px solid rgba(255,255,255,.08)}
+-    .grid{display:grid;gap:16px}
+-    .grid-3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+-    img{max-width:100%;display:block;border-radius:16px;border:1px solid rgba(255,255,255,.1)}
+-    input,textarea{width:100%;padding:12px 14px;margin:8px 0;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.4);color:#fff}
+-    button.btn{background:var(--cta);color:#fff;padding:12px 18px;border:0;border-radius:14px;cursor:pointer}
+-    .muted{color:var(--muted)}
+-    footer{background:#111;padding:2rem;text-align:center;color:#9ab}
+-
+-    /* FOMO CTA */
+-    .fomo{display:inline-flex;align-items:center;gap:12px;margin-top:12px;padding:.55rem .85rem;border:1px solid rgba(255,255,255,.15);border-radius:999px;background:rgba(255,42,42,.08);box-shadow:0 0 0 0 rgba(255,42,42,.35);animation:pulse 2s infinite}
+-    .cta-small{padding:.5rem .9rem;border-radius:999px;font-size:.92rem}
+-    .spots{opacity:.95;font-weight:800}
+-    @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,42,42,.35)}70%{box-shadow:0 0 0 12px rgba(255,42,42,0)}100%{box-shadow:0 0 0 0 rgba(255,42,42,0)}}
+-
+-    /* Star badge (header preview only; the 3D version orbits the hero) */
+-    .badge{position:relative;display:inline-flex;align-items:center;gap:12px;margin-top:12px;padding:.75rem 1.1rem;color:#2a2000}
+-    .badge .pill{background:rgba(255,255,255,.18);color:#352700;border-color:rgba(0,0,0,.12)}
+-    .star{clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 56%, 79% 91%, 50% 70%, 21% 91%, 32% 56%, 2% 35%, 39% 35%);background: radial-gradient(60% 60% at 50% 40%, #fff5c8, #ffd54d 60%, #f6b73c 100%);border:1px solid rgba(255,220,120,.7);box-shadow: 0 10px 34px rgba(255,204,0,.28), inset 0 0 14px rgba(255,255,255,.4)}
+-    .shine{position:absolute;inset:-2px;background:linear-gradient(120deg,transparent,rgba(255,255,255,.7),transparent);transform:translateX(-110%);animation:shimmer 2.8s linear infinite;pointer-events:none;clip-path:inherit}
+-    @keyframes shimmer{to{transform:translateX(110%)}}
+-    .g-icon{width:36px;height:36px;flex:0 0 auto}
+-
+-    /* Cert lines */
+-    .footer-cert{display:inline-flex;align-items:center;gap:8px;margin-left:10px;padding:.3rem .6rem;border:1px solid rgba(255,255,255,.12);border-radius:999px;background:rgba(255,255,255,.06)}
+-    .footer-cert .g{width:16px;height:16px}
+-
+-    /* Cursor pop words */
+-    #trail{position:fixed;inset:0;z-index:1;pointer-events:none}
+-    #pops{position:fixed;inset:0;z-index:2;pointer-events:none}
+-    .pop{position:absolute;transform:translate(-50%,-50%) scale(.86);opacity:0;animation:pop 1.35s ease-out forwards}
+-    .pop.badge{background:rgba(0,0,0,.7);color:#fff;padding:.32rem .6rem;border-radius:.6rem;border:1px solid rgba(255,255,255,.2);font-weight:800;font-size:.8rem;letter-spacing:.3px}
+-    .pop.badge.gold{background:rgba(255,215,0,.15);color:#ffd44d;border-color:rgba(255,200,0,.45);text-shadow:0 0 8px rgba(255,205,0,.35)}
+-    @keyframes pop{0%{opacity:0;transform:translate(-50%,-40%) scale(.8)}12%{opacity:1;transform:translate(-50%,-60%) scale(1)}100%{opacity:0;transform:translate(-50%,-120%) scale(1.05)}}
+-
+-    /* Reveal cards */
+-    #brand{padding:0;margin-bottom:2rem}
+-    #brand .grid.bare{gap:16px}
+-    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+-    @media (max-width: 760px){ .grid-2{grid-template-columns:1fr} }
+-    #brand .revealcard{position:relative;border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,.12);background:radial-gradient(600px 220px at 20% 0%, rgba(98,167,255,.12), transparent 60%);min-height:190px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+-    #brand .revealcard .cover{position:absolute;inset:0;display:grid;place-items:center;font:800 1.25rem/1 'Space Grotesk',system-ui;letter-spacing:.08em;color:#cfe4ff;background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));backdrop-filter:blur(2px);transition:opacity .3s ease, transform .3s ease;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+-    /* Back design texture */
+-    #brand .revealcard .cover::before{content:"";position:absolute;inset:-30%;background:
+-        repeating-conic-gradient(from 0deg, rgba(255,255,255,.06) 0 6deg, transparent 6deg 12deg),
+-        radial-gradient(600px 220px at 20% 0%, rgba(98,167,255,.18), transparent 60%);
+-      mix-blend-mode:screen;opacity:.55;filter:contrast(1.1) brightness(1.05);}
+-    
+-    #brand .revealcard .content{position:relative;padding:18px;opacity:0;transform:translateY(6px);transition:opacity .35s ease .05s, transform .35s ease .05s;min-height:190px;display:flex;flex-direction:column;justify-content:center;-webkit-user-select:none;user-select:none}
+-    #brand .revealcard:hover .cover{opacity:0;transform:scale(1.03)}
+-    #brand .revealcard.open .cover{opacity:0;transform:scale(1.03)}
+-    #brand .revealcard:hover .content{opacity:1;transform:none}
+-    #brand .revealcard.open .content{opacity:1;transform:none}
+-    #brand .revealcard h3{margin:0 0 10px;font:800 1.18rem/1.2 'Space Grotesk',system-ui;color:#eaf2ff}
+-    #brand .revealcard p{margin:0;color:#cdd9ea}
+-    #brand .revealcard small{display:none}
+-
+-    /* Background leprechaun canvas */
+-    #lepbg{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.28}
+-    /* Keep content above background canvas */
+-    header .content, .container, footer{position:relative;z-index:1}
+-    @media (max-width: 520px){
+-    .container{padding:1.25rem 1rem}
+-    header{padding:1.6rem 1rem 1.2rem}
+-    header p{font-size:1rem}
+-    .cta{padding:.9rem 1.2rem}
+-    .fomo{display:grid;grid-template-columns:1fr;justify-items:center;gap:10px;padding:.7rem 1rem}
+-    .fomo strong{white-space:nowrap}
+-    .cta-small{width:100%;text-align:center}
+-    #lepbg{opacity:.18}
+-  }
+-  @media (prefers-reduced-motion: reduce){
+-    .fomo{animation:none}
+-    .shine{animation:none}
+-  }
+-  /* Interactive services */
+-    #services li.svc{position:relative;background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px;transition:transform .25s ease, box-shadow .25s ease}
+-    #services li.svc strong{display:block;margin-bottom:6px}
+-    #services li.svc::after{content:"";position:absolute;inset:-1px;background:radial-gradient(120px 80px at var(--mx,50%) var(--my,50%), rgba(94,203,255,.18), transparent 60%);pointer-events:none;opacity:0;transition:opacity .25s}
+-    #services li.svc:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(0,0,0,.25)}
+-    #services li.svc:hover::after{opacity:1}
+-  /* Channels row */
+-    .channels{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:12px 0 14px}
+-    .channels>div{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02))}
+-    .channels span{font-weight:700;color:#cfe4ff}
+-    .channels svg{color:#8acbff}
+-</style>
+-  <!-- Calendly widget assets -->
+-  <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+-  <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
+-</head>
+-<body>
+-  <canvas id="lepbg" aria-hidden="true"></canvas>
+-  <canvas id="trail" aria-hidden="true"></canvas>
+-  <div id="pops" aria-hidden="true"></div>
+-  <header>
+-    <div id="hero3d" aria-hidden="true"></div>
+-    <div class="content">
+-      <span class="pill">Deployed on Netlify</span>
+-      <h1>Jumping on the AI wave has never been easier!</h1>
+-      <p>I let Google’s AI stalk your customers… legally.</p>
+-      <div class="cta-stack">
+-        <a href="#" class="cta" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/kevincacheiro93/30-min-meeting'}); return false;">Schedule a Call</a>
+-        <a href="#" class="cta secondary" data-open="contact-modal">Contact Us Now</a>
+-      </div>
+-
+-      <div class="fomo" aria-live="polite">
+-        <strong>Founder Offer:</strong> 90% off for the first 5 clients —
+-        <a href="#contact" id="claim" class="cta cta-small">Claim a spot</a>
+-        <span class="spots" id="spots">( 5 of 5 left )</span>
+-      </div>
+-    </div>
+-  </header>
+-
+-  <main class="container">
+-    <section class="bubble" id="services">
+-      <h2>Our Services</h2>
+-      <p class="muted" style="margin-top:-4px">We plan, write, and ship performance campaigns that reach customers across <strong>Search</strong>, <strong>Display</strong>, <strong>YouTube</strong>, <strong>Maps</strong>, <strong>Gmail</strong>, and <strong>Discover</strong>—coordinated by multi‑network machine learning so every impression improves the next.</p>
+-      <div class="channels" aria-label="Where your ads show">
+-        <!-- Google Search (multi‑color G) -->
+-        <div>
+-          <svg viewBox="0 0 48 48" width="24" height="24" aria-hidden="true" focusable="false">
+-            <clipPath id="g-clip-channels"><path d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"></path></clipPath>
+-            <g clip-path="url(#g-clip-channels)">
+-              <path fill="#FBBC05" d="M0 37V11l17 13z"></path>
+-              <path fill="#EA4335" d="M0 11l17 13 7-6.1L48 14V0H0z"></path>
+-              <path fill="#34A853" d="M0 37l30-23 7.9 1L48 0v48H0z"></path>
+-              <path fill="#4285F4" d="M48 48L17 24l-4-3 35-10z"></path>
+-            </g>
+-          </svg>
+-          <span>Search</span>
+-        </div>
+-        
+-        <!-- Google Display Ads style (blue & green bars + yellow dot) -->
+-        <div>
+-          <svg viewBox="0 0 64 48" width="26" height="24" aria-hidden="true" focusable="false">
+-            <defs>
+-              <linearGradient id="adsB" x1="0" y1="0" x2="1" y2="1">
+-                <stop offset="0" stop-color="#1A73E8"/><stop offset="1" stop-color="#1967D2"/>
+-              </linearGradient>
+-              <linearGradient id="adsG" x1="0" y1="0" x2="1" y2="1">
+-                <stop offset="0" stop-color="#34A853"/><stop offset="1" stop-color="#188038"/>
+-              </linearGradient>
+-            </defs>
+-            <rect x="10" y="10" rx="10" ry="10" width="14" height="34" fill="url(#adsB)" transform="rotate(-20 17 27)"/>
+-            <rect x="32" y="6" rx="10" ry="10" width="14" height="34" fill="url(#adsG)" transform="rotate(20 39 23)"/>
+-            <circle cx="47" cy="38" r="6" fill="#FBBC04"/>
+-          </svg>
+-          <span>Display</span>
+-        </div>
+-        
+-        <!-- YouTube (red play) -->
+-        <div>
+-          <svg viewBox="0 0 100 70" width="28" height="20" aria-hidden="true" focusable="false">
+-            <rect x="5" y="8" width="90" height="54" rx="12" fill="#FF0000"/>
+-            <polygon points="42,22 42,48 66,35" fill="#FFFFFF"/>
+-          </svg>
+-          <span>YouTube</span>
+-        </div>
+-        
+-        <!-- Gmail (multi‑color M) -->
+-        <div>
+-          <svg viewBox="0 0 256 192" width="28" height="21" aria-hidden="true" focusable="false">
+-            <path d="M32 32h192a16 16 0 0 1 16 16v96a16 16 0 0 1-16 16H32a16 16 0 0 1-16-16V48a16 16 0 0 1 16-16z" fill="#FFFFFF"/>
+-            <path d="M32 48v96l64-48V72L32 48z" fill="#34A853"/>
+-            <path d="M224 48v96l-64-48V72l64-24z" fill="#4285F4"/>
+-            <path d="M32 48l96 72 96-72v-8a16 16 0 0 0-16-16H48a16 16 0 0 0-16 16v8z" fill="#EA4335"/>
+-            <path d="M96 72v24l32 24 32-24V72l-32 24-32-24z" fill="#FBBC05"/>
+-          </svg>
+-          <span>Gmail &amp; Discover</span>
++  <head>
++    <meta charset="utf-8" />
++    <meta name="viewport" content="width=device-width, initial-scale=1" />
++    <title>300 Kings – AI-Powered Ad Campaigns</title>
++    <meta
++      name="description"
++      content="AI + creative to scale your ads fast, safely, and profitably."
++    />
++    <link rel="preconnect" href="https://fonts.googleapis.com" />
++    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
++    <link
++      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Manrope:wght@400;700&display=swap"
++      rel="stylesheet"
++    />
++    <link rel="stylesheet" href="assets/css/main.css" />
++    <link
++      href="https://assets.calendly.com/assets/external/widget.css"
++      rel="stylesheet"
++    />
++    <script
++      src="https://assets.calendly.com/assets/external/widget.js"
++      type="text/javascript"
++      async
++    ></script>
++  </head>
++  <body>
++    <canvas id="background-canvas" aria-hidden="true"></canvas>
++    <div id="money-rain" aria-hidden="true"></div>
++    <div id="leprechaun-layer" aria-hidden="true"></div>
++    <header class="hero">
++      <div class="hero__content container">
++        <span class="pill" data-reveal data-reveal-delay="0"
++          >Deployed on Netlify</span
++        >
++        <h1 data-reveal data-reveal-delay="120">
++          Jump on the AI wave with a campaign team that never sleeps.
++        </h1>
++        <p data-reveal data-reveal-delay="200">
++          We combine creative direction, AI production, and performance media
++          buying to build ads that print cash.
++        </p>
++        <div class="hero__actions" data-reveal data-reveal-delay="260">
++          <a
++            class="cta"
++            href="#"
++            onclick="Calendly.initPopupWidget({url: 'https://calendly.com/kevincacheiro93/30-min-meeting'}); return false;"
++            >Schedule a call</a
++          >
++          <a class="cta secondary" href="#contact">Contact us</a>
+         </div>
+-        
+-        <!-- Google Maps (multi‑color pin) -->
+-        <div>
+-          <svg viewBox="0 0 256 256" width="22" height="22" aria-hidden="true" focusable="false">
+-            <path d="M128 236s76-67 76-130a76 76 0 0 0-152 0c0 63 76 130 76 130z" fill="#4285F4"/>
+-            <path d="M128 236s76-67 76-130c0-21.2-7.8-40.6-20.7-55.3L128 128V236z" fill="#34A853"/>
+-            <circle cx="128" cy="112" r="32" fill="#FBBC05"/>
+-            <path d="M83 59l45 69 55-79c-14.5-10.2-32.2-16.2-51-16.2-20.3 0-39 6.6-54 17.7z" fill="#EA4335"/>
+-          </svg>
+-          <span>Maps</span>
+-        </div>
+-        
+-        <!-- Google Shopping (bag with multi‑color G) -->
+-        <div>
+-          <svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true" focusable="false">
+-            <rect x="10" y="18" width="44" height="36" rx="6" fill="#F1F3F4" stroke="#DADCE0"/>
+-            <path d="M22 18c0-6 4-10 10-10s10 4 10 10" fill="none" stroke="#5F6368" stroke-width="3"/>
+-            <g transform="translate(8,6) scale(0.42)">
+-              <clipPath id="g-clip-shop"><path d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"></path></clipPath>
+-              <g clip-path="url(#g-clip-shop)">
+-                <path fill="#FBBC05" d="M0 37V11l17 13z"></path>
+-                <path fill="#EA4335" d="M0 11l17 13 7-6.1L48 14V0H0z"></path>
+-                <path fill="#34A853" d="M0 37l30-23 7.9 1L48 0v48H0z"></path>
+-                <path fill="#4285F4" d="M48 48L17 24l-4-3 35-10z"></path>
+-              </g>
+-            </g>
+-          </svg>
+-          <span>Shopping</span>
++        <div
++          class="fomo"
++          aria-live="polite"
++          data-reveal
++          data-reveal-delay="320"
++        >
++          <strong>Founder offer:</strong>
++          <span
++            ><span id="spots-remaining">5</span> discounted launch slots left
++            this month.</span
++          >
++          <button id="claim" class="cta cta-small">Claim a spot</button>
+         </div>
+       </div>
+-      <ul>
+-        <li class="svc"><strong>AI-powered Ads</strong> — Simply, the best way to use AI.</li>
+-        <li class="svc"><strong>Landing Page Creation</strong> — Custom websites tailored to your needs.</li>
+-      </ul>
+-      <p class="muted"><em>Special Offer: First 5 clients get 90% off for the first two months.</em></p>
+-    </section>
+-
+-    <section id="brand">
+-      <div class="grid grid-2 bare">
+-        <figure class="revealcard" aria-label="AI adoption growth">
+-          <div class="cover">READ ME</div>
+-          <div class="content">
+-            <h3>AI is mainstream in 2025</h3>
+-            <p>Most teams already use AI. Late adopters pay more and learn slower—move early.</p>
++    </header>
++
++    <main>
++      <section class="section container" id="services">
++        <div class="section__header" data-reveal>
++          <h2>Every channel, perfectly orchestrated</h2>
++          <p class="muted">
++            We blend AI tooling with human strategy to outmaneuver your
++            competition.
++          </p>
++        </div>
++        <ul class="grid grid-3">
++          <li
++            class="card"
++            data-gradient
++            data-reveal
++            data-reveal-delay="80"
++            tabindex="0"
++            role="article"
++          >
++            <strong>AI Production Lab</strong>
++            <p>
++              Daily creative refreshes, voiceover swaps, and format
++              experimentation handled for you.
++            </p>
++          </li>
++          <li
++            class="card"
++            data-gradient
++            data-reveal
++            data-reveal-delay="140"
++            tabindex="0"
++            role="article"
++          >
++            <strong>Performance Playbooks</strong>
++            <p>
++              Battle-tested launch frameworks that make Google and Meta
++              algorithms fall in love with your data.
++            </p>
++          </li>
++          <li
++            class="card"
++            data-gradient
++            data-reveal
++            data-reveal-delay="200"
++            tabindex="0"
++            role="article"
++          >
++            <strong>Analytics &amp; Automation</strong>
++            <p>
++              Custom Looker dashboards, anomaly detection, and automated pacing
++              adjustments.
++            </p>
++          </li>
++        </ul>
++      </section>
++
++      <section class="section section--alt" id="process">
++        <div class="container">
++          <div class="section__header" data-reveal>
++            <h2>What happens after you press play?</h2>
++            <p class="muted">
++              A guided, collaborative sprint that keeps you in the loop while we
++              build the engine.
++            </p>
+           </div>
+-        </figure>
+-        <figure class="revealcard" aria-label="FOMO: founders deal">
+-          <div class="cover">READ ME</div>
+-          <div class="content">
+-            <h3>Late costs more</h3>
+-            <p>Move now to compound ROAS. Hesitation raises costs and loses ground.</p>
++          <div class="timeline" data-reveal>
++            <div class="timeline__track" aria-hidden="true"></div>
++            <div class="timeline__progress" aria-hidden="true"></div>
++            <article data-gradient tabindex="0">
++              <h3>01. Deep-dive intelligence</h3>
++              <p>
++                We map your customer motivations, existing performance, and
++                creative constraints in a 72-hour audit.
++              </p>
++            </article>
++            <article data-gradient tabindex="0">
++              <h3>02. Creative prototyping</h3>
++              <p>
++                Storyboards, hooks, and AI-assisted variations are generated,
++                tested, and iterated with your team.
++              </p>
++            </article>
++            <article data-gradient tabindex="0">
++              <h3>03. Scaling orchestration</h3>
++              <p>
++                We launch across paid channels, automate the boring parts, and
++                hand you a repeatable growth model.
++              </p>
++            </article>
+           </div>
+-        </figure>
+-        <figure class="revealcard" aria-label="AI CAC FOMO">
+-          <div class="cover">READ ME</div>
+-          <div class="content">
+-            <h3>Shrink CAC with AI</h3>
+-            <p>The best way to get a smaller CAC is with AI.</p>
++        </div>
++      </section>
++
++      <section class="section container" id="proof">
++        <div class="section__header" data-reveal>
++          <h2>Numbers that speak louder than hype</h2>
++          <p class="muted">
++            From scrappy DTC launches to enterprise demand gen, we obsess over
++            revenue, not vanity metrics.
++          </p>
++        </div>
++        <div class="metrics grid grid-3">
++          <div class="metric" data-gradient data-reveal tabindex="0">
++            <strong>$18M+</strong>
++            <span>Revenue influenced across 14 verticals</span>
+           </div>
+-        </figure>
+-        <figure class="revealcard" aria-label="Late tax">
+-          <div class="cover">READ ME</div>
+-          <div class="content">
+-            <h3>Don’t pay the late tax</h3>
+-            <p>Ship AI this week. Lower CPC, faster learning, better ROAS.</p>
++          <div
++            class="metric"
++            data-gradient
++            data-reveal
++            data-reveal-delay="80"
++            tabindex="0"
++          >
++            <strong>41%</strong>
++            <span>Average CAC reduction within first 60 days</span>
+           </div>
+-        </figure>
+-        <figure class="revealcard" aria-label="Niche learning FOMO">
+-          <div class="cover">READ ME</div>
+-          <div class="content">
+-            <h3>Don’t get left behind</h3>
+-            <p>Your competitors are already training AI on your niche. Every week you wait widens their lead.</p>
++          <div
++            class="metric"
++            data-gradient
++            data-reveal
++            data-reveal-delay="160"
++            tabindex="0"
++          >
++            <strong>9.6/10</strong>
++            <span>Client satisfaction score from post-launch surveys</span>
+           </div>
+-        </figure>
+-        <figure class="revealcard" aria-label="Urgent CTA">
+-          <div class="cover">READ ME</div>
+-          <div class="content" style="text-align:center">
+-            <h3>90% off — first two months</h3>
+-            <p>Only 5 founder spots. When they’re gone, the deal is gone.</p>
+-            <a href="#" class="cta cta-small" data-open="contact-modal">Claim 90% Off</a>
++        </div>
++      </section>
++
++      <section class="section section--alt" id="contact">
++        <div class="container contact">
++          <div class="contact__intro" data-reveal>
++            <h2>Ready to build your growth engine?</h2>
++            <p class="muted">
++              Tell us where you&apos;re stuck. We&apos;ll send a custom plan
++              with timelines, forecasts, and pricing.
++            </p>
++            <ul class="contact__highlights">
++              <li>24-hour response guarantee</li>
++              <li>Full creative &amp; media audit included</li>
++              <li>We work as an embedded partner</li>
++            </ul>
++            <div class="contact__pulse" aria-hidden="true"></div>
+           </div>
+-        </figure>
++          <form
++            id="contact-form"
++            class="contact__form"
++            action="https://formspree.io/f/xayrlgzd"
++            method="POST"
++            data-reveal
++          >
++            <label class="field">
++              <span class="field__label">Your name</span>
++              <input
++                type="text"
++                name="name"
++                placeholder="Jane Founder"
++                autocomplete="name"
++                required
++              />
++            </label>
++            <label class="field">
++              <span class="field__label">Work email</span>
++              <input
++                type="email"
++                name="email"
++                placeholder="you@brand.com"
++                autocomplete="email"
++                required
++              />
++            </label>
++            <label class="field field--textarea">
++              <span class="field__label">What&apos;s the goal?</span>
++              <textarea
++                name="message"
++                rows="4"
++                maxlength="500"
++                placeholder="Launch a new funnel, scale spend, improve retention..."
++                required
++              ></textarea>
++              <span class="char-counter"
++                ><span data-char-counter>500</span> characters left</span
++              >
++            </label>
++            <button type="submit" class="cta">Send the brief</button>
++            <p
++              class="form-status"
++              role="status"
++              aria-live="polite"
++              data-submit-status
++            >
++              We reply within 24 hours.
++            </p>
++          </form>
++        </div>
++      </section>
++    </main>
++
++    <footer class="footer">
++      <div class="container">
++        <p>
++          &copy; <span id="year"></span> 300 Kings. Built with relentless
++          experimentation.
++        </p>
+       </div>
+-    </section>
+-
+-    <section class="bubble" id="about">
+-      <h2>About Us</h2>
+-      <p>We’re a team of creative minds who put real passion into every ad campaign. We keep things simple: we let computers do computer stuff, while our team crafts the creative copy. With Google’s AI built specifically for ad campaigns, there’s no stopping your company’s growth!</p>
+-    </section>
+-
+-    <section class="bubble"><h2>FAQ</h2>
+-      <ul>
+-        <li><strong>Do I need a big budget?</strong> No, we work with small to medium budgets and scale as you grow.</li>
+-        <li><strong>How soon will I see results?</strong> Many campaigns generate leads in the first week.</li>
+-        <li><strong>Do I need a website?</strong> Not required—we can create a landing page for you.</li>
+-        <li><strong>What if it doesn’t work?</strong> If you’re not satisfied with the results, I can refer you to a bigger, better marketing agency.</li>
+-      </ul>
+-    </section>
+-
+-    <section class="bubble" id="contact">
+-      <h2>Contact Us</h2>
+-      <form action="https://formspree.io/f/xqaykddn" method="POST" accept-charset="UTF-8">
+-        <input required name="name" placeholder="Your name" />
+-        <input required type="email" name="email" placeholder="Email" />
+-        <input type="tel" name="phone" placeholder="Phone (optional)" />
+-        <textarea required name="message" placeholder="Tell us about your goals" style="min-height:120px"></textarea>
+-        <button class="btn">Send</button>
+-      </form>
+-    </section>
+-  </main>
+-
+-  <!-- Contact modal -->
+-  <div id="contact-modal" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle">
+-    <div class="modal__overlay" data-close="contact-modal"></div>
+-    <div class="modal__card" role="document">
+-      <button class="modal__close" aria-label="Close contact form" data-close="contact-modal">✕</button>
+-      <h3 id="contactModalTitle">Contact Us</h3>
+-      <form action="https://formspree.io/f/xqaykddn" method="POST" accept-charset="UTF-8">
+-        <input required name="name" placeholder="Your name" />
+-        <input required type="email" name="email" placeholder="Email" />
+-        <input type="tel" name="phone" placeholder="Phone (optional)" />
+-        <textarea required name="message" placeholder="Tell us about your goals" style="min-height:120px"></textarea>
+-        <button class="btn" style="width:100%">Send</button>
+-      </form>
+-    </div>
+-  </div>
+-
+-  <footer>© 2025 300 Kings. All rights reserved.
+-    <span class="footer-cert" aria-label="Google Certified">
+-      <svg class="g" viewBox="0 0 48 48" aria-hidden="true" focusable="false" style="vertical-align:middle">
+-        <clipPath id="g-clip-footer"><path d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"></path></clipPath>
+-        <g clip-path="url(#g-clip-footer)">
+-          <path fill="#FBBC05" d="M0 37V11l17 13z"></path>
+-          <path fill="#EA4335" d="M0 11l17 13 7-6.1L48 14V0H0z"></path>
+-          <path fill="#34A853" d="M0 37l30-23 7.9 1L48 0v48H0z"></path>
+-          <path fill="#4285F4" d="M48 48L17 24l-4-3 35-10z"></path>
+-        </g>
+-      </svg>
+-      <span>Google Certified</span>
+-      <svg width="16" height="16" viewBox="0 0 100 100" role="img" aria-label="star" style="vertical-align:middle;margin-left:8px">
+-        <defs>
+-          <linearGradient id="gs" x1="0" y1="0" x2="1" y2="1">
+-            <stop offset="0%" stop-color="#fff6c5"/><stop offset="60%" stop-color="#ffd24a"/><stop offset="100%" stop-color="#f2a538"/>
+-          </linearGradient>
+-        </defs>
+-        <polygon points="50,5 61,38 95,38 68,58 78,92 50,72 22,92 32,58 5,38 39,38" fill="url(#gs)"></polygon>
+-      </svg>
+-    </span>
+-  </footer>
+-
+-  <!-- Three.js for the 3D hero -->
+-  <script src="https://unpkg.com/three@0.159.0/build/three.min.js"></script>
+-  <script>
+-    // Infinity hero + THREE (3 stars in even orbit)
+-    (function(){
+-      const el = document.getElementById('hero3d');
+-      let w = el.clientWidth || window.innerWidth; const isCoarse = matchMedia('(pointer:coarse)').matches; const H = isCoarse ? Math.max(200, Math.min(320, Math.round(window.innerWidth*0.45))) : 300;
+-      const scene = new THREE.Scene();
+-      const camera = new THREE.PerspectiveCamera(55, w/H, 0.1, 100);
+-      const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+-      renderer.setPixelRatio(isCoarse ? 1.2 : Math.min(2, window.devicePixelRatio)); renderer.setSize(w,H); el.appendChild(renderer.domElement);
+-
+-      // Lights
+-      const dir = new THREE.DirectionalLight(0x89d5ff, 1.25); dir.position.set(3.2,4.2,5.6); scene.add(dir);
+-      scene.add(new THREE.AmbientLight(0x2c3f66, .55));
+-      const warm = new THREE.DirectionalLight(0xffe9a3, 0.7); warm.position.set(-3,2,2); scene.add(warm);
+-      const sparkle = new THREE.PointLight(0xfff2aa, 1.0, 10); scene.add(sparkle);
+-
+-      // Hero infinity loops (double lemniscate, knotted)
+-      class InfinityCurve extends THREE.Curve {
+-        constructor(a=1.0, phase=0.0, lift=0.35){ super(); this.a=a; this.phase=phase; this.lift=lift; }
+-        getPoint(t, target=new THREE.Vector3()){
+-          const A=this.a; const ang=t*Math.PI*2 + this.phase; const s=Math.sin(ang), c=Math.cos(ang);
+-          const denom = 1 + s*s + 1e-6; // stabilize near poles
+-          const x = (A * c) / denom;
+-          const z = (A * s * c) / denom * 1.35;
+-          const y = this.lift * Math.sin(2*ang) + 0.12 * Math.sin(ang*3.0);
+-          return target.set(x,y,z);
+-        }
+-      }
+-      const curve1 = new InfinityCurve(1.25, 0.0, 0.35);
+-      const curve2 = new InfinityCurve(1.25, Math.PI, 0.35);
+-      const tubeSegments = isCoarse ? 320 : 620, tubeRadius = isCoarse ? 0.20 : 0.22, tubeRadSeg = isCoarse ? 36 : 64;
+-
+-      const mat = new THREE.MeshPhysicalMaterial({ color: 0x134a9c, metalness: 1.0, roughness: 0.08, clearcoat: 1, clearcoatRoughness: 0.02, ior: 1.45, emissive: 0x0a3d89, emissiveIntensity: 0.22, sheen: 1, sheenColor: new THREE.Color(0xbfd6ff), sheenRoughness: 0.18 });
+-      // Glossy camo + fresnel
+-      mat.onBeforeCompile = (shader)=>{
+-        window.__shaderPatched = true;
+-        shader.vertexShader = `varying vec3 vPos;\nvarying vec3 vNrm;\n` + shader.vertexShader.replace('#include <begin_vertex>', `vPos = position;\nvNrm = normalize(normalMatrix * normal);\n#include <begin_vertex>`);
+-        const CAMO_PREFIX = `
+-          varying vec3 vPos;
+-          varying vec3 vNrm;
+-          float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453123); }
+-          float noise(vec2 p){ vec2 i=floor(p); vec2 f=fract(p); float a=hash(i); float b=hash(i+vec2(1.0,0.0)); float c=hash(i+vec2(0.0,1.0)); float d=hash(i+vec2(1.0,1.0)); vec2 u=f*f*(3.0-2.0*f); return mix(a,b,u.x)+ (c-a)*u.y*(1.0-u.x) + (d-b)*u.x*u.y; }
+-          float fbm(vec2 p){ float v=0.0; float a=0.5; for(int i=0;i<5;i++){ v+=a*noise(p); p*=2.0; a*=0.5; } return v; }
+-        `;
+-        shader.fragmentShader = CAMO_PREFIX + shader.fragmentShader.replace('#include <dithering_fragment>', `
+-          vec3 c1 = vec3(0.02,0.02,0.03);
+-          vec3 c2 = vec3(0.10,0.15,0.22);
+-          vec3 c3 = vec3(0.16,0.28,0.46);
+-          vec3 c4 = vec3(0.06,0.18,0.34);
+-          vec2 uvA = vPos.xy*3.0; vec2 uvB = vPos.zy*2.0; vec2 uvC = vPos.xz*1.6;
+-          float n = fbm(uvA) * 0.6 + fbm(uvB*1.3) * 0.4;
+-          float m = fbm(uvC*1.1);
+-          vec3 camo = c3;
+-          if(n>0.55) camo = mix(c3,c4,0.6);
+-          if(n>0.72) camo = mix(c4,c2,0.75);
+-          if(m>0.80) camo = c1;
+-          float darkMask = smoothstep(0.8,0.95,m);
+-          vec3 baseCol = gl_FragColor.rgb;
+-          vec3 mixed = mix(baseCol, camo, 0.28);
+-          mixed = mix(mixed, mixed*0.5, darkMask);
+-          vec3 V = normalize(vViewPosition);
+-          float fres = pow(1.0 - max(dot(normalize(vNrm), V), 0.0), 3.0);
+-          mixed += vec3(1.0) * fres * 0.25;
+-          gl_FragColor.rgb = mixed;
+-          #include <dithering_fragment>
+-        `);
+-      };
+-      const loop1 = new THREE.Mesh(new THREE.TubeGeometry(curve1, tubeSegments, tubeRadius, tubeRadSeg, true), mat);
+-      const loop2 = new THREE.Mesh(new THREE.TubeGeometry(curve2, tubeSegments, tubeRadius, tubeRadSeg, true), mat);
+-      const knot = new THREE.Group(); knot.add(loop1); knot.add(loop2); scene.add(knot);
+-      camera.position.z = 4.6;
+-
+-      // Cursor mapping (360°)
+-      let aimX=0.5, aimY=0.5; let targetX=0, targetY=0; let energy=0;
+-      function onMove(e){
+-        const clientX = (e.clientX ?? e.touches?.[0]?.clientX ?? 0);
+-        const clientY = (e.clientY ?? e.touches?.[0]?.clientY ?? 0);
+-        const x = clientX / window.innerWidth; const y = clientY / window.innerHeight;
+-        const dx = x - aimX, dy = y - aimY;
+-        aimX = x; aimY = y; targetX = (x - 0.5) * 2.7; targetY = (y - 0.5) * 2.7;
+-        energy = Math.min(1, energy + Math.hypot(dx, dy) * 2.2);
+-      }
+-      window.addEventListener('mousemove', onMove);
+-      window.addEventListener('touchmove', onMove, {passive:true});
+-      window.addEventListener('resize', ()=>{ w=el.clientWidth||window.innerWidth; renderer.setSize(w,H); camera.aspect=w/H; camera.updateProjectionMatrix(); });
+-
+-      // Gold star factory
+-      function makeStarShape(R=1, r=0.45, spikes=5){ const s=new THREE.Shape(); const step=Math.PI/spikes; s.moveTo(0,-R); for(let i=1;i<spikes*2;i++){ const rad=(i%2===0)?R:r*R; const a=-Math.PI/2+i*step; s.lineTo(Math.cos(a)*rad, Math.sin(a)*rad);} s.closePath(); return s; }
+-      const gold = new THREE.MeshPhysicalMaterial({ color: 0xFFD978, metalness: 1, roughness: 0.1, clearcoat: 1, clearcoatRoughness: 0.05, emissive: 0xFFC95E, emissiveIntensity: 0.1 });
+-      const depth = 0.32; const starGeom = new THREE.ExtrudeGeometry(makeStarShape(1.0, 0.42, 5), { depth, bevelEnabled:true, bevelSize:0.06, bevelThickness:0.06, bevelSegments:3 }); starGeom.translate(0,0,-depth/2);
+-      function makeBadgeTexture(){ const S=512; const c=document.createElement('canvas'); c.width=S; c.height=S; const ctx=c.getContext('2d'); function drawG(cx,cy,size){ const s=size/48; ctx.save(); ctx.translate(cx-size/2,cy-size/2); ctx.scale(s,s); const gPath=new Path2D("M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"); ctx.save(); ctx.clip(gPath); ctx.fillStyle='#FBBC05'; ctx.fill(new Path2D('M0 37V11l17 13z')); ctx.fillStyle='#EA4335'; ctx.fill(new Path2D('M0 11l17 13 7-6.1L48 14V0H0z')); ctx.fillStyle='#34A853'; ctx.fill(new Path2D('M0 37l30-23 7.9 1L48 0v48H0z')); ctx.fillStyle='#4285F4'; ctx.fill(new Path2D('M48 48L17 24l-4-3 35-10z')); ctx.restore(); ctx.restore(); }
+-        ctx.fillStyle='rgba(0,0,0,0.25)'; ctx.beginPath(); ctx.arc(S/2,S/2,S*0.46,0,Math.PI*2); ctx.fill(); drawG(S/2,S/2-50,200); ctx.fillStyle='rgba(255,255,255,0.95)'; let fs=64; const text='CERTIFIED'; do { ctx.font=`800 ${fs}px Manrope, system-ui, sans-serif`; } while (ctx.measureText(text).width > S*0.78 && (fs-=2)>28); ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(text,S/2,S/2+100); return c; }
+-      const badgeTex = new THREE.CanvasTexture(makeBadgeTexture());
+-      function createStarGroup(){ const star = new THREE.Mesh(starGeom, gold); const badge = new THREE.Mesh(new THREE.CircleGeometry(0.62,64), new THREE.MeshBasicMaterial({ map: badgeTex, transparent:true })); badge.position.z = depth/2 + 0.02; const g=new THREE.Group(); g.add(star); g.add(badge); g.rotation.set(Math.random()*0.6, Math.random()*Math.PI, Math.random()*0.6); return g; }
+-
+-      const ORBIT_R = 2.4; const ORBIT_SPEED = 0.104; // uniform speed
+-      const stars = [
+-        { group: createStarGroup(), r: ORBIT_R, vy: 0.0, speed: ORBIT_SPEED, scale: 0.34, phase: 0.0,              spin: 0.03  },
+-        { group: createStarGroup(), r: ORBIT_R, vy: 0.0, speed: ORBIT_SPEED, scale: 0.34, phase: Math.PI*2/3,   spin: 0.035 },
+-        { group: createStarGroup(), r: ORBIT_R, vy: 0.0, speed: ORBIT_SPEED, scale: 0.34, phase: Math.PI*4/3,   spin: 0.04  }
+-      ];
+-      stars.forEach(s=>scene.add(s.group));
+-
+-      let t=0; (function animate(){ requestAnimationFrame(animate); t+=0.016;
+-        const targetRX = (aimY - 0.5) * Math.PI; // tilt
+-        const targetRY = (aimX - 0.5) * Math.PI * 2; // spin 360
+-        knot.rotation.x += (targetRX - knot.rotation.x) * 0.09;
+-        knot.rotation.y += (targetRY - knot.rotation.y) * 0.09;
+-        sparkle.position.x += ((targetX*2.2) - sparkle.position.x) * 0.12;
+-        sparkle.position.y += ((-targetY*1.6) + 0.6 - sparkle.position.y) * 0.12;
+-        sparkle.position.z += ((2.2) - sparkle.position.z) * 0.05;
+-
+-        const basePos = new THREE.Vector3(Math.cos(0)*ORBIT_R, 0, Math.sin(0)*ORBIT_R);
+-        const baseDist = camera.position.distanceTo(basePos);
+-        stars.forEach((s)=>{
+-          const a = t * s.speed + s.phase;
+-          s.group.position.set(Math.cos(a)*s.r, 0, Math.sin(a)*s.r);
+-          s.group.rotation.y += s.spin;
+-          const dist = camera.position.distanceTo(s.group.position);
+-          const sc = s.scale * (dist / baseDist);
+-          s.group.scale.set(sc, sc, sc);
+-        });
+-
+-        energy *= 0.92;
+-        mat.emissiveIntensity = 0.2 + energy*0.8;
+-        mat.clearcoatRoughness = Math.max(0.01, 0.04 - energy*0.02);
+-        renderer.render(scene, camera);
+-      })();
+-    })();
+-  </script>
+-
+-  <!-- Cursor-triggered marketing words (no trail) -->
+-  <script>
+-    (function(){
+-      const pops=document.getElementById('pops'); if(!pops) return;
+-      const words=['CPC','CAC','ROAS','A/B','CRM','SEM'];
+-      let i=0; let last=0; const MIN_DELAY= (matchMedia('(pointer:coarse)').matches ? 260 : 120); // ~15% faster
+-      function spawn(x,y){ const d=document.createElement('div'); d.className='pop badge'; const w = words[i++ % words.length]; if(w==='ROAS') d.classList.add('gold'); d.textContent=w; d.style.left=x+'px'; d.style.top=y+'px'; pops.appendChild(d); setTimeout(()=>d.remove(), 1700); }
+-      addEventListener('pointermove', (e)=>{ const now=performance.now(); if(now-last < MIN_DELAY) return; last=now; const x=e.clientX, y=e.clientY; setTimeout(()=>spawn(x,y), 80); });
+-    })();
+-  </script>
+-
+-  <!-- Services hover interaction -->
+-  <script>
+-    (function(){
+-      const items = document.querySelectorAll('#services li.svc');
+-      items.forEach(li=>{
+-        li.addEventListener('pointermove', (e)=>{
+-          const r = li.getBoundingClientRect();
+-          const x = e.clientX - r.left; const y = e.clientY - r.top;
+-          li.style.setProperty('--mx', x+'px');
+-          li.style.setProperty('--my', y+'px');
+-        });
+-        li.addEventListener('pointerleave', ()=>{
+-          li.style.removeProperty('--mx'); li.style.removeProperty('--my');
+-        });
+-      });
+-    })();
+-  </script>
+-
+-  <!-- Touch-friendly card toggles -->
+-  <script>
+-    (function(){
+-      const isTouch = matchMedia('(pointer:coarse)').matches;
+-      if(!isTouch) return;
+-      document.querySelectorAll('#brand .revealcard').forEach(card=>{
+-        const toggle = (e)=>{ if(e.target.closest('a')) return; e.preventDefault(); card.classList.toggle('open'); };
+-        card.addEventListener('touchstart', toggle, {passive:false});
+-        card.addEventListener('click', toggle);
+-      });
+-    })();
+-  </script>
+-
+-  <!-- Modal open/close -->
+-  <script>
+-    (function(){
+-      const body = document.body;
+-      function openModal(id){ const m=document.getElementById(id); if(!m) return; m.classList.add('open'); m.setAttribute('aria-hidden','false'); body.style.overflow='hidden'; }
+-      function closeModal(id){ const m=document.getElementById(id); if(!m) return; m.classList.remove('open'); m.setAttribute('aria-hidden','true'); body.style.overflow=''; }
+-      document.querySelectorAll('[data-open]')?.forEach(btn=>{
+-        btn.addEventListener('click', (e)=>{ e.preventDefault(); openModal(btn.getAttribute('data-open')); });
+-      });
+-      document.addEventListener('click', (e)=>{
+-        const t=e.target; const id=t?.getAttribute?.('data-close'); if(id) closeModal(id);
+-      });
+-      document.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ const m=document.querySelector('.modal.open'); if(m) closeModal(m.id); }});
+-      // Expose for tests
+-      window.__contactModalReady = !!document.getElementById('contact-modal');
+-    })();
+-  </script>
+-
+-  <!-- FOMO logic (single source of truth; safe against multiple bindings) -->
+-  <script>
+-    (function(){
+-      const el = document.getElementById('spots');
+-      const claim = document.getElementById('claim');
+-      if(!el || !claim || claim.dataset.boundCalendly === '1') return;
+-
+-      const KEY = 'founder_spots_left_v1';
+-      let spots = parseInt(localStorage.getItem(KEY) || '5', 10);
+-      if (Number.isNaN(spots) || spots < 1 || spots > 5) spots = 5;
+-
+-      const render = () => el.textContent = `( ${spots} of 5 left )`;
+-      render();
+-
+-      function openCalendly(){
+-        const url = 'https://calendly.com/kevincacheiro93/30-min-meeting';
+-        if (window.Calendly && typeof Calendly.initPopupWidget === 'function') {
+-          Calendly.initPopupWidget({ url });
+-        } else {
+-          window.open(url, '_blank', 'noopener');
+-        }
+-      }
+-
+-      claim.addEventListener('click', (e) => {
+-        e.preventDefault();
+-        openCalendly();
+-        if (spots > 1) { spots -= 1; localStorage.setItem(KEY, String(spots)); render(); }
+-      }, { passive:false });
+-
+-      claim.dataset.boundCalendly = '1';
+-    })();
+-  </script>
+-
+-  <!-- Leprechaun background runner (Enhanced) -->
+-  <script>
+-  /* Leprechaun Background (Enhanced)
+-     - Detailed sprite: beard, legs (with knees), eyes + blink
+-     - Pot of gold with coins & shine; trail dust
+-     - Mario-like coin shards in explosion (rim ridges + star emboss)
+-     - Two-click logic:
+-          1st click: jump, mouth "O", speed +35% (keeps running faster)
+-          2nd click: explode
+-     - Per-leprechaun 20s respawn, independent
+-     - Mobile aware: fewer particles, lower DPR; animation paused on tab hidden
+-  */
+-  (function(){
+-    const cvs = document.getElementById('lepbg'); if(!cvs) return;
+-    const ctx = cvs.getContext('2d');
+-
+-    // --- setup & DPR ---
+-    const isCoarse = matchMedia('(pointer:coarse)').matches;
+-    let dpr = isCoarse ? 1 : Math.min(2, window.devicePixelRatio || 1);
+-    function resize(){
+-      dpr = isCoarse ? 1 : Math.min(2, window.devicePixelRatio || 1);
+-      cvs.width  = innerWidth * dpr;
+-      cvs.height = innerHeight * dpr;
+-      cvs.style.width = '100%';
+-      cvs.style.height = '100%';
+-      ctx.setTransform(dpr,0,0,dpr,0,0);
+-    }
+-    resize(); addEventListener('resize', resize);
+-
+-    // --- utils ---
+-    const TAU = Math.PI*2;
+-    const clamp = (n,a,b)=>Math.max(a,Math.min(b,n));
+-    const rnd = (a=1,b=0)=>Math.random()*(a-b)+b;
+-    const now = ()=>performance.now();
+-
+-    // --- particles ---
+-    const coins=[]; const sparks=[]; const rings=[]; const dust=[];
+-
+-    class Ring {
+-      constructor(x,y){
+-        this.x=x; this.y=y; this.r=8; this.a=0.5; this.v=4.8;
+-      }
+-      step(){
+-        this.r += this.v;
+-        this.a -= 0.015;
+-        return this.a > 0;
+-      }
+-      draw(c){
+-        c.save();
+-        c.globalAlpha = Math.max(0,this.a);
+-        c.strokeStyle = 'rgba(255,220,120,0.9)';
+-        c.lineWidth = 2;
+-        c.beginPath(); c.arc(this.x, this.y, this.r, 0, TAU); c.stroke();
+-        c.restore();
+-      }
+-    }
+-
+-    class Spark {
+-      constructor(x,y,baseVX){
+-        this.x=x; this.y=y;
+-        const ang = Math.random()*TAU;
+-        const spd = rnd(3.5,1.5);
+-        this.vx = Math.cos(ang)*spd + (baseVX||0)*0.3;
+-        this.vy = Math.sin(ang)*spd - 0.8;
+-        this.a=1; this.r=rnd(2,1);
+-        this.g=0.08; this.f=0.985;
+-      }
+-      step(){
+-        this.x+=this.vx; this.y+=this.vy;
+-        this.vy+=this.g; this.vx*=this.f; this.vy*=this.f;
+-        this.a-=0.02;
+-        return this.a>0;
+-      }
+-      draw(c){
+-        c.save();
+-        c.globalAlpha = Math.max(0,this.a);
+-        c.fillStyle='rgba(255,245,200,0.95)';
+-        c.beginPath(); c.arc(this.x,this.y,this.r,0,TAU); c.fill();
+-        c.restore();
+-      }
+-    }
+-
+-    function drawCoinShape(c,x,y,R,spin=0){
+-      c.save();
+-      c.translate(x,y); c.rotate(spin);
+-
+-      // body gradient
+-      const g = c.createRadialGradient(0,0,0, 0,0,R*1.1);
+-      g.addColorStop(0,'#fff7cf');
+-      g.addColorStop(0.45,'#ffd34d');
+-      g.addColorStop(1,'#c8951b');
+-      c.fillStyle = g;
+-      c.beginPath(); c.arc(0,0,R,0,TAU); c.fill();
+-
+-      // rim
+-      c.lineWidth = 2;
+-      c.strokeStyle = 'rgba(160,110,20,0.9)';
+-      c.beginPath(); c.arc(0,0,R*0.86,0,TAU); c.stroke();
+-
+-      // ridges
+-      c.strokeStyle = 'rgba(255,220,120,0.7)';
+-      for(let i=0;i<14;i++){
+-        const a = (i/14)*TAU;
+-        const rx = Math.cos(a)*R*0.98, ry=Math.sin(a)*R*0.98;
+-        const ix = Math.cos(a)*R*0.75, iy=Math.sin(a)*R*0.75;
+-        c.beginPath(); c.moveTo(ix,iy); c.lineTo(rx,ry); c.stroke();
+-      }
+-
+-      // embossed star
+-      c.save();
+-        c.globalAlpha=0.9;
+-        c.fillStyle='rgba(255,255,255,0.25)';
+-        c.beginPath();
+-        for(let i=0;i<5;i++){
+-          const a=i*TAU/5 - Math.PI/2;
+-          const ro=(i%2? R*0.36 : R*0.18);
+-          const px=Math.cos(a)*ro, py=Math.sin(a)*ro;
+-          if(i===0) c.moveTo(px,py); else c.lineTo(px,py);
+-        }
+-        c.closePath(); c.fill();
+-      c.restore();
+-
+-      // highlight
+-      c.globalAlpha=0.65;
+-      c.beginPath(); c.ellipse(-R*0.45,-R*0.25,R*0.5,R*0.2,0,0,TAU); c.fillStyle='rgba(255,255,255,0.7)'; c.fill();
+-      c.restore();
+-    }
+-
+-    class Coin {
+-      constructor(x,y,baseVX){
+-        this.x=x; this.y=y;
+-        const a=Math.random()*TAU;
+-        const s=isCoarse ? rnd(4,2.2) : rnd(6,3.2);
+-        this.vx=Math.cos(a)*s + (baseVX||0)*0.4;
+-        this.vy=Math.sin(a)*s - 1.4;
+-        this.r=rnd(7,5);
+-        this.a=1;
+-        this.spin = Math.random()*TAU;
+-        this.vspin = (Math.random()-0.5)*0.25;
+-        this.g=0.1; this.f=0.987;
+-      }
+-      step(){
+-        this.x+=this.vx; this.y+=this.vy;
+-        this.vy+=this.g; this.vx*=this.f; this.vy*=this.f;
+-        this.spin += this.vspin;
+-        this.a-=0.016;
+-        return this.a>0;
+-      }
+-      draw(c){
+-        c.save(); c.globalAlpha=Math.max(0,this.a);
+-        drawCoinShape(c,this.x,this.y,this.r,this.spin);
+-        c.restore();
+-      }
+-    }
+-
+-    class Dust {
+-      constructor(x,y,baseVX){
+-        this.x=x; this.y=y;
+-        this.vx=(Math.random()*0.6+0.2)+(baseVX||0)*0.12;
+-        this.vy=-(Math.random()*1.2+0.4);
+-        this.r=Math.random()*1.6+1.0;
+-        this.a=0.9;
+-        this.g=0.05;
+-      }
+-      step(){
+-        this.x+=this.vx; this.y+=this.vy; this.vy+=this.g; this.a-=0.018;
+-        return this.a>0;
+-      }
+-      draw(c){
+-        const g=c.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r*2.2);
+-        g.addColorStop(0,'#fff9d6'); g.addColorStop(0.5,'#ffd34d'); g.addColorStop(1,'rgba(255,180,0,0)');
+-        c.save(); c.globalAlpha=Math.max(0,this.a); c.fillStyle=g; c.beginPath(); c.arc(this.x,this.y,this.r*2,0,TAU); c.fill(); c.restore();
+-      }
+-    }
+-
+-    // --- leprechaun state ---
+-    function makeLep(scale, yBase){
+-      return {
+-        x: -120 - Math.random()*200,
+-        y: yBase,
+-        baseY: yBase,
+-        scale,
+-        alpha: scale>0.9?0.28:0.2,
+-        speed: rnd(1.6,1.2) * (isCoarse?0.9:1),
+-        vx: 0,
+-        phase: Math.random()*TAU,
+-        exploded:false,
+-        respawnAt:0,
+-        // interactions
+-        alerted:false,
+-        mouthTimer:0,
+-        jumpVy:0,
+-        jumping:false,
+-        // wander
+-        wobbleA: rnd(40,20),
+-        wobbleB: rnd(0.9,0.5),
+-        // eye blink
+-        blinkAt: now() + rnd(2600,1200),
+-        eyeWide:0
+-      };
+-    }
+-
+-    const leps = isCoarse
+-      ? [ makeLep(0.95, innerHeight*0.76) ]
+-      : [ makeLep(1.0, innerHeight*0.70), makeLep(0.82, innerHeight*0.78), makeLep(0.66, innerHeight*0.82) ];
+-
+-    // --- drawing the character ---
+-    function drawPotOfGold(c, surprised=false){
+-      // pot body
+-      const pg=c.createLinearGradient(0,0,0,22);
+-      pg.addColorStop(0,'#1b140b'); pg.addColorStop(1,'#0c0a07');
+-      c.fillStyle=pg;
+-      c.beginPath(); c.ellipse(0,8,12,8,0,0,TAU); c.fill();
+-      c.fillStyle='#0f0c07'; c.beginPath(); c.ellipse(0,1,14,6,0,0,TAU); c.fill();
+-
+-      // gold pile
+-      const grd = c.createRadialGradient(0,-1,2, 0,0,12);
+-      grd.addColorStop(0,'#fff6c5'); grd.addColorStop(0.6,'#ffd24a'); grd.addColorStop(1,'#caa023');
+-      c.fillStyle=grd; c.beginPath(); c.ellipse(0,-1,10.5,5,0,0,TAU); c.fill();
+-
+-      // coins peeking
+-      for(let i=0;i<4;i++){
+-        c.save(); c.translate(rnd(5,-5), rnd(1,-1)); drawCoinShape(c, rnd(4,-4), rnd(-3,-5), rnd(2.6,2.0)); c.restore();
+-      }
+-
+-      // highlight
+-      c.globalAlpha=0.6; c.fillStyle='rgba(255,255,255,0.5)'; c.beginPath();
+-      c.ellipse(-4,-2,4,1.4,0,0,TAU); c.fill(); c.globalAlpha=1;
+-
+-      // subtle shimmer when surprised
+-      if(surprised){
+-        c.globalAlpha=0.35;
+-        c.strokeStyle='rgba(255,235,150,0.9)'; c.lineWidth=1;
+-        c.beginPath(); c.arc(0,8,13.5,0,TAU); c.stroke();
+-        c.globalAlpha=1;
+-      }
+-    }
+-
+-    function drawLep(c, L, t){
+-      c.save();
+-      c.translate(L.x, L.y);
+-      c.scale(L.scale, L.scale);
+-
+-      // shadow
+-      c.globalAlpha = 0.25; c.fillStyle='#000';
+-      c.beginPath(); c.ellipse(0,26,22,6,0,0,TAU); c.fill();
+-      c.globalAlpha = 1;
+-
+-      // bob + anim
+-      const bob = Math.sin(L.phase*2)*1.6;
+-      const legA = Math.sin(L.phase)*0.9;
+-      const legB = -Math.sin(L.phase)*0.9;
+-      const armA = -Math.sin(L.phase+0.3)*0.8;
+-      const armB =  Math.sin(L.phase+0.3)*0.8;
+-      c.translate(0, bob + (L.jumping? -4:0));
+-
+-      // legs (with knees)
+-      function shoe(xo, ang){ c.save(); c.translate(xo,22); c.rotate(ang*0.45); c.fillStyle='#1b1b1b';
+-        c.beginPath(); c.moveTo(-8,-1); c.quadraticCurveTo(2,-3,8,0); c.lineTo(8,3); c.quadraticCurveTo(2,4,-8,2); c.closePath(); c.fill(); c.restore(); }
+-      function leg(xo, ang){
+-        c.save(); c.translate(xo,14); c.rotate(ang);
+-        c.strokeStyle='#114d1d'; c.lineWidth=6; c.lineCap='round';
+-        c.beginPath(); c.moveTo(0,0); c.lineTo(0,8); c.stroke(); // thigh
+-        c.translate(0,8); c.rotate(ang*0.6);
+-        c.beginPath(); c.moveTo(0,0); c.lineTo(0,8); c.stroke(); // shin
+-        c.restore();
+-      }
+-      leg(-8,legA); leg(8,legB); shoe(-10,legA); shoe(10,legB);
+-
+-      // torso
+-      c.save();
+-        const jg=c.createLinearGradient(0,0,0,18); jg.addColorStop(0,'#218a33'); jg.addColorStop(1,'#156b24');
+-        c.fillStyle=jg; c.fillRect(-14,0,28,18);
+-        c.fillStyle='#135c1e';
+-        c.beginPath(); c.moveTo(-14,0); c.lineTo(-2,0); c.lineTo(-6,8); c.lineTo(-14,8); c.closePath(); c.fill();
+-        c.beginPath(); c.moveTo(14,0); c.lineTo(2,0); c.lineTo(6,8); c.lineTo(14,8); c.closePath(); c.fill();
+-        // buttons
+-        c.fillStyle='#f9d45a'; for(let i=0;i<3;i++){ c.beginPath(); c.arc(0,4+i*5,1.2,0,TAU); c.fill(); }
+-        // belt
+-        c.fillStyle='#0f0f0f'; c.fillRect(-14,8,28,4); c.fillStyle='#f2c23f'; c.fillRect(-2,8,4,4);
+-      c.restore();
+-
+-      // arms
+-      function arm(xo, ang, withPot=false, surprised=false){
+-        c.save(); c.translate(xo,4); c.rotate(ang);
+-        c.strokeStyle='#1e7f2e'; c.lineWidth=5; c.lineCap='round';
+-        c.beginPath(); c.moveTo(0,0); c.lineTo(withPot? 10:16, withPot? 2: 6); c.stroke();
+-        if(withPot){
+-          c.translate(10,2); c.save(); c.rotate(-0.2+Math.sin(L.phase)*0.05);
+-          drawPotOfGold(c, surprised);
+-          c.restore();
+-          const m = c.getTransform(); c.restore();
+-          return {x:m.e, y:m.f-4};
+-        }
+-        c.restore(); return null;
+-      }
+-      const surprised = L.mouthTimer>0;
+-      const spill = arm(12, armA, true, surprised);
+-      arm(-12, armB, false, false);
+-
+-      // head
+-      c.save();
+-        // face
+-        const fg=c.createRadialGradient(0,-10,2,0,-8,16); fg.addColorStop(0,'#ffe7cf'); fg.addColorStop(1,'#f2d0aa');
+-        c.fillStyle=fg; c.beginPath(); c.arc(0,-8,8.5,0,TAU); c.fill();
+-
+-        // ears
+-        c.fillStyle='#eec6a0'; c.beginPath(); c.arc(-8.8,-8,2,0,TAU); c.arc(8.8,-8,2,0,TAU); c.fill();
+-
+-        // eyes (white + pupil; widen when surprised)
+-        const wide = surprised ? 1.25 : 1;
+-        const blink = (L.blinkAt - t) < 120 ? 0.15 : 1;
+-        c.fillStyle='#fff';
+-        c.beginPath(); c.ellipse(-3.2,-9,1.9,1.9*blink,0,0,TAU); c.ellipse(3.2,-9,1.9,1.9*blink,0,0,TAU); c.fill();
+-        c.fillStyle='#111';
+-        c.beginPath(); c.arc(-3.2,-9,0.9*wide*blink,0,TAU); c.arc(3.2,-9,0.9*wide*blink,0,TAU); c.fill();
+-
+-        // brows
+-        c.strokeStyle='#5a2a08'; c.lineWidth=1.2;
+-        c.beginPath(); c.moveTo(-5,-11); c.quadraticCurveTo(-3,-12,-1,-11); c.moveTo(1,-11); c.quadraticCurveTo(3,-12,5,-11); c.stroke();
+-
+-        // nose
+-        c.fillStyle='#eab999'; c.beginPath(); c.arc(0,-6,1.6,0,TAU); c.fill();
+-
+-        // beard (fuller, ginger)
+-        c.fillStyle='#de7e22';
+-        c.beginPath();
+-        c.moveTo(-7,-4); c.quadraticCurveTo(0,4,7,-4); // moustache base
+-        c.quadraticCurveTo(0,8,-7,-4); c.fill();
+-        // chin beard
+-        c.beginPath();
+-        c.moveTo(-6,-3); c.quadraticCurveTo(0,7,6,-3); c.quadraticCurveTo(0,12,-6,-3); c.fill();
+-        c.strokeStyle='rgba(120,60,10,0.5)'; c.lineWidth=1;
+-        for(let k=-5;k<=5;k+=2){ c.beginPath(); c.moveTo(k,-1); c.quadraticCurveTo(k+0.5,1,k+1.5,2.6); c.stroke(); }
+-
+-        // mouth
+-        c.fillStyle='#0b0b0b';
+-        if (surprised) { // "oh"
+-          c.beginPath(); c.ellipse(0,-4,1.6,2.0,0,0,TAU); c.fill();
+-        } else {
+-          c.beginPath(); c.moveTo(-6,-4); c.quadraticCurveTo(0,2,6,-4); c.quadraticCurveTo(0,6,-6,-4); c.fill();
+-        }
+-
+-        // hat
+-        const hg=c.createLinearGradient(0,-20,0,-8); hg.addColorStop(0,'#1aa542'); hg.addColorStop(1,'#147b31');
+-        c.fillStyle=hg; c.fillRect(-11,-20,22,8); c.fillRect(-16,-12,32,4);
+-        c.fillStyle='#0e0e0e'; c.fillRect(-11,-17,22,3); c.fillStyle='#f2c23f'; c.fillRect(-2,-17,4,3);
+-        // clover
+-        c.fillStyle='#29c35a'; for(let k=0;k<3;k++){ c.beginPath(); c.arc(-10 + k*3, -22, 2, 0, TAU); c.fill(); }
+-        c.strokeStyle='#189a40'; c.lineWidth=0.8; c.beginPath(); c.moveTo(-9,-22); c.lineTo(-9,-18); c.stroke();
+-      c.restore();
+-
+-      c.restore();
+-      return spill;
+-    }
+-
+-    // --- interactions ---
+-    function explode(L){
+-      const base = L.scale*1;
+-      const N = (isCoarse ? 70 : 120) * base;
+-      for(let i=0;i<N;i++) coins.push(new Coin(L.x + rnd(6,-6), L.y-8 + rnd(6,-6), L.speed));
+-      for(let i=0;i<N*0.6;i++) sparks.push(new Spark(L.x, L.y-8, L.speed));
+-      rings.push(new Ring(L.x, L.y-6));
+-      L.exploded = true;
+-      L.respawnAt = now() + 20000; // 20s per lep
+-      window.__lep_last_explosion = Date.now();
+-    }
+-
+-    addEventListener('click', (e)=>{
+-      const px=e.clientX, py=e.clientY;
+-      const t=now();
+-      for(const L of leps){
+-        if(L.exploded && t < L.respawnAt) continue;
+-        const R=28*L.scale;
+-        const dx=px-L.x, dy=py-L.y;
+-        if(dx*dx+dy*dy < R*R){
+-          // first click -> alert
+-          if(!L.alerted){
+-            L.alerted = true;
+-            L.mouthTimer = 900;   // "oh" duration ms
+-            if(!L.jumping){ L.jumping = true; L.jumpVy = -7.2*L.scale; }
+-            L.speed *= 1.35; // permanent boost
+-            // little sparkle pop
+-            for(let i=0;i<10;i++) sparks.push(new Spark(L.x, L.y-10, L.speed));
+-          } else {
+-            // second click -> boom
+-            explode(L);
+-          }
+-          break;
+-        }
+-      }
+-    }, { passive:true });
+-
+-    // --- main loop ---
+-    let last = now();
+-    let paused = false;
+-    document.addEventListener('visibilitychange', ()=>{ paused = document.hidden; last = now(); });
+-
+-    function tick(){
+-      if(!paused){
+-        const t = now();
+-        const dt = clamp((t - last)/16.666, 0.2, 2.5); // normalize to ~60fps units
+-        last = t;
+-
+-        ctx.clearRect(0,0,innerWidth,innerHeight);
+-
+-        // leps
+-        for(const L of leps){
+-          if(L.exploded){
+-            if(t>=L.respawnAt){
+-              // respawn
+-              L.exploded=false;
+-              L.alerted=false;
+-              L.jumping=false;
+-              L.mouthTimer=0;
+-              L.x = -120 - Math.random()*200;
+-              L.phase = Math.random()*TAU;
+-              // reset speed (fresh run)
+-              L.speed = rnd(1.6,1.2) * (isCoarse?0.9:1);
+-            }
+-          } else {
+-            // advance
+-            L.phase += 0.25 * (L.speed/1.6) * dt;
+-            // move
+-            const wobble = Math.sin(L.phase*L.wobbleB)*L.wobbleA;
+-            L.vx = L.speed * (1 + Math.sin(L.phase*0.1)*0.12);
+-            L.x += L.vx * dt;
+-            L.y = L.baseY + Math.sin(L.phase*0.5)*6 + wobble*0.02;
+-
+-            // jump physics
+-            if(L.jumping){
+-              L.y += L.jumpVy * dt;
+-              L.jumpVy += 0.6 * dt; // gravity
+-              if(L.y >= L.baseY){ L.y = L.baseY; L.jumping=false; }
+-            }
+-
+-            // timers
+-            if(L.mouthTimer>0){ L.mouthTimer -= (16.666*dt); if(L.mouthTimer<0) L.mouthTimer=0; }
+-            if(t >= L.blinkAt){ L.blinkAt = t + rnd(2600,1200); }
+-
+-            // draw
+-            ctx.save(); ctx.globalAlpha=L.alpha;
+-            const spill=drawLep(ctx, L, t);
+-            ctx.restore();
+-
+-            // dust trail from pot if available
+-            if(spill && Math.random()<0.18){ dust.push(new Dust(spill.x, spill.y, L.vx)); }
+-
+-            // wrap
+-            if(L.x > innerWidth+140){ L.x = -140 - Math.random()*140; L.phase = Math.random()*TAU; }
+-          }
+-        }
+-
+-        // particles
+-        for(let i=dust.length-1;i>=0;i--){ if(!dust[i].step()){ dust.splice(i,1); } else dust[i].draw(ctx); }
+-        for(let i=coins.length-1;i>=0;i--){ if(!coins[i].step()){ coins.splice(i,1); } else coins[i].draw(ctx); }
+-        for(let i=sparks.length-1;i>=0;i--){ if(!sparks[i].step()){ sparks.splice(i,1); } else sparks[i].draw(ctx); }
+-        for(let i=rings.length-1;i>=0;i--){ if(!rings[i].step()){ rings.splice(i,1); } else rings[i].draw(ctx); }
+-      }
+-      requestAnimationFrame(tick);
+-    }
+-    tick();
+-  })();
+-  </script>
++    </footer>
+ 
+-  <!-- Dev-only test harness: intercept external calls locally -->
+-  <script>
+-    (function(){
+-      const DEV = ['localhost','127.0.0.1'].includes(location.hostname);
+-      if(!DEV) return;
+-      // Intercept Formspree so you don't send test emails
+-      document.addEventListener('submit',(e)=>{
+-        const form = e.target;
+-        if(form.matches('form[action^="https://formspree.io/"]')){
+-          e.preventDefault();
+-          const data = Object.fromEntries(new FormData(form).entries());
+-          console.log('[DEV] Captured form submission:', data);
+-          alert('DEV MODE: form captured. Check console.');
+-        }
+-      });
+-      // Stub Calendly popup if the SDK hasn't loaded yet
+-      if(!(window.Calendly && typeof Calendly.initPopupWidget==='function')){
+-        window.Calendly = { initPopupWidget: ({url})=>{ console.log('[DEV] Calendly popup would open:', url); alert('DEV MODE: Calendly popup stub'); } };
+-      }
+-      console.info('[DEV] Dynamic-feature test harness is active.');
+-    })();
+-  </script>
+-</body>
++    <script type="module" src="assets/js/main.js"></script>
++  </body>
+ </html>
+ 
+EOF
+)
