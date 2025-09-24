@@ -1,9 +1,3 @@
- (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
-diff --git a//dev/null b/assets/js/leprechauns.js
-index 0000000000000000000000000000000000000000..f93f8d3d3b2223eaa14f07530d7f555e84be2819 100644
---- a//dev/null
-+++ b/assets/js/leprechauns.js
-@@ -0,0 +1,111 @@
 +import { triggerMoneyRain } from "./background.js";
 +
 +const LAYER_ID = "leprechaun-layer";
@@ -115,6 +109,3 @@ index 0000000000000000000000000000000000000000..f93f8d3d3b2223eaa14f07530d7f555e
 +
 +  layer.appendChild(fragment);
 +}
- 
-EOF
-)
