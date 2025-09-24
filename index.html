@@ -591,139 +591,151 @@
   </script>
 
  <!-- Leprechaun background runner (click to explode into coins; 35s respawn) -->
-<script>
-  (function(){
-    const cvs = document.getElementById('lepbg'); if(!cvs) return;
-    const ctx = cvs.getContext('2d');
+  <script>
+    (function(){
+      const cvs = document.getElementById('lepbg'); if(!cvs) return; const ctx = cvs.getContext('2d');
+      function resize(){ const dpr = matchMedia('(pointer:coarse)').matches ? 1 : (window.devicePixelRatio||1); cvs.width=innerWidth*dpr; cvs.height=innerHeight*dpr; cvs.style.width='100%'; cvs.style.height='100%'; ctx.setTransform(dpr,0,0,dpr,0,0);} resize(); addEventListener('resize', resize);
 
-    // Retina-safe canvas
-    function resize(){
-      const dpr = (window.devicePixelRatio||1);
-      cvs.width = innerWidth * dpr;
-      cvs.height = innerHeight * dpr;
-      cvs.style.width = '100%';
-      cvs.style.height = '100%';
-      ctx.setTransform(dpr,0,0,dpr,0,0);
-    }
-    resize();
-    addEventListener('resize', resize);
-
-    // --- Coins & dust (for explosion)
-    class Coin{
-      constructor(x,y,baseVX){
-        this.x=x; this.y=y;
-        const a=Math.random()*Math.PI*2, s=Math.random()*4+2.5;
-        this.vx=Math.cos(a)*s + (baseVX||0)*0.5;
-        this.vy=Math.sin(a)*s - 1.2;
-        this.r=Math.random()*3+2.2;
-        this.a=1; this.rot=Math.random()*Math.PI*2;
-        this.vrot=(Math.random()-0.5)*0.5;
+      // Fancy coin particles
+      class Coin{ constructor(x,y,baseVX){ this.x=x; this.y=y; const a=Math.random()*Math.PI*2; const s=Math.random()*4+2.5; this.vx=Math.cos(a)*s + (baseVX||0)*0.5; this.vy=Math.sin(a)*s - 1.2; this.r=Math.random()*3+2.2; this.a=1; this.rot=Math.random()*Math.PI*2; this.vrot=(Math.random()-0.5)*0.5; }
+        step(){ this.x+=this.vx; this.y+=this.vy; this.vy+=0.06; this.a-=0.016; this.rot+=this.vrot; }
+        draw(ctx){ ctx.save(); ctx.translate(this.x,this.y); ctx.rotate(this.rot); const R=this.r; const g=ctx.createRadialGradient(0,0,0,0,0,R*2.2); g.addColorStop(0,'#fff9d6'); g.addColorStop(0.5,'#ffd34d'); g.addColorStop(1,'rgba(255,180,0,0)'); ctx.globalAlpha=Math.max(0,this.a); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(0,0,R*2,0,Math.PI*2); ctx.fill();
+          ctx.globalAlpha=Math.max(0,this.a*0.9); ctx.strokeStyle='rgba(160,120,20,0.8)'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.arc(0,0,R*1.6,0,Math.PI*2); ctx.stroke();
+          ctx.globalAlpha=Math.max(0,this.a*0.7); ctx.fillStyle='rgba(255,223,120,0.9)'; ctx.beginPath();
+          for(let i=0;i<5;i++){ const ang=i*2*Math.PI/5 - Math.PI/2; const ro=i%2?R*0.7:R*1.2; const x=Math.cos(ang)*ro, y=Math.sin(ang)*ro; i?ctx.lineTo(x,y):ctx.moveTo(x,y); }
+          ctx.closePath(); ctx.fill();
+          ctx.globalAlpha=Math.max(0,this.a*0.8); ctx.fillStyle='rgba(255,255,255,0.6)'; ctx.beginPath(); ctx.ellipse(-R*0.6,-R*0.2,R*0.6,R*0.2,0,0,Math.PI*2); ctx.fill();
+          ctx.restore(); }
       }
-      step(){ this.x+=this.vx; this.y+=this.vy; this.vy+=0.06; this.a-=0.016; this.rot+=this.vrot; }
-      draw(){
-        ctx.save(); ctx.translate(this.x,this.y); ctx.rotate(this.rot);
-        const R=this.r;
-        const g=ctx.createRadialGradient(0,0,0,0,0,R*2.2);
-        g.addColorStop(0,'#fff9d6'); g.addColorStop(0.5,'#ffd34d'); g.addColorStop(1,'rgba(255,180,0,0)');
-        ctx.globalAlpha=Math.max(0,this.a); ctx.fillStyle=g;
-        ctx.beginPath(); ctx.arc(0,0,R*2,0,Math.PI*2); ctx.fill();
-        ctx.globalAlpha=Math.max(0,this.a*0.9); ctx.strokeStyle='rgba(160,120,20,0.8)'; ctx.lineWidth=1.2;
-        ctx.beginPath(); ctx.arc(0,0,R*1.6,0,Math.PI*2); ctx.stroke();
-        ctx.globalAlpha=Math.max(0,this.a*0.7); ctx.fillStyle='rgba(255,223,120,0.9)';
-        ctx.beginPath();
-        for(let i=0;i<5;i++){ const ang=i*2*Math.PI/5 - Math.PI/2; const ro=i%2?R*0.7:R*1.2; const x=Math.cos(ang)*ro, y=Math.sin(ang)*ro; i?ctx.lineTo(x,y):ctx.moveTo(x,y); }
-        ctx.closePath(); ctx.fill();
-        ctx.globalAlpha=Math.max(0,this.a*0.8); ctx.fillStyle='rgba(255,255,255,0.6)';
-        ctx.beginPath(); ctx.ellipse(-R*0.6,-R*0.2,R*0.6,R*0.2,0,0,Math.PI*2); ctx.fill();
+
+      // Subtle dust while running
+      class Dust{ constructor(x,y,baseVX){ this.x=x; this.y=y; this.vx=(Math.random()*0.8+0.2)+(baseVX||0)*0.2; this.vy=-(Math.random()*1.4+0.6); this.r=Math.random()*2+1.4; this.a=1; }
+        step(){ this.x+=this.vx; this.y+=this.vy; this.vy+=0.05; this.a-=0.02; }
+        draw(ctx){ ctx.save(); ctx.globalAlpha=Math.max(0,this.a); const g=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r*2.2); g.addColorStop(0,'#fff9d6'); g.addColorStop(0.5,'#ffd34d'); g.addColorStop(1,'rgba(255,180,0,0)'); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(this.x,this.y,this.r*2,0,Math.PI*2); ctx.fill(); ctx.restore(); }
+      }
+
+      function drawLeprechaun(x,y,phase,scale=1){
+        ctx.save(); ctx.translate(x,y); ctx.scale(scale,scale);
+        ctx.globalAlpha=0.25; ctx.fillStyle='#000'; ctx.beginPath(); ctx.ellipse(0,26,22,6,0,0,Math.PI*2); ctx.fill(); ctx.globalAlpha=1;
+
+        const t=phase; const bob=Math.sin(t*2)*1.6; const legA=Math.sin(t)*0.75; const legB=-Math.sin(t)*0.75; const armA=-Math.sin(t+0.3)*0.7; const armB=Math.sin(t+0.3)*0.7;
+        ctx.translate(0,bob);
+
+        function shoe(xo,ang){ ctx.save(); ctx.translate(xo,22); ctx.rotate(ang*0.45); ctx.fillStyle='#1b1b1b'; ctx.beginPath(); ctx.moveTo(-8,-1); ctx.quadraticCurveTo(2,-3,8,0); ctx.lineTo(8,3); ctx.quadraticCurveTo(2,4,-8,2); ctx.closePath(); ctx.fill(); ctx.restore(); }
+        function leg(xo,ang){ ctx.save(); ctx.translate(xo,14); ctx.rotate(ang); ctx.strokeStyle='#114d1d'; ctx.lineWidth=6; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(0,8); ctx.stroke(); ctx.translate(0,8); ctx.rotate(ang*0.6); ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(0,8); ctx.stroke(); ctx.restore(); }
+
+        ctx.save();
+          const jg=ctx.createLinearGradient(0,0,0,18); jg.addColorStop(0,'#218a33'); jg.addColorStop(1,'#156b24'); ctx.fillStyle=jg; ctx.fillRect(-14,0,28,18);
+          ctx.fillStyle='#135c1e'; ctx.beginPath(); ctx.moveTo(-14,0); ctx.lineTo(-2,0); ctx.lineTo(-6,8); ctx.lineTo(-14,8); ctx.closePath(); ctx.fill();
+          ctx.beginPath(); ctx.moveTo(14,0); ctx.lineTo(2,0); ctx.lineTo(6,8); ctx.lineTo(14,8); ctx.closePath(); ctx.fill();
+          ctx.fillStyle='#f9d45a'; for(let i=0;i<3;i++){ ctx.beginPath(); ctx.arc(0,4+i*5,1.2,0,Math.PI*2); ctx.fill(); }
+          ctx.fillStyle='#0f0f0f'; ctx.fillRect(-14,8,28,4); ctx.fillStyle='#f2c23f'; ctx.fillRect(-2,8,4,4);
         ctx.restore();
+
+        leg(-8,legA); leg(8,legB); shoe(-10,legA); shoe(10,legB);
+
+        function arm(xo,ang,withPot=false){ ctx.save(); ctx.translate(xo,4); ctx.rotate(ang); ctx.strokeStyle='#1e7f2e'; ctx.lineWidth=5; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(withPot? 10:16, withPot? 2: 6); ctx.stroke(); if(withPot){ ctx.translate(10,2); ctx.save(); ctx.rotate(-0.2+Math.sin(t)*0.05);
+            const pg=ctx.createLinearGradient(0,0,0,16); pg.addColorStop(0,'#1c160d'); pg.addColorStop(1,'#0c0a07'); ctx.fillStyle=pg; ctx.beginPath(); ctx.ellipse(0,6,10,8,0,0,Math.PI*2); ctx.fill();
+            ctx.fillStyle='#0f0c07'; ctx.beginPath(); ctx.ellipse(0,0,12,6,0,0,Math.PI*2); ctx.fill();
+            const grd = ctx.createRadialGradient(0,-1,2,0,0,12); grd.addColorStop(0,'#fff6c5'); grd.addColorStop(0.6,'#ffd24a'); grd.addColorStop(1,'#caa023'); ctx.fillStyle=grd; ctx.beginPath(); ctx.ellipse(0,-2,10,5,0,0,Math.PI*2); ctx.fill();
+            ctx.globalAlpha=0.55; ctx.fillStyle='rgba(255,255,255,0.45)'; ctx.beginPath(); ctx.ellipse(-2,-3,4,1.6,0,0,Math.PI*2); ctx.fill(); ctx.globalAlpha=1;
+          ctx.restore(); const m = ctx.getTransform(); ctx.restore(); return {x:m.e, y:m.f-4}; } ctx.restore(); return null; }
+
+        ctx.save();
+          const fg=ctx.createRadialGradient(0,-10,2,0,-8,16); fg.addColorStop(0,'#ffe7cf'); fg.addColorStop(1,'#f2d0aa'); ctx.fillStyle=fg; ctx.beginPath(); ctx.arc(0,-8,8,0,Math.PI*2); ctx.fill();
+          ctx.fillStyle='#eec6a0'; ctx.beginPath(); ctx.arc(-8,-8,2,0,Math.PI*2); ctx.arc(8,-8,2,0,Math.PI*2); ctx.fill();
+          ctx.fillStyle='#111'; ctx.beginPath(); ctx.arc(-3,-9,1.2,0,Math.PI*2); ctx.arc(3,-9,1.2,0,Math.PI*2); ctx.fill();
+          ctx.strokeStyle='#5a2a08'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(-5,-11); ctx.quadraticCurveTo(-3,-12,-1,-11); ctx.moveTo(1,-11); ctx.quadraticCurveTo(3,-12,5,-11); ctx.stroke();
+          ctx.fillStyle='#eab999'; ctx.beginPath(); ctx.arc(0,-6,1.6,0,Math.PI*2); ctx.fill();
+          ctx.fillStyle='#de8326'; ctx.beginPath(); ctx.moveTo(-6,-4); ctx.quadraticCurveTo(0,2,6,-4); ctx.quadraticCurveTo(0,6,-6,-4); ctx.fill();
+          ctx.strokeStyle='rgba(120,60,10,0.5)'; ctx.lineWidth=1; for(let k=-5;k<=5;k+=2){ ctx.beginPath(); ctx.moveTo(k,-2); ctx.quadraticCurveTo(k+0.5,0,k+1.5,1.8); ctx.stroke(); }
+          const hg=ctx.createLinearGradient(0,-20,0,-8); hg.addColorStop(0,'#1aa542'); hg.addColorStop(1,'#147b31'); ctx.fillStyle=hg; ctx.fillRect(-11,-20,22,8); ctx.fillRect(-16,-12,32,4);
+          ctx.fillStyle='#0e0e0e'; ctx.fillRect(-11,-17,22,3); ctx.fillStyle='#f2c23f'; ctx.fillRect(-2,-17,4,3);
+          ctx.fillStyle='#29c35a'; for(let k=0;k<3;k++){ ctx.beginPath(); ctx.arc(-10 + k*3, -22, 2, 0, Math.PI*2); ctx.fill(); } ctx.strokeStyle='#189a40'; ctx.lineWidth=0.8; ctx.beginPath(); ctx.moveTo(-9,-22); ctx.lineTo(-9,-18); ctx.stroke();
+        ctx.restore();
+
+        const spill = arm(12, armA, true);
+        arm(-12, armB, false);
+
+        ctx.restore();
+        return spill;
       }
-    }
-    class Dust{
-      constructor(x,y,baseVX){ this.x=x; this.y=y; this.vx=(Math.random()*0.8+0.2)+(baseVX||0)*0.2; this.vy=-(Math.random()*1.4+0.6); this.r=Math.random()*2+1.4; this.a=1; }
-      step(){ this.x+=this.vx; this.y+=this.vy; this.vy+=0.05; this.a-=0.02; }
-      draw(){
-        ctx.save(); ctx.globalAlpha=Math.max(0,this.a);
-        const g=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r*2.2);
-        g.addColorStop(0,'#fff9d6'); g.addColorStop(0.5,'#ffd34d'); g.addColorStop(1,'rgba(255,180,0,0)');
-        ctx.fillStyle=g; ctx.beginPath(); ctx.arc(this.x,this.y,this.r*2,0,Math.PI*2); ctx.fill(); ctx.restore();
+
+      const dust=[];
+      const coins=[];
+      const isCoarseBG = matchMedia('(pointer:coarse)').matches;
+      const leps = isCoarseBG ? [
+        { x:-120, y: innerHeight*0.76, vx:1.4, phase:0, scale:0.9, alpha:0.2, exploded:false, respawnAt:0 }
+      ] : [
+        { x:-120, y: innerHeight*0.72, vx:1.8, phase:0, scale:1.0, alpha:0.28, exploded:false, respawnAt:0 },
+        { x:-220, y: innerHeight*0.78, vx:1.2, phase:0, scale:0.7, alpha:0.18, exploded:false, respawnAt:0 }
+      ];
+
+      function explode(L){
+        const base = L.scale*1;
+        const N = (matchMedia('(pointer:coarse)').matches ? 70 : 120) * base;
+        for(let i=0;i<N;i++) coins.push(new Coin(L.x + (Math.random()*6-3), L.y-8 + (Math.random()*6-3), L.vx));
+        L.exploded = true; L.respawnAt = performance.now() + 35000;
+        window.__lep_last_explosion = Date.now();
       }
-    }
 
-    // --- Leprechaun state
-    const coins=[]; const dust=[];
-    const lep = { x:-120, y: innerHeight*0.76, vx: 1.6, phase: 0, exploded:false, respawnAt:0 };
+      addEventListener('click', (e)=>{
+        const px=e.clientX, py=e.clientY; const now=performance.now();
+        for(const L of leps){ if(L.exploded && now < L.respawnAt) continue; const R=28*L.scale; const dx=px-L.x, dy=py-L.y; if(dx*dx+dy*dy < R*R){ explode(L); } }
+      });
 
-    // Draw a detailed leprechaun
-    function drawLeprechaun(x,y,phase,scale=1){
-      ctx.save(); ctx.translate(x,y); ctx.scale(scale,scale);
-      // shadow
-      ctx.globalAlpha=0.25; ctx.fillStyle='#000'; ctx.beginPath(); ctx.ellipse(0,26,22,6,0,0,Math.PI*2); ctx.fill(); ctx.globalAlpha=1;
-      const bob=Math.sin(phase*2)*1.6; const legA=Math.sin(phase)*0.75; const legB=-Math.sin(phase)*0.75; const armA=-Math.sin(phase+0.3)*0.7; const armB=Math.sin(phase+0.3)*0.7;
-      ctx.translate(0,bob);
-      // shoes
-      function shoe(xo,ang){ ctx.save(); ctx.translate(xo,22); ctx.rotate(ang*0.45); ctx.fillStyle='#1b1b1b'; ctx.beginPath(); ctx.moveTo(-8,-1); ctx.quadraticCurveTo(2,-3,8,0); ctx.lineTo(8,3); ctx.quadraticCurveTo(2,4,-8,2); ctx.closePath(); ctx.fill(); ctx.restore(); }
-      // legs
-      function leg(xo,ang){ ctx.save(); ctx.translate(xo,14); ctx.rotate(ang); ctx.fillStyle='#0e5a1e'; ctx.fillRect(-2,0,4,10); ctx.restore(); }
-      // body
-      ctx.fillStyle='#0f7a24'; ctx.strokeStyle='#0a4c18'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.roundRect(-10,-2,20,18,6); ctx.fill(); ctx.stroke();
-      // arms
-      function arm(xo,ang){ ctx.save(); ctx.translate(xo,6); ctx.rotate(ang); ctx.fillStyle='#0f7a24'; ctx.fillRect(-2,0,4,10); ctx.restore(); }
-      // head
-      ctx.save(); ctx.translate(0,-6); ctx.fillStyle='#f1c27d'; ctx.beginPath(); ctx.ellipse(0,0,8,8,0,0,Math.PI*2); ctx.fill();
-        ctx.fillStyle='#000'; ctx.beginPath(); ctx.arc(-3,-2,1.2,0,Math.PI*2); ctx.arc(3,-2,1.2,0,Math.PI*2); ctx.fill();
-        ctx.strokeStyle='#3a2a18'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(-5,-4); ctx.quadraticCurveTo(-3,-5,-1,-4); ctx.moveTo(1,-4); ctx.quadraticCurveTo(3,-5,5,-4); ctx.stroke();
-        // smile
-        ctx.lineWidth=1.2; ctx.fillStyle='#d46a2a'; ctx.beginPath(); ctx.moveTo(-7,2); ctx.quadraticCurveTo(0,8,7,2); ctx.quadraticCurveTo(0,10,-7,2); ctx.closePath(); ctx.fill();
-        ctx.globalAlpha=0.85; ctx.fillStyle='rgba(255,255,255,0.9)'; ctx.beginPath(); ctx.ellipse(0,2,5,1.2,0,0,Math.PI); ctx.fill(); ctx.globalAlpha=1;
-      ctx.restore();
-      // hat
-      ctx.save(); ctx.translate(0,-16); ctx.fillStyle = '#0b4d16'; ctx.beginPath(); ctx.ellipse(0,0,12,3,0,0,Math.PI*2); ctx.fill(); ctx.fillStyle='#106c20'; ctx.fillRect(-8,-7,16,7); ctx.fillStyle='#0b4d16'; ctx.fillRect(-8,-2,16,2); ctx.fillStyle='#c99c2e'; ctx.fillRect(-4,-4,8,3); ctx.restore();
-      // pot of gold
-      ctx.save(); ctx.translate(16,8); ctx.rotate(0.2); ctx.fillStyle='#1a1a1a'; ctx.beginPath(); ctx.ellipse(0,0,8,6,0,0,Math.PI*2); ctx.fill(); ctx.fillStyle='#111'; ctx.beginPath(); ctx.ellipse(0,-2,9,4,0,0,Math.PI*2); ctx.fill(); ctx.fillStyle='#ffd34d'; for(let i=0;i<6;i++){ ctx.beginPath(); ctx.arc((Math.random()*6-3), -3+(Math.random()*2-1), 1.6, 0, Math.PI*2); ctx.fill(); } ctx.restore();
-      // limbs & shoes
-      leg(-6,legA); leg(6,legB); arm(-10,armA); arm(10,armB);
-      shoe(-6,legA); shoe(6,legB);
-      ctx.restore();
-    }
-
-    function explode(x,y){
-      for(let i=0;i<60;i++) coins.push(new Coin(x,y,lep.vx));
-      for(let i=0;i<30;i++) dust.push(new Dust(x,y,lep.vx));
-    }
-
-    // Click near leprechaun to explode -> respawn in 35s
-    addEventListener('click', (e)=>{
-      const rect=cvs.getBoundingClientRect();
-      const x=e.clientX-rect.left, y=e.clientY-rect.top;
-      const dx=x-lep.x, dy=y-lep.y;
-      if(!lep.exploded && Math.hypot(dx,dy) < 40){
-        lep.exploded=true; lep.respawnAt=performance.now()+35000; explode(lep.x, lep.y);
+      function tick(){
+        ctx.clearRect(0,0,innerWidth,innerHeight);
+        const now=performance.now();
+        for(const L of leps){
+          if(L.exploded){ if(now>=L.respawnAt){ L.exploded=false; L.x = -120 - Math.random()*100; L.phase=Math.random()*Math.PI*2; } }
+          if(!L.exploded){
+            L.phase += 0.25 * (L.vx/1.6);
+            L.x += L.vx * (1 + Math.sin(L.phase*0.1)*0.15);
+            L.y = (L.scale>0.9? innerHeight*0.72 : innerHeight*0.78) + Math.sin(L.phase*0.5)*6;
+            ctx.save(); ctx.globalAlpha=L.alpha; const spill=drawLeprechaun(L.x, L.y, L.phase, L.scale); ctx.restore();
+            if(spill && Math.random()<0.20){ dust.push(new Dust(spill.x, spill.y, L.vx)); }
+            if(L.x > innerWidth+120){ L.x=-120 - Math.random()*100; L.phase=Math.random()*Math.PI*2; }
+          }
+        }
+        for(let i=dust.length-1;i>=0;i--){ const s=dust[i]; s.step(); s.draw(ctx); if(s.a<=0) dust.splice(i,1); }
+        for(let i=coins.length-1;i>=0;i--){ const c=coins[i]; c.step(); c.draw(ctx); if(c.a<=0) coins.splice(i,1); }
+        requestAnimationFrame(tick);
       }
-    });
+      tick();
+    })();
+  </script>
 
-    function step(){
-      if(!lep.exploded){
-        lep.phase+=0.15;
-        lep.x+=lep.vx;
-        if(Math.random()<0.15) dust.push(new Dust(lep.x-10, lep.y+18, lep.vx));
-        if(lep.x>innerWidth+60){ lep.x=-120; }
-      }else if(performance.now()>lep.respawnAt){
-        lep.exploded=false; lep.x=-120; lep.y= innerHeight*0.76; lep.vx=1.6;
+  <!-- FOMO logic (spots + Calendly) -->
+  <script>
+    (function(){
+      const el = document.getElementById('spots');
+      const claim = document.getElementById('claim');
+      if(!el || !claim) return;
+      const KEY = 'founder_spots_left_v1';
+      let spots = parseInt(localStorage.getItem(KEY) || '5', 10);
+      if (Number.isNaN(spots) || spots < 1 || spots > 5) spots = 5;
+      const render = () => el.textContent = `( ${spots} of 5 left )`;
+      render();
+      function openCalendly(){
+        const url = 'https://calendly.com/kevincacheiro93/30-min-meeting';
+        if (window.Calendly && typeof Calendly.initPopupWidget === 'function') {
+          Calendly.initPopupWidget({ url });
+        } else {
+          window.open(url, '_blank', 'noopener');
+        }
       }
-      for(const c of coins) c.step();
-      for(const d of dust) d.step();
-      for(let i=coins.length-1;i>=0;i--) if(coins[i].a<=0) coins.splice(i,1);
-      for(let i=dust.length-1;i>=0;i--) if(dust[i].a<=0) dust.splice(i,1);
-    }
+      claim.addEventListener('click', (e) => {
+        e.preventDefault();
+        openCalendly();
+        if (spots > 1) { spots -= 1; localStorage.setItem(KEY, String(spots)); render(); }
+      }, { passive:false });
+      claim.dataset.boundCalendly = '1';
+    })();
+  </script>
 
-    function draw(){
-      ctx.clearRect(0,0,cvs.width,cvs.height);
-      step();
-      if(!lep.exploded) drawLeprechaun(lep.x, lep.y, lep.phase, 1);
-      for(const c of coins) c.draw();
-      for(const d of dust) d.draw();
-      requestAnimationFrame(draw);
-    }
-    draw();
-  })();
-</script>
+  <!-- Dev tests (non-blocking) -->
+  <script>
+    (function(){
+      function test(name, fn){ try{ const r=fn(); if(r?.then){ r.then(()=>console.log('✅',name)).catch(e=>console.warn('❌',name,e)); } else { console.log('✅',name); } } catch(e){ console.warn('❌',name,e); } }
+      test('Footer send button text', ()=>{ const btn=document.querySelector('#contact button.btn'); if(!btn) throw 
