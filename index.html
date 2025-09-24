@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>300 Kings – AI-Powered Ad Campaigns</title>
   <meta name="description" content="AI + creative to scale your ads fast, safely, and profitably." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Manrope:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root{
@@ -303,8 +305,6 @@
       </div>
     </section>
 
-    
-
     <section class="bubble" id="about">
       <h2>About Us</h2>
       <p>We’re a team of creative minds who put real passion into every ad campaign. We keep things simple: we let computers do computer stuff, while our team crafts the creative copy. With Google’s AI built specifically for ad campaigns, there’s no stopping your company’s growth!</p>
@@ -507,7 +507,7 @@
   <script>
     (function(){
       const pops=document.getElementById('pops'); if(!pops) return;
-      const words=['CPC','CAC','ROAS'];
+      const words=['CPC','CAC','ROAS','A/B','CRM','SEM'];
       let i=0; let last=0; const MIN_DELAY= (matchMedia('(pointer:coarse)').matches ? 260 : 120); // ~25% faster
       function spawn(x,y){ const d=document.createElement('div'); d.className='pop badge'; const w = words[i++ % words.length]; if(w==='ROAS') d.classList.add('gold'); d.textContent=w; d.style.left=x+'px'; d.style.top=y+'px'; pops.appendChild(d); setTimeout(()=>d.remove(), 1700); }
       addEventListener('pointermove', (e)=>{ const now=performance.now(); if(now-last < MIN_DELAY) return; last=now; const x=e.clientX, y=e.clientY; setTimeout(()=>spawn(x,y), 80); });
@@ -563,17 +563,20 @@
     })();
   </script>
 
-  <!-- FOMO logic (spots + Calendly) -->
+  <!-- FOMO logic (single source of truth; safe against multiple bindings) -->
   <script>
     (function(){
       const el = document.getElementById('spots');
       const claim = document.getElementById('claim');
-      if(!el || !claim) return;
+      if(!el || !claim || claim.dataset.boundCalendly === '1') return;
+
       const KEY = 'founder_spots_left_v1';
       let spots = parseInt(localStorage.getItem(KEY) || '5', 10);
       if (Number.isNaN(spots) || spots < 1 || spots > 5) spots = 5;
+
       const render = () => el.textContent = `( ${spots} of 5 left )`;
       render();
+
       function openCalendly(){
         const url = 'https://calendly.com/kevincacheiro93/30-min-meeting';
         if (window.Calendly && typeof Calendly.initPopupWidget === 'function') {
@@ -582,160 +585,503 @@
           window.open(url, '_blank', 'noopener');
         }
       }
+
       claim.addEventListener('click', (e) => {
         e.preventDefault();
         openCalendly();
         if (spots > 1) { spots -= 1; localStorage.setItem(KEY, String(spots)); render(); }
       }, { passive:false });
-    })();
-  </script>
 
- <!-- Leprechaun background runner (click to explode into coins; 35s respawn) -->
-  <script>
-    (function(){
-      const cvs = document.getElementById('lepbg'); if(!cvs) return; const ctx = cvs.getContext('2d');
-      function resize(){ const dpr = matchMedia('(pointer:coarse)').matches ? 1 : (window.devicePixelRatio||1); cvs.width=innerWidth*dpr; cvs.height=innerHeight*dpr; cvs.style.width='100%'; cvs.style.height='100%'; ctx.setTransform(dpr,0,0,dpr,0,0);} resize(); addEventListener('resize', resize);
-
-      // Fancy coin particles
-      class Coin{ constructor(x,y,baseVX){ this.x=x; this.y=y; const a=Math.random()*Math.PI*2; const s=Math.random()*4+2.5; this.vx=Math.cos(a)*s + (baseVX||0)*0.5; this.vy=Math.sin(a)*s - 1.2; this.r=Math.random()*3+2.2; this.a=1; this.rot=Math.random()*Math.PI*2; this.vrot=(Math.random()-0.5)*0.5; }
-        step(){ this.x+=this.vx; this.y+=this.vy; this.vy+=0.06; this.a-=0.016; this.rot+=this.vrot; }
-        draw(ctx){ ctx.save(); ctx.translate(this.x,this.y); ctx.rotate(this.rot); const R=this.r; const g=ctx.createRadialGradient(0,0,0,0,0,R*2.2); g.addColorStop(0,'#fff9d6'); g.addColorStop(0.5,'#ffd34d'); g.addColorStop(1,'rgba(255,180,0,0)'); ctx.globalAlpha=Math.max(0,this.a); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(0,0,R*2,0,Math.PI*2); ctx.fill();
-          ctx.globalAlpha=Math.max(0,this.a*0.9); ctx.strokeStyle='rgba(160,120,20,0.8)'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.arc(0,0,R*1.6,0,Math.PI*2); ctx.stroke();
-          ctx.globalAlpha=Math.max(0,this.a*0.7); ctx.fillStyle='rgba(255,223,120,0.9)'; ctx.beginPath();
-          for(let i=0;i<5;i++){ const ang=i*2*Math.PI/5 - Math.PI/2; const ro=i%2?R*0.7:R*1.2; const x=Math.cos(ang)*ro, y=Math.sin(ang)*ro; i?ctx.lineTo(x,y):ctx.moveTo(x,y); }
-          ctx.closePath(); ctx.fill();
-          ctx.globalAlpha=Math.max(0,this.a*0.8); ctx.fillStyle='rgba(255,255,255,0.6)'; ctx.beginPath(); ctx.ellipse(-R*0.6,-R*0.2,R*0.6,R*0.2,0,0,Math.PI*2); ctx.fill();
-          ctx.restore(); }
-      }
-
-      // Subtle dust while running
-      class Dust{ constructor(x,y,baseVX){ this.x=x; this.y=y; this.vx=(Math.random()*0.8+0.2)+(baseVX||0)*0.2; this.vy=-(Math.random()*1.4+0.6); this.r=Math.random()*2+1.4; this.a=1; }
-        step(){ this.x+=this.vx; this.y+=this.vy; this.vy+=0.05; this.a-=0.02; }
-        draw(ctx){ ctx.save(); ctx.globalAlpha=Math.max(0,this.a); const g=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r*2.2); g.addColorStop(0,'#fff9d6'); g.addColorStop(0.5,'#ffd34d'); g.addColorStop(1,'rgba(255,180,0,0)'); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(this.x,this.y,this.r*2,0,Math.PI*2); ctx.fill(); ctx.restore(); }
-      }
-
-      function drawLeprechaun(x,y,phase,scale=1){
-        ctx.save(); ctx.translate(x,y); ctx.scale(scale,scale);
-        ctx.globalAlpha=0.25; ctx.fillStyle='#000'; ctx.beginPath(); ctx.ellipse(0,26,22,6,0,0,Math.PI*2); ctx.fill(); ctx.globalAlpha=1;
-
-        const t=phase; const bob=Math.sin(t*2)*1.6; const legA=Math.sin(t)*0.75; const legB=-Math.sin(t)*0.75; const armA=-Math.sin(t+0.3)*0.7; const armB=Math.sin(t+0.3)*0.7;
-        ctx.translate(0,bob);
-
-        function shoe(xo,ang){ ctx.save(); ctx.translate(xo,22); ctx.rotate(ang*0.45); ctx.fillStyle='#1b1b1b'; ctx.beginPath(); ctx.moveTo(-8,-1); ctx.quadraticCurveTo(2,-3,8,0); ctx.lineTo(8,3); ctx.quadraticCurveTo(2,4,-8,2); ctx.closePath(); ctx.fill(); ctx.restore(); }
-        function leg(xo,ang){ ctx.save(); ctx.translate(xo,14); ctx.rotate(ang); ctx.strokeStyle='#114d1d'; ctx.lineWidth=6; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(0,8); ctx.stroke(); ctx.translate(0,8); ctx.rotate(ang*0.6); ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(0,8); ctx.stroke(); ctx.restore(); }
-
-        ctx.save();
-          const jg=ctx.createLinearGradient(0,0,0,18); jg.addColorStop(0,'#218a33'); jg.addColorStop(1,'#156b24'); ctx.fillStyle=jg; ctx.fillRect(-14,0,28,18);
-          ctx.fillStyle='#135c1e'; ctx.beginPath(); ctx.moveTo(-14,0); ctx.lineTo(-2,0); ctx.lineTo(-6,8); ctx.lineTo(-14,8); ctx.closePath(); ctx.fill();
-          ctx.beginPath(); ctx.moveTo(14,0); ctx.lineTo(2,0); ctx.lineTo(6,8); ctx.lineTo(14,8); ctx.closePath(); ctx.fill();
-          ctx.fillStyle='#f9d45a'; for(let i=0;i<3;i++){ ctx.beginPath(); ctx.arc(0,4+i*5,1.2,0,Math.PI*2); ctx.fill(); }
-          ctx.fillStyle='#0f0f0f'; ctx.fillRect(-14,8,28,4); ctx.fillStyle='#f2c23f'; ctx.fillRect(-2,8,4,4);
-        ctx.restore();
-
-        leg(-8,legA); leg(8,legB); shoe(-10,legA); shoe(10,legB);
-
-        function arm(xo,ang,withPot=false){ ctx.save(); ctx.translate(xo,4); ctx.rotate(ang); ctx.strokeStyle='#1e7f2e'; ctx.lineWidth=5; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(withPot? 10:16, withPot? 2: 6); ctx.stroke(); if(withPot){ ctx.translate(10,2); ctx.save(); ctx.rotate(-0.2+Math.sin(t)*0.05);
-            const pg=ctx.createLinearGradient(0,0,0,16); pg.addColorStop(0,'#1c160d'); pg.addColorStop(1,'#0c0a07'); ctx.fillStyle=pg; ctx.beginPath(); ctx.ellipse(0,6,10,8,0,0,Math.PI*2); ctx.fill();
-            ctx.fillStyle='#0f0c07'; ctx.beginPath(); ctx.ellipse(0,0,12,6,0,0,Math.PI*2); ctx.fill();
-            const grd = ctx.createRadialGradient(0,-1,2,0,0,12); grd.addColorStop(0,'#fff6c5'); grd.addColorStop(0.6,'#ffd24a'); grd.addColorStop(1,'#caa023'); ctx.fillStyle=grd; ctx.beginPath(); ctx.ellipse(0,-2,10,5,0,0,Math.PI*2); ctx.fill();
-            ctx.globalAlpha=0.55; ctx.fillStyle='rgba(255,255,255,0.45)'; ctx.beginPath(); ctx.ellipse(-2,-3,4,1.6,0,0,Math.PI*2); ctx.fill(); ctx.globalAlpha=1;
-          ctx.restore(); const m = ctx.getTransform(); ctx.restore(); return {x:m.e, y:m.f-4}; } ctx.restore(); return null; }
-
-        ctx.save();
-          const fg=ctx.createRadialGradient(0,-10,2,0,-8,16); fg.addColorStop(0,'#ffe7cf'); fg.addColorStop(1,'#f2d0aa'); ctx.fillStyle=fg; ctx.beginPath(); ctx.arc(0,-8,8,0,Math.PI*2); ctx.fill();
-          ctx.fillStyle='#eec6a0'; ctx.beginPath(); ctx.arc(-8,-8,2,0,Math.PI*2); ctx.arc(8,-8,2,0,Math.PI*2); ctx.fill();
-          ctx.fillStyle='#111'; ctx.beginPath(); ctx.arc(-3,-9,1.2,0,Math.PI*2); ctx.arc(3,-9,1.2,0,Math.PI*2); ctx.fill();
-          ctx.strokeStyle='#5a2a08'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(-5,-11); ctx.quadraticCurveTo(-3,-12,-1,-11); ctx.moveTo(1,-11); ctx.quadraticCurveTo(3,-12,5,-11); ctx.stroke();
-          ctx.fillStyle='#eab999'; ctx.beginPath(); ctx.arc(0,-6,1.6,0,Math.PI*2); ctx.fill();
-          ctx.fillStyle='#de8326'; ctx.beginPath(); ctx.moveTo(-6,-4); ctx.quadraticCurveTo(0,2,6,-4); ctx.quadraticCurveTo(0,6,-6,-4); ctx.fill();
-          ctx.strokeStyle='rgba(120,60,10,0.5)'; ctx.lineWidth=1; for(let k=-5;k<=5;k+=2){ ctx.beginPath(); ctx.moveTo(k,-2); ctx.quadraticCurveTo(k+0.5,0,k+1.5,1.8); ctx.stroke(); }
-          const hg=ctx.createLinearGradient(0,-20,0,-8); hg.addColorStop(0,'#1aa542'); hg.addColorStop(1,'#147b31'); ctx.fillStyle=hg; ctx.fillRect(-11,-20,22,8); ctx.fillRect(-16,-12,32,4);
-          ctx.fillStyle='#0e0e0e'; ctx.fillRect(-11,-17,22,3); ctx.fillStyle='#f2c23f'; ctx.fillRect(-2,-17,4,3);
-          ctx.fillStyle='#29c35a'; for(let k=0;k<3;k++){ ctx.beginPath(); ctx.arc(-10 + k*3, -22, 2, 0, Math.PI*2); ctx.fill(); } ctx.strokeStyle='#189a40'; ctx.lineWidth=0.8; ctx.beginPath(); ctx.moveTo(-9,-22); ctx.lineTo(-9,-18); ctx.stroke();
-        ctx.restore();
-
-        const spill = arm(12, armA, true);
-        arm(-12, armB, false);
-
-        ctx.restore();
-        return spill;
-      }
-
-      const dust=[];
-      const coins=[];
-      const isCoarseBG = matchMedia('(pointer:coarse)').matches;
-      const leps = isCoarseBG ? [
-        { x:-120, y: innerHeight*0.76, vx:1.4, phase:0, scale:0.9, alpha:0.2, exploded:false, respawnAt:0 }
-      ] : [
-        { x:-120, y: innerHeight*0.72, vx:1.8, phase:0, scale:1.0, alpha:0.28, exploded:false, respawnAt:0 },
-        { x:-220, y: innerHeight*0.78, vx:1.2, phase:0, scale:0.7, alpha:0.18, exploded:false, respawnAt:0 }
-      ];
-
-      function explode(L){
-        const base = L.scale*1;
-        const N = (matchMedia('(pointer:coarse)').matches ? 70 : 120) * base;
-        for(let i=0;i<N;i++) coins.push(new Coin(L.x + (Math.random()*6-3), L.y-8 + (Math.random()*6-3), L.vx));
-        L.exploded = true; L.respawnAt = performance.now() + 35000;
-        window.__lep_last_explosion = Date.now();
-      }
-
-      addEventListener('click', (e)=>{
-        const px=e.clientX, py=e.clientY; const now=performance.now();
-        for(const L of leps){ if(L.exploded && now < L.respawnAt) continue; const R=28*L.scale; const dx=px-L.x, dy=py-L.y; if(dx*dx+dy*dy < R*R){ explode(L); } }
-      });
-
-      function tick(){
-        ctx.clearRect(0,0,innerWidth,innerHeight);
-        const now=performance.now();
-        for(const L of leps){
-          if(L.exploded){ if(now>=L.respawnAt){ L.exploded=false; L.x = -120 - Math.random()*100; L.phase=Math.random()*Math.PI*2; } }
-          if(!L.exploded){
-            L.phase += 0.25 * (L.vx/1.6);
-            L.x += L.vx * (1 + Math.sin(L.phase*0.1)*0.15);
-            L.y = (L.scale>0.9? innerHeight*0.72 : innerHeight*0.78) + Math.sin(L.phase*0.5)*6;
-            ctx.save(); ctx.globalAlpha=L.alpha; const spill=drawLeprechaun(L.x, L.y, L.phase, L.scale); ctx.restore();
-            if(spill && Math.random()<0.20){ dust.push(new Dust(spill.x, spill.y, L.vx)); }
-            if(L.x > innerWidth+120){ L.x=-120 - Math.random()*100; L.phase=Math.random()*Math.PI*2; }
-          }
-        }
-        for(let i=dust.length-1;i>=0;i--){ const s=dust[i]; s.step(); s.draw(ctx); if(s.a<=0) dust.splice(i,1); }
-        for(let i=coins.length-1;i>=0;i--){ const c=coins[i]; c.step(); c.draw(ctx); if(c.a<=0) coins.splice(i,1); }
-        requestAnimationFrame(tick);
-      }
-      tick();
-    })();
-  </script>
-
-  <!-- FOMO logic (spots + Calendly) -->
-  <script>
-    (function(){
-      const el = document.getElementById('spots');
-      const claim = document.getElementById('claim');
-      if(!el || !claim) return;
-      const KEY = 'founder_spots_left_v1';
-      let spots = parseInt(localStorage.getItem(KEY) || '5', 10);
-      if (Number.isNaN(spots) || spots < 1 || spots > 5) spots = 5;
-      const render = () => el.textContent = `( ${spots} of 5 left )`;
-      render();
-      function openCalendly(){
-        const url = 'https://calendly.com/kevincacheiro93/30-min-meeting';
-        if (window.Calendly && typeof Calendly.initPopupWidget === 'function') {
-          Calendly.initPopupWidget({ url });
-        } else {
-          window.open(url, '_blank', 'noopener');
-        }
-      }
-      claim.addEventListener('click', (e) => {
-        e.preventDefault();
-        openCalendly();
-        if (spots > 1) { spots -= 1; localStorage.setItem(KEY, String(spots)); render(); }
-      }, { passive:false });
       claim.dataset.boundCalendly = '1';
     })();
   </script>
 
-  <!-- Dev tests (non-blocking) -->
+  <!-- Leprechaun background runner (Enhanced) -->
+  <script>
+  /* Leprechaun Background (Enhanced)
+     - Detailed sprite: beard, legs (with knees), eyes + blink
+     - Pot of gold with coins & shine; trail dust
+     - Mario-like coin shards in explosion (rim ridges + star emboss)
+     - Two-click logic:
+          1st click: jump, mouth "O", speed +35% (keeps running faster)
+          2nd click: explode
+     - Per-leprechaun 20s respawn, independent
+     - Mobile aware: fewer particles, lower DPR; animation paused on tab hidden
+  */
+  (function(){
+    const cvs = document.getElementById('lepbg'); if(!cvs) return;
+    const ctx = cvs.getContext('2d');
+
+    // --- setup & DPR ---
+    const isCoarse = matchMedia('(pointer:coarse)').matches;
+    let dpr = isCoarse ? 1 : Math.min(2, window.devicePixelRatio || 1);
+    function resize(){
+      dpr = isCoarse ? 1 : Math.min(2, window.devicePixelRatio || 1);
+      cvs.width  = innerWidth * dpr;
+      cvs.height = innerHeight * dpr;
+      cvs.style.width = '100%';
+      cvs.style.height = '100%';
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+    }
+    resize(); addEventListener('resize', resize);
+
+    // --- utils ---
+    const TAU = Math.PI*2;
+    const clamp = (n,a,b)=>Math.max(a,Math.min(b,n));
+    const rnd = (a=1,b=0)=>Math.random()*(a-b)+b;
+    const now = ()=>performance.now();
+
+    // --- particles ---
+    const coins=[]; const sparks=[]; const rings=[]; const dust=[];
+
+    class Ring {
+      constructor(x,y){
+        this.x=x; this.y=y; this.r=8; this.a=0.5; this.v=4.8;
+      }
+      step(){
+        this.r += this.v;
+        this.a -= 0.015;
+        return this.a > 0;
+      }
+      draw(c){
+        c.save();
+        c.globalAlpha = Math.max(0,this.a);
+        c.strokeStyle = 'rgba(255,220,120,0.9)';
+        c.lineWidth = 2;
+        c.beginPath(); c.arc(this.x, this.y, this.r, 0, TAU); c.stroke();
+        c.restore();
+      }
+    }
+
+    class Spark {
+      constructor(x,y,baseVX){
+        this.x=x; this.y=y;
+        const ang = Math.random()*TAU;
+        const spd = rnd(3.5,1.5);
+        this.vx = Math.cos(ang)*spd + (baseVX||0)*0.3;
+        this.vy = Math.sin(ang)*spd - 0.8;
+        this.a=1; this.r=rnd(2,1);
+        this.g=0.08; this.f=0.985;
+      }
+      step(){
+        this.x+=this.vx; this.y+=this.vy;
+        this.vy+=this.g; this.vx*=this.f; this.vy*=this.f;
+        this.a-=0.02;
+        return this.a>0;
+      }
+      draw(c){
+        c.save();
+        c.globalAlpha = Math.max(0,this.a);
+        c.fillStyle='rgba(255,245,200,0.95)';
+        c.beginPath(); c.arc(this.x,this.y,this.r,0,TAU); c.fill();
+        c.restore();
+      }
+    }
+
+    function drawCoinShape(c,x,y,R,spin=0){
+      c.save();
+      c.translate(x,y); c.rotate(spin);
+
+      // body gradient
+      const g = c.createRadialGradient(0,0,0, 0,0,R*1.1);
+      g.addColorStop(0,'#fff7cf');
+      g.addColorStop(0.45,'#ffd34d');
+      g.addColorStop(1,'#c8951b');
+      c.fillStyle = g;
+      c.beginPath(); c.arc(0,0,R,0,TAU); c.fill();
+
+      // rim
+      c.lineWidth = 2;
+      c.strokeStyle = 'rgba(160,110,20,0.9)';
+      c.beginPath(); c.arc(0,0,R*0.86,0,TAU); c.stroke();
+
+      // ridges
+      c.strokeStyle = 'rgba(255,220,120,0.7)';
+      for(let i=0;i<14;i++){
+        const a = (i/14)*TAU;
+        const rx = Math.cos(a)*R*0.98, ry=Math.sin(a)*R*0.98;
+        const ix = Math.cos(a)*R*0.75, iy=Math.sin(a)*R*0.75;
+        c.beginPath(); c.moveTo(ix,iy); c.lineTo(rx,ry); c.stroke();
+      }
+
+      // embossed star
+      c.save();
+        c.globalAlpha=0.9;
+        c.fillStyle='rgba(255,255,255,0.25)';
+        c.beginPath();
+        for(let i=0;i<5;i++){
+          const a=i*TAU/5 - Math.PI/2;
+          const ro=(i%2? R*0.36 : R*0.18);
+          const px=Math.cos(a)*ro, py=Math.sin(a)*ro;
+          if(i===0) c.moveTo(px,py); else c.lineTo(px,py);
+        }
+        c.closePath(); c.fill();
+      c.restore();
+
+      // highlight
+      c.globalAlpha=0.65;
+      c.beginPath(); c.ellipse(-R*0.45,-R*0.25,R*0.5,R*0.2,0,0,TAU); c.fillStyle='rgba(255,255,255,0.7)'; c.fill();
+      c.restore();
+    }
+
+    class Coin {
+      constructor(x,y,baseVX){
+        this.x=x; this.y=y;
+        const a=Math.random()*TAU;
+        const s=isCoarse ? rnd(4,2.2) : rnd(6,3.2);
+        this.vx=Math.cos(a)*s + (baseVX||0)*0.4;
+        this.vy=Math.sin(a)*s - 1.4;
+        this.r=rnd(7,5);
+        this.a=1;
+        this.spin = Math.random()*TAU;
+        this.vspin = (Math.random()-0.5)*0.25;
+        this.g=0.1; this.f=0.987;
+      }
+      step(){
+        this.x+=this.vx; this.y+=this.vy;
+        this.vy+=this.g; this.vx*=this.f; this.vy*=this.f;
+        this.spin += this.vspin;
+        this.a-=0.016;
+        return this.a>0;
+      }
+      draw(c){
+        c.save(); c.globalAlpha=Math.max(0,this.a);
+        drawCoinShape(c,this.x,this.y,this.r,this.spin);
+        c.restore();
+      }
+    }
+
+    class Dust {
+      constructor(x,y,baseVX){
+        this.x=x; this.y=y;
+        this.vx=(Math.random()*0.6+0.2)+(baseVX||0)*0.12;
+        this.vy=-(Math.random()*1.2+0.4);
+        this.r=Math.random()*1.6+1.0;
+        this.a=0.9;
+        this.g=0.05;
+      }
+      step(){
+        this.x+=this.vx; this.y+=this.vy; this.vy+=this.g; this.a-=0.018;
+        return this.a>0;
+      }
+      draw(c){
+        const g=c.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r*2.2);
+        g.addColorStop(0,'#fff9d6'); g.addColorStop(0.5,'#ffd34d'); g.addColorStop(1,'rgba(255,180,0,0)');
+        c.save(); c.globalAlpha=Math.max(0,this.a); c.fillStyle=g; c.beginPath(); c.arc(this.x,this.y,this.r*2,0,TAU); c.fill(); c.restore();
+      }
+    }
+
+    // --- leprechaun state ---
+    function makeLep(scale, yBase){
+      return {
+        x: -120 - Math.random()*200,
+        y: yBase,
+        baseY: yBase,
+        scale,
+        alpha: scale>0.9?0.28:0.2,
+        speed: rnd(1.6,1.2) * (isCoarse?0.9:1),
+        vx: 0,
+        phase: Math.random()*TAU,
+        exploded:false,
+        respawnAt:0,
+        // interactions
+        alerted:false,
+        mouthTimer:0,
+        jumpVy:0,
+        jumping:false,
+        // wander
+        wobbleA: rnd(40,20),
+        wobbleB: rnd(0.9,0.5),
+        // eye blink
+        blinkAt: now() + rnd(2600,1200),
+        eyeWide:0
+      };
+    }
+
+    const leps = isCoarse
+      ? [ makeLep(0.95, innerHeight*0.76) ]
+      : [ makeLep(1.0, innerHeight*0.70), makeLep(0.82, innerHeight*0.78), makeLep(0.66, innerHeight*0.82) ];
+
+    // --- drawing the character ---
+    function drawPotOfGold(c, surprised=false){
+      // pot body
+      const pg=c.createLinearGradient(0,0,0,22);
+      pg.addColorStop(0,'#1b140b'); pg.addColorStop(1,'#0c0a07');
+      c.fillStyle=pg;
+      c.beginPath(); c.ellipse(0,8,12,8,0,0,TAU); c.fill();
+      c.fillStyle='#0f0c07'; c.beginPath(); c.ellipse(0,1,14,6,0,0,TAU); c.fill();
+
+      // gold pile
+      const grd = c.createRadialGradient(0,-1,2, 0,0,12);
+      grd.addColorStop(0,'#fff6c5'); grd.addColorStop(0.6,'#ffd24a'); grd.addColorStop(1,'#caa023');
+      c.fillStyle=grd; c.beginPath(); c.ellipse(0,-1,10.5,5,0,0,TAU); c.fill();
+
+      // coins peeking
+      for(let i=0;i<4;i++){
+        c.save(); c.translate(rnd(5,-5), rnd(1,-1)); drawCoinShape(c, rnd(4,-4), rnd(-3,-5), rnd(2.6,2.0)); c.restore();
+      }
+
+      // highlight
+      c.globalAlpha=0.6; c.fillStyle='rgba(255,255,255,0.5)'; c.beginPath();
+      c.ellipse(-4,-2,4,1.4,0,0,TAU); c.fill(); c.globalAlpha=1;
+
+      // subtle shimmer when surprised
+      if(surprised){
+        c.globalAlpha=0.35;
+        c.strokeStyle='rgba(255,235,150,0.9)'; c.lineWidth=1;
+        c.beginPath(); c.arc(0,8,13.5,0,TAU); c.stroke();
+        c.globalAlpha=1;
+      }
+    }
+
+    function drawLep(c, L, t){
+      c.save();
+      c.translate(L.x, L.y);
+      c.scale(L.scale, L.scale);
+
+      // shadow
+      c.globalAlpha = 0.25; c.fillStyle='#000';
+      c.beginPath(); c.ellipse(0,26,22,6,0,0,TAU); c.fill();
+      c.globalAlpha = 1;
+
+      // bob + anim
+      const bob = Math.sin(L.phase*2)*1.6;
+      const legA = Math.sin(L.phase)*0.9;
+      const legB = -Math.sin(L.phase)*0.9;
+      const armA = -Math.sin(L.phase+0.3)*0.8;
+      const armB =  Math.sin(L.phase+0.3)*0.8;
+      c.translate(0, bob + (L.jumping? -4:0));
+
+      // legs (with knees)
+      function shoe(xo, ang){ c.save(); c.translate(xo,22); c.rotate(ang*0.45); c.fillStyle='#1b1b1b';
+        c.beginPath(); c.moveTo(-8,-1); c.quadraticCurveTo(2,-3,8,0); c.lineTo(8,3); c.quadraticCurveTo(2,4,-8,2); c.closePath(); c.fill(); c.restore(); }
+      function leg(xo, ang){
+        c.save(); c.translate(xo,14); c.rotate(ang);
+        c.strokeStyle='#114d1d'; c.lineWidth=6; c.lineCap='round';
+        c.beginPath(); c.moveTo(0,0); c.lineTo(0,8); c.stroke(); // thigh
+        c.translate(0,8); c.rotate(ang*0.6);
+        c.beginPath(); c.moveTo(0,0); c.lineTo(0,8); c.stroke(); // shin
+        c.restore();
+      }
+      leg(-8,legA); leg(8,legB); shoe(-10,legA); shoe(10,legB);
+
+      // torso
+      c.save();
+        const jg=c.createLinearGradient(0,0,0,18); jg.addColorStop(0,'#218a33'); jg.addColorStop(1,'#156b24');
+        c.fillStyle=jg; c.fillRect(-14,0,28,18);
+        c.fillStyle='#135c1e';
+        c.beginPath(); c.moveTo(-14,0); c.lineTo(-2,0); c.lineTo(-6,8); c.lineTo(-14,8); c.closePath(); c.fill();
+        c.beginPath(); c.moveTo(14,0); c.lineTo(2,0); c.lineTo(6,8); c.lineTo(14,8); c.closePath(); c.fill();
+        // buttons
+        c.fillStyle='#f9d45a'; for(let i=0;i<3;i++){ c.beginPath(); c.arc(0,4+i*5,1.2,0,TAU); c.fill(); }
+        // belt
+        c.fillStyle='#0f0f0f'; c.fillRect(-14,8,28,4); c.fillStyle='#f2c23f'; c.fillRect(-2,8,4,4);
+      c.restore();
+
+      // arms
+      function arm(xo, ang, withPot=false, surprised=false){
+        c.save(); c.translate(xo,4); c.rotate(ang);
+        c.strokeStyle='#1e7f2e'; c.lineWidth=5; c.lineCap='round';
+        c.beginPath(); c.moveTo(0,0); c.lineTo(withPot? 10:16, withPot? 2: 6); c.stroke();
+        if(withPot){
+          c.translate(10,2); c.save(); c.rotate(-0.2+Math.sin(L.phase)*0.05);
+          drawPotOfGold(c, surprised);
+          c.restore();
+          const m = c.getTransform(); c.restore();
+          return {x:m.e, y:m.f-4};
+        }
+        c.restore(); return null;
+      }
+      const surprised = L.mouthTimer>0;
+      const spill = arm(12, armA, true, surprised);
+      arm(-12, armB, false, false);
+
+      // head
+      c.save();
+        // face
+        const fg=c.createRadialGradient(0,-10,2,0,-8,16); fg.addColorStop(0,'#ffe7cf'); fg.addColorStop(1,'#f2d0aa');
+        c.fillStyle=fg; c.beginPath(); c.arc(0,-8,8.5,0,TAU); c.fill();
+
+        // ears
+        c.fillStyle='#eec6a0'; c.beginPath(); c.arc(-8.8,-8,2,0,TAU); c.arc(8.8,-8,2,0,TAU); c.fill();
+
+        // eyes (white + pupil; widen when surprised)
+        const wide = surprised ? 1.25 : 1;
+        const blink = (L.blinkAt - t) < 120 ? 0.15 : 1;
+        c.fillStyle='#fff';
+        c.beginPath(); c.ellipse(-3.2,-9,1.9,1.9*blink,0,0,TAU); c.ellipse(3.2,-9,1.9,1.9*blink,0,0,TAU); c.fill();
+        c.fillStyle='#111';
+        c.beginPath(); c.arc(-3.2,-9,0.9*wide*blink,0,TAU); c.arc(3.2,-9,0.9*wide*blink,0,TAU); c.fill();
+
+        // brows
+        c.strokeStyle='#5a2a08'; c.lineWidth=1.2;
+        c.beginPath(); c.moveTo(-5,-11); c.quadraticCurveTo(-3,-12,-1,-11); c.moveTo(1,-11); c.quadraticCurveTo(3,-12,5,-11); c.stroke();
+
+        // nose
+        c.fillStyle='#eab999'; c.beginPath(); c.arc(0,-6,1.6,0,TAU); c.fill();
+
+        // beard (fuller, ginger)
+        c.fillStyle='#de7e22';
+        c.beginPath();
+        c.moveTo(-7,-4); c.quadraticCurveTo(0,4,7,-4); // moustache base
+        c.quadraticCurveTo(0,8,-7,-4); c.fill();
+        // chin beard
+        c.beginPath();
+        c.moveTo(-6,-3); c.quadraticCurveTo(0,7,6,-3); c.quadraticCurveTo(0,12,-6,-3); c.fill();
+        c.strokeStyle='rgba(120,60,10,0.5)'; c.lineWidth=1;
+        for(let k=-5;k<=5;k+=2){ c.beginPath(); c.moveTo(k,-1); c.quadraticCurveTo(k+0.5,1,k+1.5,2.6); c.stroke(); }
+
+        // mouth
+        c.fillStyle='#0b0b0b';
+        if (surprised) { // "oh"
+          c.beginPath(); c.ellipse(0,-4,1.6,2.0,0,0,TAU); c.fill();
+        } else {
+          c.beginPath(); c.moveTo(-6,-4); c.quadraticCurveTo(0,2,6,-4); c.quadraticCurveTo(0,6,-6,-4); c.fill();
+        }
+
+        // hat
+        const hg=c.createLinearGradient(0,-20,0,-8); hg.addColorStop(0,'#1aa542'); hg.addColorStop(1,'#147b31');
+        c.fillStyle=hg; c.fillRect(-11,-20,22,8); c.fillRect(-16,-12,32,4);
+        c.fillStyle='#0e0e0e'; c.fillRect(-11,-17,22,3); c.fillStyle='#f2c23f'; c.fillRect(-2,-17,4,3);
+        // clover
+        c.fillStyle='#29c35a'; for(let k=0;k<3;k++){ c.beginPath(); c.arc(-10 + k*3, -22, 2, 0, TAU); c.fill(); }
+        c.strokeStyle='#189a40'; c.lineWidth=0.8; c.beginPath(); c.moveTo(-9,-22); c.lineTo(-9,-18); c.stroke();
+      c.restore();
+
+      c.restore();
+      return spill;
+    }
+
+    // --- interactions ---
+    function explode(L){
+      const base = L.scale*1;
+      const N = (isCoarse ? 70 : 120) * base;
+      for(let i=0;i<N;i++) coins.push(new Coin(L.x + rnd(6,-6), L.y-8 + rnd(6,-6), L.speed));
+      for(let i=0;i<N*0.6;i++) sparks.push(new Spark(L.x, L.y-8, L.speed));
+      rings.push(new Ring(L.x, L.y-6));
+      L.exploded = true;
+      L.respawnAt = now() + 20000; // 20s per lep
+      window.__lep_last_explosion = Date.now();
+    }
+
+    addEventListener('click', (e)=>{
+      const px=e.clientX, py=e.clientY;
+      const t=now();
+      for(const L of leps){
+        if(L.exploded && t < L.respawnAt) continue;
+        const R=28*L.scale;
+        const dx=px-L.x, dy=py-L.y;
+        if(dx*dx+dy*dy < R*R){
+          // first click -> alert
+          if(!L.alerted){
+            L.alerted = true;
+            L.mouthTimer = 900;   // "oh" duration ms
+            if(!L.jumping){ L.jumping = true; L.jumpVy = -7.2*L.scale; }
+            L.speed *= 1.35; // permanent boost
+            // little sparkle pop
+            for(let i=0;i<10;i++) sparks.push(new Spark(L.x, L.y-10, L.speed));
+          } else {
+            // second click -> boom
+            explode(L);
+          }
+          break;
+        }
+      }
+    }, { passive:true });
+
+    // --- main loop ---
+    let last = now();
+    let paused = false;
+    document.addEventListener('visibilitychange', ()=>{ paused = document.hidden; last = now(); });
+
+    function tick(){
+      if(!paused){
+        const t = now();
+        const dt = clamp((t - last)/16.666, 0.2, 2.5); // normalize to ~60fps units
+        last = t;
+
+        ctx.clearRect(0,0,innerWidth,innerHeight);
+
+        // leps
+        for(const L of leps){
+          if(L.exploded){
+            if(t>=L.respawnAt){
+              // respawn
+              L.exploded=false;
+              L.alerted=false;
+              L.jumping=false;
+              L.mouthTimer=0;
+              L.x = -120 - Math.random()*200;
+              L.phase = Math.random()*TAU;
+              // reset speed (fresh run)
+              L.speed = rnd(1.6,1.2) * (isCoarse?0.9:1);
+            }
+          } else {
+            // advance
+            L.phase += 0.25 * (L.speed/1.6) * dt;
+            // move
+            const wobble = Math.sin(L.phase*L.wobbleB)*L.wobbleA;
+            L.vx = L.speed * (1 + Math.sin(L.phase*0.1)*0.12);
+            L.x += L.vx * dt;
+            L.y = L.baseY + Math.sin(L.phase*0.5)*6 + wobble*0.02;
+
+            // jump physics
+            if(L.jumping){
+              L.y += L.jumpVy * dt;
+              L.jumpVy += 0.6 * dt; // gravity
+              if(L.y >= L.baseY){ L.y = L.baseY; L.jumping=false; }
+            }
+
+            // timers
+            if(L.mouthTimer>0){ L.mouthTimer -= (16.666*dt); if(L.mouthTimer<0) L.mouthTimer=0; }
+            if(t >= L.blinkAt){ L.blinkAt = t + rnd(2600,1200); }
+
+            // draw
+            ctx.save(); ctx.globalAlpha=L.alpha;
+            const spill=drawLep(ctx, L, t);
+            ctx.restore();
+
+            // dust trail from pot if available
+            if(spill && Math.random()<0.18){ dust.push(new Dust(spill.x, spill.y, L.vx)); }
+
+            // wrap
+            if(L.x > innerWidth+140){ L.x = -140 - Math.random()*140; L.phase = Math.random()*TAU; }
+          }
+        }
+
+        // particles
+        for(let i=dust.length-1;i>=0;i--){ if(!dust[i].step()){ dust.splice(i,1); } else dust[i].draw(ctx); }
+        for(let i=coins.length-1;i>=0;i--){ if(!coins[i].step()){ coins.splice(i,1); } else coins[i].draw(ctx); }
+        for(let i=sparks.length-1;i>=0;i--){ if(!sparks[i].step()){ sparks.splice(i,1); } else sparks[i].draw(ctx); }
+        for(let i=rings.length-1;i>=0;i--){ if(!rings[i].step()){ rings.splice(i,1); } else rings[i].draw(ctx); }
+      }
+      requestAnimationFrame(tick);
+    }
+    tick();
+  })();
+  </script>
+
+  <!-- Dev-only test harness: intercept external calls locally -->
   <script>
     (function(){
-      function test(name, fn){ try{ const r=fn(); if(r?.then){ r.then(()=>console.log('✅',name)).catch(e=>console.warn('❌',name,e)); } else { console.log('✅',name); } } catch(e){ console.warn('❌',name,e); } }
-      test('Footer send button text', ()=>{ const btn=document.querySelector('#contact button.btn'); if(!btn) throw 
+      const DEV = ['localhost','127.0.0.1'].includes(location.hostname);
+      if(!DEV) return;
+      // Intercept Formspree so you don't send test emails
+      document.addEventListener('submit',(e)=>{
+        const form = e.target;
+        if(form.matches('form[action^="https://formspree.io/"]')){
+          e.preventDefault();
+          const data = Object.fromEntries(new FormData(form).entries());
+          console.log('[DEV] Captured form submission:', data);
+          alert('DEV MODE: form captured. Check console.');
+        }
+      });
+      // Stub Calendly popup if the SDK hasn't loaded yet
+      if(!(window.Calendly && typeof Calendly.initPopupWidget==='function')){
+        window.Calendly = { initPopupWidget: ({url})=>{ console.log('[DEV] Calendly popup would open:', url); alert('DEV MODE: Calendly popup stub'); } };
+      }
+      console.info('[DEV] Dynamic-feature test harness is active.');
+    })();
+  </script>
+</body>
+</html>
