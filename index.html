@@ -508,7 +508,7 @@
     (function(){
       const pops=document.getElementById('pops'); if(!pops) return;
       const words=['CPC','CAC','ROAS','A/B','CRM','SEM'];
-      let i=0; let last=0; const MIN_DELAY= (matchMedia('(pointer:coarse)').matches ? 260 : 120); // ~25% faster
+      let i=0; let last=0; const MIN_DELAY= (matchMedia('(pointer:coarse)').matches ? 260 : 120); // ~15% faster
       function spawn(x,y){ const d=document.createElement('div'); d.className='pop badge'; const w = words[i++ % words.length]; if(w==='ROAS') d.classList.add('gold'); d.textContent=w; d.style.left=x+'px'; d.style.top=y+'px'; pops.appendChild(d); setTimeout(()=>d.remove(), 1700); }
       addEventListener('pointermove', (e)=>{ const now=performance.now(); if(now-last < MIN_DELAY) return; last=now; const x=e.clientX, y=e.clientY; setTimeout(()=>spawn(x,y), 80); });
     })();
