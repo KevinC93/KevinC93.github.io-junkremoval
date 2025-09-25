@@ -2,14 +2,20 @@ import { initAuroraBackground } from "./background.js";
 import { initLeprechauns } from "./leprechauns.js";
 import {
   initContactForm,
+  initContactModal,
+  initCursorPops,
+  initCursorTrail,
   initInteractiveGlow,
   initMagneticElements,
   initMarquee,
   initMetricCounters,
   initParallax,
+  initRevealCards,
   initScrollReveal,
   initSmoothScroll,
+  initServiceHover,
   initTimelineProgress,
+  initFounderOffer,
 } from "./interactions.js";
 
 document.documentElement.classList.remove("no-js");
@@ -31,5 +37,11 @@ initMagneticElements();
 initSmoothScroll();
 initParallax();
 initMarquee();
+initCursorTrail();
+initCursorPops();
+initServiceHover();
+initRevealCards();
+initFounderOffer();
+initContactModal();
 
 window.__APP_LOADED__ = true;
