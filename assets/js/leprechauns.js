@@ -1,75 +1,93 @@
 import { triggerMoneyRain } from "./background.js";
 
 const LAYER_ID = "leprechaun-layer";
-const RESPAWN_DELAY = 20000;
-const LEPRECHAUN_COUNT = 5;
+const RESPAWN_DELAY = 22000;
+const NODE_COUNT = 6;
 
 const supportsPointerEvents = window.PointerEvent !== undefined;
 
-const positions = [
-  { x: 12, y: 18 },
-  { x: 78, y: 24 },
-  { x: 20, y: 68 },
-  { x: 60, y: 72 },
-  { x: 40, y: 42 },
+const anchorPositions = [
+  { x: 16, y: 24 },
+  { x: 74, y: 18 },
+  { x: 28, y: 64 },
+  { x: 62, y: 70 },
+  { x: 46, y: 42 },
+  { x: 12, y: 78 },
 ];
 
 const state = new Map();
 let rainLocked = false;
 
-function createLepElement(index) {
-  const lep = document.createElement("button");
-  lep.type = "button";
-  lep.className = "leprechaun";
-  lep.dataset.state = "idle";
-  lep.setAttribute("aria-live", "polite");
-  lep.innerHTML = `<span>Luck ${index + 1}</span><div class="leprechaun__sparkle" aria-hidden="true"></div>`;
-  return lep;
+function createTrigger(index) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "leprechaun";
+  button.dataset.state = "idle";
+  button.setAttribute("aria-live", "polite");
+  button.innerHTML = `<span>Boost ${index + 1}</span><div class="leprechaun__sparkle" aria-hidden="true"></div>`;
+  return button;
 }
 
-function addPrimaryActivation(lep, handler) {
+function addPrimaryActivation(element, handler) {
   if (supportsPointerEvents) {
-    lep.addEventListener("pointerdown", handler);
+    element.addEventListener("pointerdown", handler);
     return;
   }
-
-  lep.addEventListener("click", handler);
+  element.addEventListener("click", handler);
 }
 
-function placeLep(lep, position) {
-  lep.style.left = `${position.x}%`;
-  lep.style.top = `${position.y}%`;
+function applyPosition(element, position) {
+  element.style.left = `${position.x}%`;
+  element.style.top = `${position.y}%`;
 }
 
-function randomOffset(value, variance = 10) {
+function withVariance(value, variance = 12) {
   const offset = (Math.random() - 0.5) * variance;
   return Math.min(92, Math.max(8, value + offset));
 }
 
-function scheduleRespawn(id, lep) {
+function scheduleRespawn(id, element) {
   const timer = window.setTimeout(() => {
-    lep.dataset.state = "idle";
-    lep.classList.remove("exploded");
-    const base = positions[id % positions.length];
-    placeLep(lep, {
-      x: randomOffset(base.x, 12),
-      y: randomOffset(base.y, 12),
+    element.dataset.state = "idle";
+    const base = anchorPositions[id % anchorPositions.length];
+    applyPosition(element, {
+      x: withVariance(base.x, 18),
+      y: withVariance(base.y, 18),
     });
-    lep.style.transform = "scale(1)";
+    element.style.transform = "scale(1)";
     state.set(id, { status: "idle", timer: null });
     rainLocked = false;
   }, RESPAWN_DELAY);
   state.set(id, { status: "respawning", timer });
 }
-@@ -73,39 +84,44 @@ function explodeLep(id, lep) {
-  lep.style.transform = "scale(1.15)";
+
+function maybeMakeItRain() {
+  const allExploded = Array.from(state.values()).every(
+    (entry) => entry.status === "exploded",
+  );
+  if (allExploded && !rainLocked) {
+    rainLocked = true;
+    triggerMoneyRain();
+  }
+}
+
+function detonate(id, element) {
+  const entry = state.get(id);
+  if (!entry || entry.status === "exploded") return;
+
+  if (entry.timer) {
+    clearTimeout(entry.timer);
+  }
+
+  element.dataset.state = "exploding";
+  element.style.transform = "scale(1.25) rotate(-6deg)";
 
   window.setTimeout(() => {
-    lep.dataset.state = "exploded";
-    lep.style.transform = "scale(0.6)";
+    element.dataset.state = "exploded";
+    element.style.transform = "scale(0)";
     state.set(id, { status: "exploded", timer: null });
-    tryTriggerMoneyRain();
-    scheduleRespawn(id, lep);
+    maybeMakeItRain();
+    scheduleRespawn(id, element);
   }, 520);
 }
 
@@ -79,31 +97,31 @@ export function initLeprechauns() {
 
   const fragment = document.createDocumentFragment();
 
-  for (let i = 0; i < LEPRECHAUN_COUNT; i += 1) {
-    const lep = createLepElement(i);
-    const base = positions[i % positions.length];
-    placeLep(lep, {
-      x: randomOffset(base.x, 6),
-      y: randomOffset(base.y, 6),
+  for (let i = 0; i < NODE_COUNT; i += 1) {
+    const trigger = createTrigger(i);
+    const base = anchorPositions[i % anchorPositions.length];
+    applyPosition(trigger, {
+      x: withVariance(base.x, 10),
+      y: withVariance(base.y, 10),
     });
 
-    addPrimaryActivation(lep, (event) => {
+    addPrimaryActivation(trigger, (event) => {
       if (event.type === "click") {
         event.preventDefault();
       }
-      explodeLep(i, lep);
+      detonate(i, trigger);
     });
-    lep.addEventListener("keydown", (event) => {
+
+    trigger.addEventListener("keydown", (event) => {
       if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
-        explodeLep(i, lep);
+        detonate(i, trigger);
       }
     });
 
     state.set(i, { status: "idle", timer: null });
-    fragment.appendChild(lep);
+    fragment.appendChild(trigger);
   }
 
   layer.appendChild(fragment);
 }
-assets/js/main.js
