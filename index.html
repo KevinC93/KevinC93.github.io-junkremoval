@@ -27,6 +27,8 @@
   </head>
   <body>
     <canvas id="aurora-canvas" aria-hidden="true"></canvas>
+    <canvas id="trail" aria-hidden="true"></canvas>
+    <div id="pops" aria-hidden="true"></div>
     <div id="money-rain" aria-hidden="true"></div>
     <div id="leprechaun-layer" aria-hidden="true"></div>
 
@@ -56,14 +58,9 @@
           data-depth="0.18"
           data-reveal
         >
-          <span class="pill">Netlify deployed · AI native</span>
-          <h1>
-            Launch campaigns that bend reality, not the budget.
-          </h1>
-          <p>
-            We architect omnichannel engines with predictive creative, smart
-            automation, and revenue accountability baked into every sprint.
-          </p>
+          <span class="pill">Deployed on Netlify</span>
+          <h1>Jumping on the AI wave has never been easier!</h1>
+          <p>I let Google’s AI stalk your customers… legally.</p>
           <div class="hero__ctas">
             <a
               class="cta"
@@ -71,16 +68,24 @@
               data-magnetic
               onclick="Calendly.initPopupWidget({url: 'https://calendly.com/kevincacheiro93/30-min-meeting'}); return false;"
             >
-              Claim an acceleration call
+              Schedule a call
             </a>
             <button
               class="cta cta--outline"
               type="button"
               data-magnetic
-              data-scroll-to="#showreel"
+              data-open="contact-modal"
             >
-              Watch the playbook
+              Contact us now
             </button>
+          </div>
+          <div class="hero__fomo" data-reveal data-reveal-delay="320">
+            <strong>Founder Offer:</strong>
+            <span>90% off for the first 5 clients —</span>
+            <button id="claim" class="cta cta--chip" type="button">
+              Claim a spot
+            </button>
+            <span class="hero__spots" id="spots">( 5 of 5 left )</span>
           </div>
           <dl class="hero__meta">
             <div>
@@ -141,60 +146,217 @@
       </section>
 
       <section class="section" id="services">
-        <div class="container section__intro" data-reveal>
-          <h2>Command the full signal chain</h2>
-          <p>
-            Every sprint unifies brand, media, and analytics into a self-learning
-            performance loop. The more we deploy, the smarter it gets.
+        <div class="container">
+          <div class="section__intro" data-reveal>
+            <h2>Our Services</h2>
+            <p>
+              We plan, write, and ship performance campaigns that reach
+              customers across <strong>Search</strong>, <strong>Display</strong>,
+              <strong>YouTube</strong>, <strong>Maps</strong>,
+              <strong>Gmail</strong>, and <strong>Discover</strong>—coordinated by
+              multi-network machine learning so every impression improves the
+              next.
+            </p>
+          </div>
+          <div class="channels" aria-label="Where your ads show" data-reveal>
+            <div>
+              <svg viewBox="0 0 48 48" width="24" height="24" aria-hidden="true" focusable="false">
+                <clipPath id="g-clip-channels">
+                  <path
+                    d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"
+                  ></path>
+                </clipPath>
+                <g clip-path="url(#g-clip-channels)">
+                  <path fill="#FBBC05" d="M0 37V11l17 13z"></path>
+                  <path fill="#EA4335" d="M0 11l17 13 7-6.1L48 14V0H0z"></path>
+                  <path fill="#34A853" d="M0 37l30-23 7.9 1L48 0v48H0z"></path>
+                  <path fill="#4285F4" d="M48 48L17 24l-4-3 35-10z"></path>
+                </g>
+              </svg>
+              <span>Search</span>
+            </div>
+            <div>
+              <svg viewBox="0 0 64 48" width="26" height="24" aria-hidden="true" focusable="false">
+                <defs>
+                  <linearGradient id="adsB" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#1A73E8" /><stop offset="1" stop-color="#1967D2" />
+                  </linearGradient>
+                  <linearGradient id="adsG" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#34A853" /><stop offset="1" stop-color="#188038" />
+                  </linearGradient>
+                </defs>
+                <rect x="10" y="10" rx="10" ry="10" width="14" height="34" fill="url(#adsB)" transform="rotate(-20 17 27)" />
+                <rect x="32" y="6" rx="10" ry="10" width="14" height="34" fill="url(#adsG)" transform="rotate(20 39 23)" />
+                <circle cx="47" cy="38" r="6" fill="#FBBC04" />
+              </svg>
+              <span>Display</span>
+            </div>
+            <div>
+              <svg viewBox="0 0 100 70" width="28" height="20" aria-hidden="true" focusable="false">
+                <rect x="5" y="8" width="90" height="54" rx="12" fill="#FF0000" />
+                <polygon points="42,22 42,48 66,35" fill="#FFFFFF" />
+              </svg>
+              <span>YouTube</span>
+            </div>
+            <div>
+              <svg viewBox="0 0 256 192" width="28" height="21" aria-hidden="true" focusable="false">
+                <path d="M32 32h192a16 16 0 0 1 16 16v96a16 16 0 0 1-16 16H32a16 16 0 0 1-16-16V48a16 16 0 0 1 16-16z" fill="#FFFFFF" />
+                <path d="M32 48v96l64-48V72L32 48z" fill="#34A853" />
+                <path d="M224 48v96l-64-48V72l64-24z" fill="#4285F4" />
+                <path d="M32 48l96 72 96-72v-8a16 16 0 0 0-16-16H48a16 16 0 0 0-16 16v8z" fill="#EA4335" />
+                <path d="M96 72v24l32 24 32-24V72l-32 24-32-24z" fill="#FBBC05" />
+              </svg>
+              <span>Gmail &amp; Discover</span>
+            </div>
+            <div>
+              <svg viewBox="0 0 256 256" width="22" height="22" aria-hidden="true" focusable="false">
+                <path d="M128 236s76-67 76-130a76 76 0 0 0-152 0c0 63 76 130 76 130z" fill="#4285F4" />
+                <path d="M128 236s76-67 76-130c0-21.2-7.8-40.6-20.7-55.3L128 128V236z" fill="#34A853" />
+                <circle cx="128" cy="112" r="32" fill="#FBBC05" />
+                <path d="M83 59l45 69 55-79c-14.5-10.2-32.2-16.2-51-16.2-20.3 0-39 6.6-54 17.7z" fill="#EA4335" />
+              </svg>
+              <span>Maps</span>
+            </div>
+            <div>
+              <svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true" focusable="false">
+                <rect x="10" y="18" width="44" height="36" rx="6" fill="#F1F3F4" stroke="#DADCE0" />
+                <path d="M22 18c0-6 4-10 10-10s10 4 10 10" fill="none" stroke="#5F6368" stroke-width="3" />
+                <g transform="translate(8,6) scale(0.42)">
+                  <clipPath id="g-clip-shop">
+                    <path
+                      d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"
+                    ></path>
+                  </clipPath>
+                  <g clip-path="url(#g-clip-shop)">
+                    <path fill="#FBBC05" d="M0 37V11l17 13z"></path>
+                    <path fill="#EA4335" d="M0 11l17 13 7-6.1L48 14V0H0z"></path>
+                    <path fill="#34A853" d="M0 37l30-23 7.9 1L48 0v48H0z"></path>
+                    <path fill="#4285F4" d="M48 48L17 24l-4-3 35-10z"></path>
+                  </g>
+                </g>
+              </svg>
+              <span>Shopping</span>
+            </div>
+          </div>
+          <ul class="services-list" data-reveal data-reveal-delay="80">
+            <li class="svc">
+              <strong>AI-powered Ads</strong>
+              <span>Simply, the best way to use AI.</span>
+            </li>
+            <li class="svc">
+              <strong>Landing Page Creation</strong>
+              <span>Custom websites tailored to your needs.</span>
+            </li>
+          </ul>
+          <p class="section__note" data-reveal data-reveal-delay="120">
+            <em>Special Offer: First 5 clients get 90% off for the first two months.</em>
           </p>
         </div>
-        <div class="container grid grid-3">
-          <article class="glow-card" data-gradient data-reveal>
-            <h3>Quantum Creative Lab</h3>
+      </section>
+
+      <section class="section section--alt" id="brand">
+        <div class="container">
+          <div class="section__intro" data-reveal>
+            <h2>Flip the cards</h2>
             <p>
-              Generate hundreds of on-brand hooks and motion tests weekly with a
-              hybrid of AI concepting and in-house art direction.
+              Tap through the founder cheat codes that made the original
+              version of this site go viral. Same words, new glow.
             </p>
-            <ul>
-              <li>Script &amp; storyboard prototyping</li>
-              <li>Voice, format, and CTA multivariate testing</li>
-              <li>Automated compliance passes per market</li>
-            </ul>
-          </article>
-          <article
-            class="glow-card"
-            data-gradient
-            data-reveal
-            data-reveal-delay="80"
-          >
-            <h3>Performance Autopilot</h3>
-            <p>
-              Deploy governance that reacts faster than your competitors with
-              anomaly detection, budget pacing, and smart bidding loops.
-            </p>
-            <ul>
-              <li>API syncs with Meta, Google, TikTok, Reddit</li>
-              <li>Creative fatigue &amp; spend anomaly alerts</li>
-              <li>ROAS-anchored scenario modelling</li>
-            </ul>
-          </article>
-          <article
-            class="glow-card"
-            data-gradient
-            data-reveal
-            data-reveal-delay="140"
-          >
-            <h3>Founders&apos; Growth Desk</h3>
-            <p>
-              You get direct access to the strategy core—daily reporting,
-              real-time dashboards, and war room decision support.
-            </p>
-            <ul>
-              <li>Daily executive summary with next actions</li>
-              <li>Source-of-truth dashboards &amp; LTV tracking</li>
-              <li>Weekly innovation sprint &amp; roadmap</li>
-            </ul>
-          </article>
+          </div>
+          <div class="flip-grid" data-reveal data-reveal-delay="80">
+            <figure class="revealcard" aria-label="AI adoption growth">
+              <div class="cover">READ ME</div>
+              <div class="content">
+                <h3>AI is mainstream in 2025</h3>
+                <p>
+                  Most teams already use AI. Late adopters pay more and learn
+                  slower—move early.
+                </p>
+              </div>
+            </figure>
+            <figure class="revealcard" aria-label="FOMO: founders deal">
+              <div class="cover">READ ME</div>
+              <div class="content">
+                <h3>Late costs more</h3>
+                <p>
+                  Move now to compound ROAS. Hesitation raises costs and loses
+                  ground.
+                </p>
+              </div>
+            </figure>
+            <figure class="revealcard" aria-label="AI CAC FOMO">
+              <div class="cover">READ ME</div>
+              <div class="content">
+                <h3>Shrink CAC with AI</h3>
+                <p>The best way to get a smaller CAC is with AI.</p>
+              </div>
+            </figure>
+            <figure class="revealcard" aria-label="Late tax">
+              <div class="cover">READ ME</div>
+              <div class="content">
+                <h3>Don’t pay the late tax</h3>
+                <p>Ship AI this week. Lower CPC, faster learning, better ROAS.</p>
+              </div>
+            </figure>
+            <figure class="revealcard" aria-label="Niche learning FOMO">
+              <div class="cover">READ ME</div>
+              <div class="content">
+                <h3>Don’t get left behind</h3>
+                <p>
+                  Your competitors are already training AI on your niche. Every
+                  week you wait widens their lead.
+                </p>
+              </div>
+            </figure>
+            <figure class="revealcard" aria-label="Urgent CTA">
+              <div class="cover">READ ME</div>
+              <div class="content">
+                <h3>90% off — first two months</h3>
+                <p>Only 5 founder spots. When they’re gone, the deal is gone.</p>
+                <button class="cta cta--chip" type="button" data-open="contact-modal">
+                  Claim 90% Off
+                </button>
+              </div>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="about">
+        <div class="container about" data-reveal>
+          <h2>About Us</h2>
+          <p>
+            We’re a team of creative minds who put real passion into every ad
+            campaign. We keep things simple: we let computers do computer stuff,
+            while our team crafts the creative copy. With Google’s AI built
+            specifically for ad campaigns, there’s no stopping your company’s
+            growth!
+          </p>
+        </div>
+      </section>
+
+      <section class="section section--alt" id="faq">
+        <div class="container" data-reveal>
+          <h2>FAQ</h2>
+          <ul class="faq-list">
+            <li>
+              <strong>Do I need a big budget?</strong> No, we work with small to
+              medium budgets and scale as you grow.
+            </li>
+            <li>
+              <strong>How soon will I see results?</strong> Many campaigns
+              generate leads in the first week.
+            </li>
+            <li>
+              <strong>Do I need a website?</strong> Not required—we can create a
+              landing page for you.
+            </li>
+            <li>
+              <strong>What if it doesn’t work?</strong> If you’re not satisfied
+              with the results, I can refer you to a bigger, better marketing
+              agency.
+            </li>
+          </ul>
         </div>
       </section>
 
@@ -452,6 +614,52 @@
         </div>
       </section>
     </main>
+
+    <div
+      id="contact-modal"
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-hidden="true"
+      aria-labelledby="contact-modal-title"
+    >
+      <div class="modal__overlay" data-close="contact-modal"></div>
+      <div class="modal__card" role="document">
+        <button
+          class="modal__close"
+          type="button"
+          aria-label="Close contact form"
+          data-close="contact-modal"
+        >
+          ✕
+        </button>
+        <h3 id="contact-modal-title">Contact Us</h3>
+        <form action="https://formspree.io/f/xqaykddn" method="POST" accept-charset="UTF-8">
+          <label class="modal__field">
+            <span>Your name</span>
+            <input required name="name" placeholder="Your name" />
+          </label>
+          <label class="modal__field">
+            <span>Email</span>
+            <input required type="email" name="email" placeholder="Email" />
+          </label>
+          <label class="modal__field">
+            <span>Phone</span>
+            <input type="tel" name="phone" placeholder="Phone (optional)" />
+          </label>
+          <label class="modal__field">
+            <span>Goals</span>
+            <textarea
+              required
+              name="message"
+              placeholder="Tell us about your goals"
+              rows="4"
+            ></textarea>
+          </label>
+          <button class="cta" type="submit">Send</button>
+        </form>
+      </div>
+    </div>
 
     <footer class="footer">
       <div class="container">
