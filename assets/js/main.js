@@ -7,6 +7,8 @@ import {
   initTimelineProgress,
 } from "./interactions.js";
 
+document.documentElement.classList.add("js");
+
 const state = {
   spotsRemaining: 5,
 };
@@ -32,30 +34,3 @@ function initFomoWidget() {
   }
 
   claimButton.addEventListener("click", () => {
-    if (state.spotsRemaining === 0) return;
-    state.spotsRemaining = Math.max(0, state.spotsRemaining - 1);
-    spotsEl.textContent = state.spotsRemaining.toString();
-    try {
-      window.localStorage.setItem(
-        "kc-spots-remaining",
-        state.spotsRemaining.toString(),
-      );
-    } catch (error) {
-      console.warn("Unable to persist remaining spots", error);
-    }
-    claimButton.textContent =
-      state.spotsRemaining === 0 ? "All claimed!" : "Spot reserved";
-    claimButton.disabled = true;
-    claimButton.classList.add("secondary");
-  });
-}
-
-initFomoWidget();
-initHeartCanvas();
-initLeprechauns();
-initScrollReveal();
-initInteractiveGlow();
-initTimelineProgress();
-initContactForm();
-
-window.__APP_LOADED__ = true;
