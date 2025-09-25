@@ -4,6 +4,8 @@ const LAYER_ID = "leprechaun-layer";
 const RESPAWN_DELAY = 20000;
 const LEPRECHAUN_COUNT = 5;
 
+const supportsPointerEvents = window.PointerEvent !== undefined;
+
 const positions = [
   { x: 12, y: 18 },
   { x: 78, y: 24 },
@@ -23,6 +25,15 @@ function createLepElement(index) {
   lep.setAttribute("aria-live", "polite");
   lep.innerHTML = `<span>Luck ${index + 1}</span><div class="leprechaun__sparkle" aria-hidden="true"></div>`;
   return lep;
+}
+
+function addPrimaryActivation(lep, handler) {
+  if (supportsPointerEvents) {
+    lep.addEventListener("pointerdown", handler);
+    return;
+  }
+
+  lep.addEventListener("click", handler);
 }
 
 function placeLep(lep, position) {
@@ -50,26 +61,7 @@ function scheduleRespawn(id, lep) {
   }, RESPAWN_DELAY);
   state.set(id, { status: "respawning", timer });
 }
-
-function tryTriggerMoneyRain() {
-  const allExploded = Array.from(state.values()).every(
-    (entry) => entry.status === "exploded",
-  );
-  if (allExploded && !rainLocked) {
-    rainLocked = true;
-    triggerMoneyRain();
-  }
-}
-
-function explodeLep(id, lep) {
-  const entry = state.get(id);
-  if (!entry || entry.status === "exploded") return;
-
-  if (entry.timer) {
-    clearTimeout(entry.timer);
-  }
-
-  lep.dataset.state = "exploding";
+@@ -73,39 +84,44 @@ function explodeLep(id, lep) {
   lep.style.transform = "scale(1.15)";
 
   window.setTimeout(() => {
@@ -95,7 +87,12 @@ export function initLeprechauns() {
       y: randomOffset(base.y, 6),
     });
 
-    lep.addEventListener("pointerdown", () => explodeLep(i, lep));
+    addPrimaryActivation(lep, (event) => {
+      if (event.type === "click") {
+        event.preventDefault();
+      }
+      explodeLep(i, lep);
+    });
     lep.addEventListener("keydown", (event) => {
       if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
@@ -109,3 +106,4 @@ export function initLeprechauns() {
 
   layer.appendChild(fragment);
 }
+assets/js/main.js
