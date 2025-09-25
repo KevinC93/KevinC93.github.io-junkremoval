@@ -95,7 +95,7 @@ export function initInteractiveGlow() {
       updateGlowPosition(element, event);
     });
 
-@@ -88,102 +119,259 @@ export function initInteractiveGlow() {
+@@ -88,102 +119,510 @@ export function initInteractiveGlow() {
       element.style.setProperty("--pointer-opacity", "1");
     });
 
@@ -354,4 +354,255 @@ export function initMarquee() {
   clone.style.animationDelay = `-${duration / 2}s`;
 
   track.parentElement?.appendChild(clone);
+}
+
+export function initCursorPops() {
+  const pops = document.getElementById("pops");
+  if (!pops) return;
+
+  const isCoarse = window.matchMedia("(pointer:coarse)").matches;
+  const words = ["CPC", "CAC", "ROAS", "A/B", "CRM", "SEM"];
+  const minDelay = isCoarse ? 260 : 120;
+  let index = 0;
+  let last = 0;
+
+  window.addEventListener(
+    "pointermove",
+    (event) => {
+      if (event.pointerType === "touch") return;
+      const now = performance.now();
+      if (now - last < minDelay) return;
+      last = now;
+
+      const word = words[index % words.length];
+      index += 1;
+
+      const pop = document.createElement("div");
+      pop.className = "pop";
+      if (word === "ROAS") {
+        pop.classList.add("gold");
+      }
+      pop.textContent = word;
+      pop.style.left = `${event.clientX}px`;
+      pop.style.top = `${event.clientY}px`;
+      pops.appendChild(pop);
+
+      window.setTimeout(() => {
+        pop.remove();
+      }, 1700);
+    },
+    { passive: true },
+  );
+}
+
+export function initServiceHover() {
+  const items = document.querySelectorAll("#services .svc");
+  if (!items.length) return;
+
+  items.forEach((item) => {
+    item.addEventListener("pointermove", (event) => {
+      if (event.pointerType === "touch") return;
+      const rect = item.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      item.style.setProperty("--mx", `${x}px`);
+      item.style.setProperty("--my", `${y}px`);
+    });
+
+    item.addEventListener("pointerleave", () => {
+      item.style.removeProperty("--mx");
+      item.style.removeProperty("--my");
+    });
+  });
+}
+
+export function initRevealCards() {
+  const cards = document.querySelectorAll("#brand .revealcard");
+  if (!cards.length) return;
+  const isCoarse = window.matchMedia("(pointer:coarse)").matches;
+  if (!isCoarse) return;
+
+  cards.forEach((card) => {
+    const toggle = (event) => {
+      if (event.target.closest("button, a")) return;
+      event.preventDefault();
+      card.classList.toggle("open");
+    };
+    card.addEventListener("click", toggle);
+    card.addEventListener("touchstart", toggle, { passive: false });
+  });
+}
+
+export function initFounderOffer() {
+  const spotsEl = document.getElementById("spots");
+  const claim = document.getElementById("claim");
+  if (!spotsEl || !claim || claim.dataset.boundCalendly === "1") return;
+
+  const storageKey = "founder_spots_left_v1";
+  let spots = parseInt(localStorage.getItem(storageKey) || "5", 10);
+  if (Number.isNaN(spots) || spots < 1 || spots > 5) {
+    spots = 5;
+  }
+
+  const render = () => {
+    spotsEl.textContent = `( ${spots} of 5 left )`;
+  };
+
+  render();
+
+  const openCalendly = () => {
+    const url = "https://calendly.com/kevincacheiro93/30-min-meeting";
+    if (window.Calendly && typeof window.Calendly.initPopupWidget === "function") {
+      window.Calendly.initPopupWidget({ url });
+    } else {
+      window.open(url, "_blank", "noopener");
+    }
+  };
+
+  claim.addEventListener(
+    "click",
+    (event) => {
+      event.preventDefault();
+      openCalendly();
+      if (spots > 1) {
+        spots -= 1;
+        localStorage.setItem(storageKey, String(spots));
+        render();
+      }
+    },
+    { passive: false },
+  );
+
+  claim.dataset.boundCalendly = "1";
+}
+
+export function initContactModal() {
+  const modal = document.getElementById("contact-modal");
+  if (!modal) return;
+  const openTriggers = document.querySelectorAll('[data-open="contact-modal"]');
+  if (!openTriggers.length) return;
+
+  const body = document.body;
+
+  const openModal = () => {
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
+    body.style.overflow = "hidden";
+  };
+
+  const closeModal = () => {
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
+    body.style.overflow = "";
+  };
+
+  openTriggers.forEach((trigger) => {
+    trigger.addEventListener("click", (event) => {
+      event.preventDefault();
+      openModal();
+    });
+  });
+
+  modal.addEventListener("click", (event) => {
+    const target = event.target;
+    if (target instanceof Element && target.dataset.close === "contact-modal") {
+      event.preventDefault();
+      closeModal();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && modal.classList.contains("is-open")) {
+      closeModal();
+    }
+  });
+
+  window.addEventListener("beforeunload", () => {
+    modal.classList.remove("is-open");
+  });
+}
+
+export function initCursorTrail() {
+  const canvas = document.getElementById("trail");
+  if (!(canvas instanceof HTMLCanvasElement)) return;
+  if (window.matchMedia("(pointer:coarse)").matches) return;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  const points = [];
+  const maxPoints = 36;
+  let running = false;
+  let width = 0;
+  let height = 0;
+  let dpr = 1;
+  let rafId = 0;
+
+  const resize = () => {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  };
+
+  const render = () => {
+    ctx.fillStyle = "rgba(5, 8, 22, 0.12)";
+    ctx.fillRect(0, 0, width, height);
+
+    for (let i = 0; i < points.length; i += 1) {
+      const point = points[i];
+      point.life -= 0.035;
+      const radius = 18 * point.life;
+      if (radius <= 0) continue;
+      const gradient = ctx.createRadialGradient(point.x, point.y, 0, point.x, point.y, radius);
+      gradient.addColorStop(0, `rgba(56, 189, 248, ${0.55 * point.life})`);
+      gradient.addColorStop(1, "rgba(56, 189, 248, 0)");
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    for (let i = points.length - 1; i >= 0; i -= 1) {
+      if (points[i].life <= 0.02) {
+        points.splice(i, 1);
+      }
+    }
+
+    if (points.length) {
+      rafId = window.requestAnimationFrame(render);
+    } else {
+      ctx.clearRect(0, 0, width, height);
+      running = false;
+    }
+  };
+
+  const addPoint = (x, y) => {
+    points.push({ x, y, life: 1 });
+    if (points.length > maxPoints) {
+      points.shift();
+    }
+    if (!running) {
+      running = true;
+      rafId = window.requestAnimationFrame(render);
+    }
+  };
+
+  const handlePointerMove = (event) => {
+    if (event.pointerType === "touch") return;
+    addPoint(event.clientX, event.clientY);
+  };
+
+  resize();
+  window.addEventListener("resize", resize);
+  window.addEventListener("pointermove", handlePointerMove, { passive: true });
+
+  window.addEventListener("beforeunload", () => {
+    if (rafId) {
+      window.cancelAnimationFrame(rafId);
+    }
+  });
 }
