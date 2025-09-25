@@ -1,3 +1,0 @@
-
-# TypeScript + Tailwind + App Router + ESLint (recommended)
-npx create-next-app@latest web --ts --tailwind --app --eslint
