@@ -526,16 +526,25 @@ export function initCursorTrail() {
   const canvas = document.getElementById("trail");
   if (!(canvas instanceof HTMLCanvasElement)) return;
   if (window.matchMedia("(pointer:coarse)").matches) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
-  const points = [];
-  const maxPoints = 36;
-  let running = false;
+  const KEYWORDS = [
+    { text: "CPC", color: "96, 165, 250" },
+    { text: "SEM", color: "129, 140, 248" },
+    { text: "CAC", color: "56, 189, 248" },
+    { text: "CRM", color: "59, 130, 246" },
+    { text: "ROAS", color: "246, 193, 66" },
+  ];
+
+  const glyphs = [];
+  let keywordIndex = 0;
   let width = 0;
   let height = 0;
   let dpr = 1;
   let rafId = 0;
+  let lastTime = 0;
 
   const resize = () => {
     dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -543,57 +552,80 @@ export function initCursorTrail() {
     height = window.innerHeight;
     canvas.width = width * dpr;
     canvas.height = height * dpr;
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
+    canvas.style.width = width + "px";
+    canvas.style.height = height + "px";
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   };
 
-  const render = () => {
-    ctx.fillStyle = "rgba(5, 8, 22, 0.12)";
-    ctx.fillRect(0, 0, width, height);
-
-    for (let i = 0; i < points.length; i += 1) {
-      const point = points[i];
-      point.life -= 0.035;
-      const radius = 18 * point.life;
-      if (radius <= 0) continue;
-      const gradient = ctx.createRadialGradient(point.x, point.y, 0, point.x, point.y, radius);
-      gradient.addColorStop(0, `rgba(56, 189, 248, ${0.55 * point.life})`);
-      gradient.addColorStop(1, "rgba(56, 189, 248, 0)");
-      ctx.fillStyle = gradient;
-      ctx.beginPath();
-      ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
-      ctx.fill();
+  const addGlyph = (x, y) => {
+    const keyword = KEYWORDS[keywordIndex];
+    keywordIndex = (keywordIndex + 1) % KEYWORDS.length;
+    glyphs.push({
+      x,
+      y,
+      vx: (Math.random() - 0.5) * 0.6,
+      vy: -0.35 - Math.random() * 0.2,
+      life: 1,
+      text: keyword.text,
+      color: keyword.color,
+      wobble: Math.random() * Math.PI * 2,
+    });
+    if (glyphs.length > 48) {
+      glyphs.shift();
     }
-
-    for (let i = points.length - 1; i >= 0; i -= 1) {
-      if (points[i].life <= 0.02) {
-        points.splice(i, 1);
-      }
-    }
-
-    if (points.length) {
+    if (!rafId) {
+      lastTime = performance.now();
       rafId = window.requestAnimationFrame(render);
-    } else {
-      ctx.clearRect(0, 0, width, height);
-      running = false;
     }
   };
 
-  const addPoint = (x, y) => {
-    points.push({ x, y, life: 1 });
-    if (points.length > maxPoints) {
-      points.shift();
+  const render = (timestamp) => {
+    const delta = Math.min(timestamp - lastTime, 48) || 16;
+    lastTime = timestamp;
+    ctx.clearRect(0, 0, width, height);
+
+    for (let i = glyphs.length - 1; i >= 0; i -= 1) {
+      const glyph = glyphs[i];
+      glyph.life -= 0.015 * (delta / 16);
+      if (glyph.life <= 0) {
+        glyphs.splice(i, 1);
+        continue;
+      }
+      glyph.x += glyph.vx * delta * 0.04;
+      glyph.y += glyph.vy * delta * 0.04;
+      glyph.wobble += 0.12;
+      const alphaBase = glyph.life * 1.35;
+      const alpha = Math.max(Math.min(alphaBase, 0.95), 0);
+      const fontSize = 16 + (1 - glyph.life) * 12;
+      ctx.font = "600 " + fontSize.toFixed(1) + "px \"Space Grotesk\", \"Manrope\", sans-serif";
+      ctx.fillStyle = "rgba(" + glyph.color + ", " + alpha.toFixed(3) + ")";
+      ctx.shadowColor = "rgba(14, 116, 144, " + (alpha * 0.6).toFixed(3) + ")";
+      ctx.shadowBlur = 18;
+      const offsetX = Math.sin(glyph.wobble) * 6;
+      const offsetY = Math.cos(glyph.wobble) * 4;
+      ctx.fillText(glyph.text, glyph.x + offsetX, glyph.y + offsetY);
+      ctx.shadowBlur = 0;
+
+      if (glyph.text === "ROAS") {
+        ctx.strokeStyle = "rgba(253, 224, 71, " + (alpha * 0.85).toFixed(3) + ")";
+        ctx.lineWidth = 1.2;
+        ctx.strokeText(glyph.text, glyph.x + offsetX, glyph.y + offsetY);
+      }
     }
-    if (!running) {
-      running = true;
+
+    if (glyphs.length) {
       rafId = window.requestAnimationFrame(render);
+    } else {
+      rafId = 0;
+      ctx.clearRect(0, 0, width, height);
     }
   };
 
   const handlePointerMove = (event) => {
-    if (event.pointerType === "touch") return;
-    addPoint(event.clientX, event.clientY);
+    if (event.pointerType && event.pointerType !== "mouse" && event.pointerType !== "pen") {
+      return;
+    }
+    addGlyph(event.clientX, event.clientY);
   };
 
   resize();
