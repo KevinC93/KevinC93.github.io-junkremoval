@@ -1,4 +1,4 @@
-:root {
+﻿:root {
   --ink: #f8fafc;
   --ink-soft: rgba(248, 250, 252, 0.72);
   --ink-muted: rgba(226, 232, 240, 0.62);
@@ -26,7 +26,7 @@ html {
 
 body {
   margin: 0;
-  font-family: "Manrope", system-ui, -apple-system, BlinkMacSystemFont,
+  font-family: var(--font-manrope), system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", sans-serif;
   background: radial-gradient(circle at top left, #111827, #020617 62%);
   color: var(--ink);
@@ -277,7 +277,7 @@ img {
 }
 
 .logo {
-  font-family: "Space Grotesk", sans-serif;
+  font-family: var(--font-space-grotesk), sans-serif;
   font-size: 1.2rem;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -337,7 +337,7 @@ img {
 }
 
 .hero__copy h1 {
-  font-family: "Space Grotesk", sans-serif;
+  font-family: var(--font-space-grotesk), sans-serif;
   font-size: clamp(2.7rem, 4.6vw, 4rem);
   margin: 1.2rem 0 1rem;
   line-height: 1.1;
@@ -468,7 +468,7 @@ img {
 
 .hero__meta dd {
   margin: 0.35rem 0 0;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: var(--font-space-grotesk), sans-serif;
   font-size: 1.6rem;
 }
 
@@ -629,7 +629,7 @@ img {
 }
 
 .marquee__track span::before {
-  content: "✦";
+  content: "âœ¦";
   margin-inline: 1.5rem;
   color: rgba(168, 85, 247, 0.6);
 }
@@ -659,7 +659,7 @@ img {
 
 .section__intro h2 {
   margin: 0;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: var(--font-space-grotesk), sans-serif;
   font-size: clamp(2rem, 3.4vw, 2.8rem);
 }
 
@@ -747,7 +747,7 @@ img {
 .svc strong {
   display: block;
   margin-bottom: 0.4rem;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: var(--font-space-grotesk), sans-serif;
   font-size: 1.12rem;
 }
 
@@ -782,7 +782,7 @@ img {
   inset: 0;
   display: grid;
   place-items: center;
-  font: 800 1.2rem/1 "Space Grotesk", sans-serif;
+  font: 800 1.2rem/1 var(--font-space-grotesk), sans-serif;
   letter-spacing: 0.12em;
   color: rgba(226, 232, 240, 0.82);
   background: rgba(15, 23, 42, 0.72);
@@ -910,7 +910,7 @@ img {
 .glow-card h3 {
   margin: 0 0 1rem;
   font-size: 1.35rem;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: var(--font-space-grotesk), sans-serif;
 }
 
 .glow-card p {
@@ -974,7 +974,7 @@ img {
 
 .timeline h3 {
   margin-top: 0;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: var(--font-space-grotesk), sans-serif;
 }
 
 .timeline p {
@@ -999,7 +999,7 @@ img {
 
 .metric strong {
   font-size: clamp(2rem, 5vw, 2.9rem);
-  font-family: "Space Grotesk", sans-serif;
+  font-family: var(--font-space-grotesk), sans-serif;
 }
 
 .metric span {
@@ -1099,7 +1099,7 @@ img {
 .note h3 {
   margin: 0;
   font-size: 1.35rem;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: var(--font-space-grotesk), sans-serif;
 }
 
 .note p {
@@ -1270,7 +1270,7 @@ img {
 
 .modal__card h3 {
   margin: 0;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: var(--font-space-grotesk), sans-serif;
   font-size: 1.4rem;
 }
 
@@ -1365,3 +1365,4 @@ img {
     animation: none;
   }
 }
+

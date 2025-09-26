@@ -1,0 +1,648 @@
+﻿
+    <canvas id="aurora-canvas" aria-hidden="true"></canvas>
+    <canvas id="trail" aria-hidden="true"></canvas>
+    <div id="pops" aria-hidden="true"></div>
+    <div id="money-rain" aria-hidden="true"></div>
+    <div id="leprechaun-layer" aria-hidden="true"></div>
+
+    <header class="site-header" data-parallax>
+      <nav class="nav container" data-reveal>
+        <a class="logo" href="#top">300 Kings</a>
+        <div class="nav__links">
+          <a href="#services">Capabilities</a>
+          <a href="#process">Method</a>
+          <a href="#proof">Proof</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <button
+          class="cta cta--ghost"
+          type="button"
+          data-magnetic
+          data-scroll-to="#contact"
+        >
+          Build my launch map
+        </button>
+      </nav>
+
+      <div class="hero container">
+        <div
+          class="hero__copy"
+          data-parallax-layer
+          data-depth="0.18"
+          data-reveal
+        >
+          <span class="pill">Deployed on Netlify</span>
+          <h1>Jumping on the AI wave has never been easier!</h1>
+          <p>I let Googleâ€™s AI stalk your customersâ€¦ legally.</p>
+          <div class="hero__ctas">
+            <a
+              class="cta"
+              href="#"
+              data-magnetic
+              onclick="Calendly.initPopupWidget({url: 'https://calendly.com/kevincacheiro93/30-min-meeting'}); return false;"
+            >
+              Schedule a call
+            </a>
+            <button
+              class="cta cta--outline"
+              type="button"
+              data-magnetic
+              data-open="contact-modal"
+            >
+              Contact us now
+            </button>
+          </div>
+          <div class="hero__fomo" data-reveal data-reveal-delay="320">
+            <strong>Founder Offer:</strong>
+            <span>90% off for the first 5 clients â€”</span>
+            <button id="claim" class="cta cta--chip" type="button">
+              Claim a spot
+            </button>
+            <span class="hero__spots" id="spots">( 5 of 5 left )</span>
+          </div>
+          <dl class="hero__meta">
+            <div>
+              <dt>Average launch to ROI</dt>
+              <dd>
+                <span data-count-to="29" data-count-suffix=" days">0</span>
+              </dd>
+            </div>
+            <div>
+              <dt>Automations deployed</dt>
+              <dd>
+                <span
+                  data-count-to="147"
+                  data-count-prefix=""
+                  data-count-suffix=" triggers"
+                >
+                  0
+                </span>
+              </dd>
+            </div>
+            <div>
+              <dt>Creative iterations / month</dt>
+              <dd>
+                <span data-count-to="68" data-count-suffix="+">0</span>
+              </dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="hero__visual" data-parallax-layer data-depth="0.32">
+          <div class="hero__cluster" data-reveal data-reveal-delay="120">
+            <div class="orb orb--primary"></div>
+            <div class="orb orb--secondary"></div>
+            <div class="orb orb--tertiary"></div>
+            <div class="hero__radar">
+              <div class="hero__radar-sweep"></div>
+              <div class="hero__radar-sweep"></div>
+            </div>
+            <div class="hero__readout">
+              <strong>Mission Control</strong>
+              <span>Real-time ROAS telemetry syncing across every channel.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="marquee" data-marquee>
+        <div class="marquee__track">
+          <span>Shopify Scale</span>
+          <span>Series B B2B SaaS</span>
+          <span>Crypto Fintech</span>
+          <span>Luxury eComm</span>
+          <span>Next-Gen Mobility</span>
+          <span>Future of Work</span>
+        </div>
+      </section>
+
+      <section class="section" id="services">
+        <div class="container">
+          <div class="section__intro" data-reveal>
+            <h2>Our Services</h2>
+            <p>
+              We plan, write, and ship performance campaigns that reach
+              customers across <strong>Search</strong>, <strong>Display</strong>,
+              <strong>YouTube</strong>, <strong>Maps</strong>,
+              <strong>Gmail</strong>, and <strong>Discover</strong>â€”coordinated by
+              multi-network machine learning so every impression improves the
+              next.
+            </p>
+          </div>
+          <div class="channels" aria-label="Where your ads show" data-reveal>
+            <div>
+              <svg viewBox="0 0 48 48" width="24" height="24" aria-hidden="true" focusable="false">
+                <clipPath id="g-clip-channels">
+                  <path
+                    d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"
+                  ></path>
+                </clipPath>
+                <g clip-path="url(#g-clip-channels)">
+                  <path fill="#FBBC05" d="M0 37V11l17 13z"></path>
+                  <path fill="#EA4335" d="M0 11l17 13 7-6.1L48 14V0H0z"></path>
+                  <path fill="#34A853" d="M0 37l30-23 7.9 1L48 0v48H0z"></path>
+                  <path fill="#4285F4" d="M48 48L17 24l-4-3 35-10z"></path>
+                </g>
+              </svg>
+              <span>Search</span>
+            </div>
+            <div>
+              <svg viewBox="0 0 64 48" width="26" height="24" aria-hidden="true" focusable="false">
+                <defs>
+                  <linearGradient id="adsB" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#1A73E8" /><stop offset="1" stop-color="#1967D2" />
+                  </linearGradient>
+                  <linearGradient id="adsG" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#34A853" /><stop offset="1" stop-color="#188038" />
+                  </linearGradient>
+                </defs>
+                <rect x="10" y="10" rx="10" ry="10" width="14" height="34" fill="url(#adsB)" transform="rotate(-20 17 27)" />
+                <rect x="32" y="6" rx="10" ry="10" width="14" height="34" fill="url(#adsG)" transform="rotate(20 39 23)" />
+                <circle cx="47" cy="38" r="6" fill="#FBBC04" />
+              </svg>
+              <span>Display</span>
+            </div>
+            <div>
+              <svg viewBox="0 0 100 70" width="28" height="20" aria-hidden="true" focusable="false">
+                <rect x="5" y="8" width="90" height="54" rx="12" fill="#FF0000" />
+                <polygon points="42,22 42,48 66,35" fill="#FFFFFF" />
+              </svg>
+              <span>YouTube</span>
+            </div>
+            <div>
+              <svg viewBox="0 0 256 192" width="28" height="21" aria-hidden="true" focusable="false">
+                <path d="M32 32h192a16 16 0 0 1 16 16v96a16 16 0 0 1-16 16H32a16 16 0 0 1-16-16V48a16 16 0 0 1 16-16z" fill="#FFFFFF" />
+                <path d="M32 48v96l64-48V72L32 48z" fill="#34A853" />
+                <path d="M224 48v96l-64-48V72l64-24z" fill="#4285F4" />
+                <path d="M32 48l96 72 96-72v-8a16 16 0 0 0-16-16H48a16 16 0 0 0-16 16v8z" fill="#EA4335" />
+                <path d="M96 72v24l32 24 32-24V72l-32 24-32-24z" fill="#FBBC05" />
+              </svg>
+              <span>Gmail &amp; Discover</span>
+            </div>
+            <div>
+              <svg viewBox="0 0 256 256" width="22" height="22" aria-hidden="true" focusable="false">
+                <path d="M128 236s76-67 76-130a76 76 0 0 0-152 0c0 63 76 130 76 130z" fill="#4285F4" />
+                <path d="M128 236s76-67 76-130c0-21.2-7.8-40.6-20.7-55.3L128 128V236z" fill="#34A853" />
+                <circle cx="128" cy="112" r="32" fill="#FBBC05" />
+                <path d="M83 59l45 69 55-79c-14.5-10.2-32.2-16.2-51-16.2-20.3 0-39 6.6-54 17.7z" fill="#EA4335" />
+              </svg>
+              <span>Maps</span>
+            </div>
+            <div>
+              <svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true" focusable="false">
+                <rect x="10" y="18" width="44" height="36" rx="6" fill="#F1F3F4" stroke="#DADCE0" />
+                <path d="M22 18c0-6 4-10 10-10s10 4 10 10" fill="none" stroke="#5F6368" stroke-width="3" />
+                <g transform="translate(8,6) scale(0.42)">
+                  <clipPath id="g-clip-shop">
+                    <path
+                      d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"
+                    ></path>
+                  </clipPath>
+                  <g clip-path="url(#g-clip-shop)">
+                    <path fill="#FBBC05" d="M0 37V11l17 13z"></path>
+                    <path fill="#EA4335" d="M0 11l17 13 7-6.1L48 14V0H0z"></path>
+                    <path fill="#34A853" d="M0 37l30-23 7.9 1L48 0v48H0z"></path>
+                    <path fill="#4285F4" d="M48 48L17 24l-4-3 35-10z"></path>
+                  </g>
+                </g>
+              </svg>
+              <span>Shopping</span>
+            </div>
+          </div>
+          <ul class="services-list" data-reveal data-reveal-delay="80">
+            <li class="svc">
+              <strong>AI-powered Ads</strong>
+              <span>Simply, the best way to use AI.</span>
+            </li>
+            <li class="svc">
+              <strong>Landing Page Creation</strong>
+              <span>Custom websites tailored to your needs.</span>
+            </li>
+          </ul>
+          <p class="section__note" data-reveal data-reveal-delay="120">
+            <em>Special Offer: First 5 clients get 90% off for the first two months.</em>
+          </p>
+        </div>
+      </section>
+
+      <section class="section section--alt" id="brand">
+        <div class="container">
+          <div class="section__intro" data-reveal>
+            <h2>Flip the cards</h2>
+            <p>
+              Tap through the founder cheat codes that made the original
+              version of this site go viral. Same words, new glow.
+            </p>
+          </div>
+          <div class="flip-grid" data-reveal data-reveal-delay="80">
+            <figure class="revealcard" aria-label="AI adoption growth">
+              <div class="cover">READ ME</div>
+              <div class="content">
+                <h3>AI is mainstream in 2025</h3>
+                <p>
+                  Most teams already use AI. Late adopters pay more and learn
+                  slowerâ€”move early.
+                </p>
+              </div>
+            </figure>
+            <figure class="revealcard" aria-label="FOMO: founders deal">
+              <div class="cover">READ ME</div>
+              <div class="content">
+                <h3>Late costs more</h3>
+                <p>
+                  Move now to compound ROAS. Hesitation raises costs and loses
+                  ground.
+                </p>
+              </div>
+            </figure>
+            <figure class="revealcard" aria-label="AI CAC FOMO">
+              <div class="cover">READ ME</div>
+              <div class="content">
+                <h3>Shrink CAC with AI</h3>
+                <p>The best way to get a smaller CAC is with AI.</p>
+              </div>
+            </figure>
+            <figure class="revealcard" aria-label="Late tax">
+              <div class="cover">READ ME</div>
+              <div class="content">
+                <h3>Donâ€™t pay the late tax</h3>
+                <p>Ship AI this week. Lower CPC, faster learning, better ROAS.</p>
+              </div>
+            </figure>
+            <figure class="revealcard" aria-label="Niche learning FOMO">
+              <div class="cover">READ ME</div>
+              <div class="content">
+                <h3>Donâ€™t get left behind</h3>
+                <p>
+                  Your competitors are already training AI on your niche. Every
+                  week you wait widens their lead.
+                </p>
+              </div>
+            </figure>
+            <figure class="revealcard" aria-label="Urgent CTA">
+              <div class="cover">READ ME</div>
+              <div class="content">
+                <h3>90% off â€” first two months</h3>
+                <p>Only 5 founder spots. When theyâ€™re gone, the deal is gone.</p>
+                <button class="cta cta--chip" type="button" data-open="contact-modal">
+                  Claim 90% Off
+                </button>
+              </div>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="about">
+        <div class="container about" data-reveal>
+          <h2>About Us</h2>
+          <p>
+            Weâ€™re a team of creative minds who put real passion into every ad
+            campaign. We keep things simple: we let computers do computer stuff,
+            while our team crafts the creative copy. With Googleâ€™s AI built
+            specifically for ad campaigns, thereâ€™s no stopping your companyâ€™s
+            growth!
+          </p>
+        </div>
+      </section>
+
+      <section class="section section--alt" id="faq">
+        <div class="container" data-reveal>
+          <h2>FAQ</h2>
+          <ul class="faq-list">
+            <li>
+              <strong>Do I need a big budget?</strong> No, we work with small to
+              medium budgets and scale as you grow.
+            </li>
+            <li>
+              <strong>How soon will I see results?</strong> Many campaigns
+              generate leads in the first week.
+            </li>
+            <li>
+              <strong>Do I need a website?</strong> Not requiredâ€”we can create a
+              landing page for you.
+            </li>
+            <li>
+              <strong>What if it doesnâ€™t work?</strong> If youâ€™re not satisfied
+              with the results, I can refer you to a bigger, better marketing
+              agency.
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section section--alt" id="process">
+        <div class="container">
+          <div class="section__intro" data-reveal>
+            <h2>How we compress launch timelines</h2>
+            <p>
+              A tight four-phase cadence keeps strategy, creative, and media
+              marching in lockstep while we automate the boring parts.
+            </p>
+          </div>
+          <div class="timeline" data-reveal>
+            <div class="timeline__track" aria-hidden="true"></div>
+            <div class="timeline__progress" aria-hidden="true"></div>
+            <article data-gradient tabindex="0">
+              <h3>01. Signal Sweep</h3>
+              <p>
+                Immersive audit of funnel data, user research, and competitor
+                heat maps. We surface the pressure points worth attacking.
+              </p>
+            </article>
+            <article data-gradient tabindex="0">
+              <h3>02. Creative Forge</h3>
+              <p>
+                Rapid prototyping of angles, visuals, and scripts. Approved
+                variations are stress-tested across paid social and UGC pods.
+              </p>
+            </article>
+            <article data-gradient tabindex="0">
+              <h3>03. Launch Stack</h3>
+              <p>
+                Deployment into paid channels with automated guardrails,
+                cross-network budget sync, and predictive bidding inputs.
+              </p>
+            </article>
+            <article data-gradient tabindex="0">
+              <h3>04. Momentum Lab</h3>
+              <p>
+                Weekly experiments, cohort deep-dives, and new asset drops keep
+                performance compounding while protecting efficiency.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="proof">
+        <div class="container section__intro" data-reveal>
+          <h2>Gravity-defying numbers</h2>
+          <p>
+            We partner with founders who demand profitable scale. The results
+            keep our calendars permanently waitlisted.
+          </p>
+        </div>
+        <div class="container metrics grid grid-3">
+          <article class="metric" data-gradient data-reveal>
+            <strong
+              data-count-to="23"
+              data-count-suffix=" launches"
+              >0</strong
+            >
+            <span>Full-funnel campaigns launched in the last 12 months</span>
+          </article>
+          <article
+            class="metric"
+            data-gradient
+            data-reveal
+            data-reveal-delay="80"
+          >
+            <strong data-count-to="41" data-count-suffix="%">0</strong>
+            <span>Average CAC reduction inside the first 8 weeks</span>
+          </article>
+          <article
+            class="metric"
+            data-gradient
+            data-reveal
+            data-reveal-delay="140"
+          >
+            <strong data-count-to="18" data-count-suffix="M+">0</strong>
+            <span>Revenue directly attributed to managed campaigns</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="section section--alt" id="showreel">
+        <div class="container showreel">
+          <div class="showreel__copy" data-reveal>
+            <h2>Step inside the command center</h2>
+            <p>
+              See how we orchestrate creative, media, and analytics in a single
+              adaptive hub. This is where every experiment is born.
+            </p>
+            <ul>
+              <li>Live dashboards from Meta, Google, and first-party data</li>
+              <li>Creative fatigue and anomaly alerts before they burn spend</li>
+              <li>Automated scenario modelling for finance, ops, and growth</li>
+            </ul>
+            <button class="cta" type="button" data-magnetic data-scroll-to="#contact">
+              Beam me in
+            </button>
+          </div>
+          <div class="showreel__panel" data-reveal data-reveal-delay="120">
+            <div class="panel__grid">
+              <div class="panel__card">
+                <span>Daily ROAS telemetry</span>
+                <strong>4.8x</strong>
+              </div>
+              <div class="panel__card">
+                <span>Creative throughput</span>
+                <strong>38 assets</strong>
+              </div>
+              <div class="panel__card">
+                <span>Anomaly alerts</span>
+                <strong>+2 realtime</strong>
+              </div>
+              <div class="panel__card">
+                <span>Scaling runway</span>
+                <strong>+63%</strong>
+              </div>
+            </div>
+            <div class="panel__footer">
+              <span>Powered by our Netlify edge automations</span>
+              <div class="panel__spark"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="lab">
+        <div class="container section__intro" data-reveal>
+          <h2>Operator&apos;s field notes</h2>
+          <p>
+            Real experiments from the lab. Steal the tactics, or have us run them
+            for you.
+          </p>
+        </div>
+        <div class="container grid grid-3">
+          <article class="note" data-reveal>
+            <span class="note__tag">Playbook</span>
+            <h3>UGC Reactor Framework</h3>
+            <p>
+              Turn community content into evergreen ads with AI voice swaps and
+              motion matching that keeps CPAs sliding downwards.
+            </p>
+            <button class="chip" type="button" data-magnetic data-scroll-to="#contact">
+              Download deck
+            </button>
+          </article>
+          <article class="note" data-reveal data-reveal-delay="80">
+            <span class="note__tag">Case Study</span>
+            <h3>B2B Demo Drip</h3>
+            <p>
+              Automated intent scoring blended with live sales signals to triple
+              booked demos for a Series B AI platform in 43 days.
+            </p>
+            <button class="chip" type="button" data-magnetic data-scroll-to="#contact">
+              Request access
+            </button>
+          </article>
+          <article class="note" data-reveal data-reveal-delay="140">
+            <span class="note__tag">Tech Drop</span>
+            <h3>Edge Automation Kit</h3>
+            <p>
+              Deploy Netlify edge functions that modulate landing pages in
+              real-time based on ad creative, weather, or stock levels.
+            </p>
+            <button class="chip" type="button" data-magnetic data-scroll-to="#contact">
+              Ship it for me
+            </button>
+          </article>
+        </div>
+      </section>
+
+      <section class="section section--alt" id="contact">
+        <div class="container contact">
+          <div class="contact__intro" data-reveal>
+            <h2>Ready for compounding growth?</h2>
+            <p>
+              Tell us where you&apos;re stuck. We&apos;ll send a mission plan with
+              projections, timeline, and what we&apos;ll handle from day one.
+            </p>
+            <ul class="contact__highlights">
+              <li>Netlify edge automations &amp; dashboards included</li>
+              <li>Creative &amp; media pod embedded with your team</li>
+              <li>24-hour founder response guarantee</li>
+            </ul>
+            <div class="contact__pulse" aria-hidden="true"></div>
+          </div>
+          <form
+            id="contact-form"
+            class="contact__form"
+            name="mission-brief"
+            method="POST"
+            netlify
+            netlify-honeypot="bot-field"
+            data-reveal
+          >
+            <input type="hidden" name="form-name" value="mission-brief" />
+            <p class="hidden">
+              <label>
+                Donâ€™t fill this out if you&apos;re human:
+                <input name="bot-field" />
+              </label>
+            </p>
+            <label class="field">
+              <span class="field__label">Your name</span>
+              <input
+                type="text"
+                name="name"
+                placeholder="Jane Founder"
+                autocomplete="name"
+                required
+              />
+            </label>
+            <label class="field">
+              <span class="field__label">Work email</span>
+              <input
+                type="email"
+                name="email"
+                placeholder="you@brand.com"
+                autocomplete="email"
+                required
+              />
+            </label>
+            <label class="field">
+              <span class="field__label">Company</span>
+              <input
+                type="text"
+                name="company"
+                placeholder="300 Kings"
+                autocomplete="organization"
+              />
+            </label>
+            <label class="field field--textarea">
+              <span class="field__label">Mission objective</span>
+              <textarea
+                name="message"
+                rows="4"
+                maxlength="600"
+                placeholder="Launch a new market, cut CAC, build a creative engine..."
+                required
+              ></textarea>
+              <span class="char-counter">
+                <span data-char-counter>600</span> characters left
+              </span>
+            </label>
+            <button class="cta" type="submit" data-magnetic>
+              Send the mission brief
+            </button>
+            <p class="form-status" role="status" aria-live="polite" data-submit-status>
+              We reply inside 24 hours.
+            </p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <div
+      id="contact-modal"
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-hidden="true"
+      aria-labelledby="contact-modal-title"
+    >
+      <div class="modal__overlay" data-close="contact-modal"></div>
+      <div class="modal__card" role="document">
+        <button
+          class="modal__close"
+          type="button"
+          aria-label="Close contact form"
+          data-close="contact-modal"
+        >
+          âœ•
+        </button>
+        <h3 id="contact-modal-title">Contact Us</h3>
+        <form action="https://formspree.io/f/xqaykddn" method="POST" accept-charset="UTF-8">
+          <label class="modal__field">
+            <span>Your name</span>
+            <input required name="name" placeholder="Your name" />
+          </label>
+          <label class="modal__field">
+            <span>Email</span>
+            <input required type="email" name="email" placeholder="Email" />
+          </label>
+          <label class="modal__field">
+            <span>Phone</span>
+            <input type="tel" name="phone" placeholder="Phone (optional)" />
+          </label>
+          <label class="modal__field">
+            <span>Goals</span>
+            <textarea
+              required
+              name="message"
+              placeholder="Tell us about your goals"
+              rows="4"
+            ></textarea>
+          </label>
+          <button class="cta" type="submit">Send</button>
+        </form>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="container">
+        <p>
+          &copy; <span id="year"></span> 300 Kings. Engineered on Netlify, obsessed
+          with outcomes.
+        </p>
+      </div>
+    </footer>
+
+    
+    
+  
