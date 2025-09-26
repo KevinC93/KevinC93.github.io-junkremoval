@@ -529,6 +529,9 @@ export function initCursorTrail() {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
+  canvas.style.pointerEvents = "none";
+  canvas.style.mixBlendMode = "multiply";
+
   const KEYWORDS = [
     { text: "CPC", color: "47, 128, 237" },
     { text: "SEM", color: "14, 165, 233" },

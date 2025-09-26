@@ -116,6 +116,9 @@ function setState(lep, state) {
 function applyTransform(lep) {
   lep.element.style.transform = `translate3d(${lep.x}vw, ${lep.y}vh, 0)`;
   lep.element.dataset.direction = lep.vx < 0 ? "left" : "right";
+  lep.element.style.filter = lep.status === "boosted"
+    ? "drop-shadow(0 22px 36px rgba(217, 119, 6, 0.45))"
+    : "drop-shadow(0 18px 30px rgba(14, 116, 144, 0.28))";
 }
 
 function spawnCoin(lep, { variant = "fall", dx = 0, dy = 0, delay = 0 } = {}) {
@@ -278,9 +281,12 @@ export function initLeprechauns() {
   const layer = document.getElementById(LAYER_ID);
   if (!layer || layer.dataset.enhanced === "true") return;
   layer.dataset.enhanced = "true";
+  layer.innerHTML = "";
+  layer.style.pointerEvents = "none";
+  layer.style.visibility = "visible";
   layerRef = layer;
 
-  const baseSpeed = reduceMotionQuery.matches ? 0.013 : 0.022;
+  const baseSpeed = reduceMotionQuery.matches ? 0.018 : 0.033;
 
   for (let i = 0; i < LEPRECHAUN_COUNT; i += 1) {
     const runner = createRunner(i);
