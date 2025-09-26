@@ -34,7 +34,13 @@
 
     <header class="site-header" data-parallax>
       <nav class="nav container" data-reveal>
-        <a class="logo" href="#top">300 Kings</a>
+        <a class="logo" href="#top">
+        <span class="logo__crown" aria-hidden="true">
+          <span class="logo__gem"></span>
+          <span class="logo__spark" aria-hidden="true"></span>
+        </span>
+        <span class="logo__text">300 Kings</span>
+      </a>
         <div class="nav__links">
           <a href="#services">Capabilities</a>
           <a href="#process">Method</a>
@@ -58,7 +64,12 @@
           data-depth="0.18"
           data-reveal
         >
-          <span class="pill">Deployed on Netlify</span>
+        <div class="brand-crest" data-reveal>
+          <span class="brand-crest__crown" aria-hidden="true"></span>
+          <span class="brand-crest__text">300 Kings</span>
+          <span class="brand-crest__tag">Quantum Growth Campaigns</span>
+        </div>
+        <span class="pill">Deployed on Netlify</span>
           <h1>Jumping on the AI wave has never been easier!</h1>
           <p>I let Google’s AI stalk your customers… legally.</p>
           <div class="hero__ctas">
@@ -80,8 +91,8 @@
             </button>
           </div>
           <div class="hero__fomo" data-reveal data-reveal-delay="320">
-            <strong>Founder Offer:</strong>
-            <span>90% off for the first 5 clients —</span>
+            <strong>Founder Offer</strong>
+            <span class="hero__badge">90% off for the first 5 clients</span>
             <button id="claim" class="cta cta--chip" type="button">
               Claim a spot
             </button>
