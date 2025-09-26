@@ -22,10 +22,10 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "300 Kings — Quantum Growth Campaigns",
+  title: "300 Kings - Quantum Growth Campaigns",
   description,
   openGraph: {
-    title: "300 Kings — Quantum Growth Campaigns",
+    title: "300 Kings - Quantum Growth Campaigns",
     description,
     url: "https://kevinc93.netlify.app/",
     siteName: "300 Kings",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "300 Kings — Quantum Growth Campaigns",
+    title: "300 Kings - Quantum Growth Campaigns",
     description,
   },
 };
