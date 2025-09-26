@@ -526,16 +526,15 @@ export function initCursorTrail() {
   const canvas = document.getElementById("trail");
   if (!(canvas instanceof HTMLCanvasElement)) return;
   if (window.matchMedia("(pointer:coarse)").matches) return;
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
   const KEYWORDS = [
-    { text: "CPC", color: "96, 165, 250" },
-    { text: "SEM", color: "129, 140, 248" },
-    { text: "CAC", color: "56, 189, 248" },
-    { text: "CRM", color: "59, 130, 246" },
-    { text: "ROAS", color: "246, 193, 66" },
+    { text: "CPC", color: "47, 128, 237" },
+    { text: "SEM", color: "14, 165, 233" },
+    { text: "CAC", color: "14, 165, 129" },
+    { text: "CRM", color: "79, 70, 229" },
+    { text: "ROAS", color: "217, 119, 6" },
   ];
 
   const glyphs = [];
@@ -557,20 +556,21 @@ export function initCursorTrail() {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   };
 
-  const addGlyph = (x, y) => {
+  const addGlyph = (x, y, boost = 0) => {
     const keyword = KEYWORDS[keywordIndex];
     keywordIndex = (keywordIndex + 1) % KEYWORDS.length;
     glyphs.push({
       x,
       y,
-      vx: (Math.random() - 0.5) * 0.6,
-      vy: -0.35 - Math.random() * 0.2,
+      vx: (Math.random() - 0.5) * 0.45,
+      vy: -0.25 - Math.random() * 0.2,
       life: 1,
       text: keyword.text,
       color: keyword.color,
       wobble: Math.random() * Math.PI * 2,
+      boost,
     });
-    if (glyphs.length > 48) {
+    if (glyphs.length > 56) {
       glyphs.shift();
     }
     if (!rafId) {
@@ -586,29 +586,29 @@ export function initCursorTrail() {
 
     for (let i = glyphs.length - 1; i >= 0; i -= 1) {
       const glyph = glyphs[i];
-      glyph.life -= 0.015 * (delta / 16);
+      glyph.life -= 0.016 * (delta / 16);
       if (glyph.life <= 0) {
         glyphs.splice(i, 1);
         continue;
       }
-      glyph.x += glyph.vx * delta * 0.04;
-      glyph.y += glyph.vy * delta * 0.04;
-      glyph.wobble += 0.12;
-      const alphaBase = glyph.life * 1.35;
-      const alpha = Math.max(Math.min(alphaBase, 0.95), 0);
-      const fontSize = 16 + (1 - glyph.life) * 12;
-      ctx.font = "600 " + fontSize.toFixed(1) + "px \"Space Grotesk\", \"Manrope\", sans-serif";
+      glyph.x += glyph.vx * delta * 0.05;
+      glyph.y += glyph.vy * delta * 0.05;
+      glyph.wobble += 0.14;
+      const alphaBase = glyph.life + glyph.boost * 0.25;
+      const alpha = Math.max(Math.min(alphaBase, 1), 0);
+      const fontSize = 18 + (1 - glyph.life) * 16 + glyph.boost * 6;
+      ctx.font = "600 " + fontSize.toFixed(1) + 'px "Space Grotesk", "Manrope", sans-serif';
       ctx.fillStyle = "rgba(" + glyph.color + ", " + alpha.toFixed(3) + ")";
-      ctx.shadowColor = "rgba(14, 116, 144, " + (alpha * 0.6).toFixed(3) + ")";
-      ctx.shadowBlur = 18;
-      const offsetX = Math.sin(glyph.wobble) * 6;
-      const offsetY = Math.cos(glyph.wobble) * 4;
+      ctx.shadowColor = "rgba(14, 165, 233, " + (alpha * 0.35).toFixed(3) + ")";
+      ctx.shadowBlur = 14;
+      const offsetX = Math.sin(glyph.wobble) * 8;
+      const offsetY = Math.cos(glyph.wobble) * 6;
       ctx.fillText(glyph.text, glyph.x + offsetX, glyph.y + offsetY);
       ctx.shadowBlur = 0;
 
       if (glyph.text === "ROAS") {
-        ctx.strokeStyle = "rgba(253, 224, 71, " + (alpha * 0.85).toFixed(3) + ")";
-        ctx.lineWidth = 1.2;
+        ctx.strokeStyle = "rgba(217, 119, 6, " + (alpha * 0.85).toFixed(3) + ")";
+        ctx.lineWidth = 1.4;
         ctx.strokeText(glyph.text, glyph.x + offsetX, glyph.y + offsetY);
       }
     }
@@ -628,13 +628,48 @@ export function initCursorTrail() {
     addGlyph(event.clientX, event.clientY);
   };
 
+  const handlePointerDown = (event) => {
+    addGlyph(event.clientX, event.clientY, 0.6);
+  };
+
   resize();
   window.addEventListener("resize", resize);
   window.addEventListener("pointermove", handlePointerMove, { passive: true });
+  window.addEventListener("pointerdown", handlePointerDown, { passive: true });
 
   window.addEventListener("beforeunload", () => {
     if (rafId) {
       window.cancelAnimationFrame(rafId);
+    }
+  });
+}
+
+export function initMediaOrbits() {
+  const nodes = document.querySelectorAll(
+    '[data-immersive-content] img, [data-immersive-content] video, [data-immersive-content] svg',
+  );
+  if (!nodes.length) return;
+
+  nodes.forEach((node) => {
+    const parent = node.parentElement;
+    if (!parent) return;
+    if (node.closest('.media-orbit')) return;
+    const wrapper = document.createElement('span');
+    wrapper.className = 'media-orbit';
+    const halo = document.createElement('span');
+    halo.className = 'media-orbit__halo';
+
+    parent.insertBefore(wrapper, node);
+    wrapper.appendChild(node);
+    wrapper.appendChild(halo);
+
+    if (node instanceof HTMLImageElement) {
+      if (!node.hasAttribute('loading')) {
+        node.loading = 'lazy';
+      }
+      if (!node.hasAttribute('decoding')) {
+        node.decoding = 'async';
+      }
     }
   });
 }

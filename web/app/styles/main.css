@@ -1566,3 +1566,10 @@ button[type="submit"]:focus-visible {
   }
 }
 
+
+.logo__spark {
+  left: 50%;
+  transform: translate(-50%, 0);
+  mix-blend-mode: screen;
+}
+
