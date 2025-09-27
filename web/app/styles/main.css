@@ -3098,3 +3098,55 @@ main > footer {
 
 
 
+#money-rain {
+  background: radial-gradient(circle at 50% 10%, rgba(14, 116, 144, 0.12), rgba(14, 116, 144, 0));
+}
+
+#money-rain::before,
+#money-rain::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate3d(0, 24px, 0) scale(0.96);
+  transition:
+    opacity 0.6s var(--motion-slow),
+    transform 0.6s var(--motion-slow);
+}
+
+#money-rain::before {
+  left: 50%;
+  bottom: clamp(1.5rem, 6vw, 4rem);
+  width: min(480px, 58vw);
+  height: min(320px, 48vw);
+  transform: translate3d(-50%, 24px, 0) scale(0.94);
+  background: url("/assets/img/moneyfall-celebration.svg") no-repeat center / contain;
+  filter: drop-shadow(0 24px 60px rgba(14, 116, 144, 0.28));
+}
+
+#money-rain::after {
+  right: clamp(1.5rem, 6vw, 4rem);
+  bottom: clamp(1rem, 6vw, 4rem);
+  width: min(240px, 32vw);
+  height: min(240px, 32vw);
+  background: url("/assets/img/leprechaun-reference.svg") no-repeat center / contain;
+  filter: drop-shadow(0 20px 42px rgba(17, 94, 89, 0.35));
+}
+
+#money-rain.is-active::before,
+#money-rain.is-active::after {
+  opacity: 0.95;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+@media (max-width: 720px) {
+  #money-rain {
+    background: radial-gradient(circle at 50% 0%, rgba(14, 116, 144, 0.16), rgba(14, 116, 144, 0));
+  }
+  #money-rain::after {
+    width: min(180px, 42vw);
+    height: min(180px, 42vw);
+    right: clamp(0.5rem, 8vw, 3rem);
+  }
+}
+
