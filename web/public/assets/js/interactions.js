@@ -1,4 +1,4 @@
-﻿const prefersReducedMotion = window.matchMedia(
+const prefersReducedMotion = window.matchMedia(
   "(prefers-reduced-motion: reduce)",
 ).matches;
 const GLOW_CLASS = "glow-active";
@@ -606,7 +606,7 @@ export function initCursorTrail() {
 
     for (let i = glyphs.length - 1; i >= 0; i -= 1) {
       const glyph = glyphs[i];
-      glyph.life -= 0.016 * (delta / 16);
+      glyph.life -= 0.009 * (delta / 16);
       if (glyph.life <= 0) {
         glyphs.splice(i, 1);
         continue;

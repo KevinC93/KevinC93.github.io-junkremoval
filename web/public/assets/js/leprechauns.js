@@ -227,16 +227,8 @@ function handleActivation(lep) {
   if (lep.status === "exploding" || lep.status === "hidden") return;
   lep.clicks += 1;
   spawnCoin(lep);
-
-  if (lep.clicks === 1) {
-    lep.speed = Math.min(lep.speed * SPEED_STEP, MAX_SPEED);
-    lep.vx *= SPEED_STEP;
-    lep.vy *= SPEED_STEP;
-    setState(lep, "boosted");
-    return;
-  }
-
   explode(lep);
+  triggerMoneyRain(6000);
 }
 
 function update(timestamp) {

@@ -1,4 +1,4 @@
-﻿import { initAuroraBackground } from "./background.js";
+import { initAuroraBackground } from "./background.js";
 import { initLeprechauns } from "./leprechauns.js";
 import {
   initContactForm,
