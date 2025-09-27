@@ -3,49 +3,79 @@ import { triggerMoneyRain } from "./background.js";
 const LAYER_ID = "leprechaun-layer";
 const LEPRECHAUN_COUNT = 3;
 const RESPAWN_DELAY = 20000;
-const SPEED_STEP = 1.25;
-const MAX_SPEED = 0.055;
+const SPEED_STEP = 2;
+const MAX_SPEED = 0.11;
 
 const supportsPointerEvents = window.PointerEvent !== undefined;
 const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
 const SPRITE_TEMPLATE = `
   <span class="leprechaun__sprite" aria-hidden="true">
-    <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="presentation">
+    <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg" role="presentation">
       <defs>
-        <linearGradient id="gold-sheen" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0" stop-color="#fef3c7" />
-          <stop offset="0.45" stop-color="#f6c12a" />
-          <stop offset="1" stop-color="#f59e0b" />
+        <linearGradient id="lep-hat" x1="0" x2="1" y1="0.25" y2="1">
+          <stop offset="0" stop-color="#064e3b" />
+          <stop offset="1" stop-color="#047857" />
         </linearGradient>
-        <linearGradient id="coat-shade" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0" stop-color="#0b7a36" />
-          <stop offset="1" stop-color="#0a4d2b" />
+        <linearGradient id="lep-coat" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stop-color="#065f46" />
+          <stop offset="1" stop-color="#0f5132" />
+        </linearGradient>
+        <linearGradient id="lep-pot" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0" stop-color="#111827" />
+          <stop offset="1" stop-color="#1f2937" />
         </linearGradient>
       </defs>
-      <g fill="none" stroke="none" stroke-width="0">
-        <path d="M82 19c0 11-8 18-22 18s-22-7-22-18 8-16 22-16 22 5 22 16z" fill="#065f46" />
-        <rect x="44" y="24" width="32" height="10" rx="4" fill="#0f5132" />
-        <path d="M54 34h12v8H54z" fill="#f59e0b" />
-        <circle cx="60" cy="48" r="14" fill="#fde68a" />
-        <path d="M68 62c0 4-3 6-8 6s-8-2-8-6 3-6 8-6 8 2 8 6z" fill="#ea580c" />
-        <path d="M40 70c-5 12-2 26 4 33s16 11 25 9 18-9 22-19 3-22-3-29z" fill="url(#coat-shade)" />
-        <path d="M66 71c-6 10-5 21 0 26s13 5 19-2 9-20 2-28z" fill="#0b7a36" />
-        <path d="M24 75c9-5 24-7 34-3s18 13 23 23l-6 4c-4-8-10-14-18-17s-20-1-28 3z" fill="#0f5132" opacity="0.9" />
-        <path d="M36 95l-9 12c-2 3-1 6 2 7s7-1 9-4l9-13z" fill="#1f2937" />
-        <path d="M94 96l12 10c3 3 3 6 1 8s-7 2-10-1l-11-11z" fill="#1f2937" />
-        <g transform="translate(62 80)">
-          <path d="M20 6c10 0 18 8 18 18s-8 18-18 18-20-6-22-16 6-20 22-20z" fill="#111827" />
-          <ellipse cx="20" cy="26" rx="16" ry="8" fill="#1f2937" />
-          <ellipse cx="20" cy="14" rx="10" ry="5" fill="url(#gold-sheen)" class="leprechaun__shine" />
-          <circle cx="10" cy="20" r="3" fill="#f6c12a" opacity="0.8" />
-          <circle cx="28" cy="24" r="3" fill="#f6c12a" opacity="0.8" />
+      <g class="leprechaun__shadow">
+        <ellipse cx="70" cy="118" rx="34" ry="10" fill="rgba(2,14,23,0.22)" />
+      </g>
+      <g class="leprechaun__hat">
+        <path d="M32 28h76v22c0 9.5-17 17-38 17s-38-7.5-38-17z" fill="url(#lep-hat)" />
+        <rect x="24" y="44" width="92" height="14" rx="6" fill="#033f2d" />
+        <rect x="46" y="47" width="48" height="8" rx="3" fill="#facc15" />
+        <rect x="60" y="47" width="20" height="8" rx="3" fill="#b45309" />
+      </g>
+      <g class="leprechaun__face">
+        <circle cx="70" cy="58" r="20" fill="#fde4c8" />
+        <path class="leprechaun__beard" d="M48 62c0 14 12 26 22 26s22-12 22-26c0-6-2-8-4-8-3 0-4 4-10 4-6 0-8-4-12-4-4 0-6 4-10 4-3 0-4-4-7-4-2 0-3 2-3 8z" fill="#f97316" />
+        <circle cx="62" cy="58" r="3.6" fill="#0f172a" />
+        <circle cx="78" cy="58" r="3.6" fill="#0f172a" />
+        <path d="M62 71c6 4 10 4 16 0" stroke="#fb923c" stroke-width="3" stroke-linecap="round" />
+        <path d="M54 52c4-4 8-5 12-3" stroke="#0f172a" stroke-width="2.4" stroke-linecap="round" />
+        <path d="M86 52c-4-4-8-5-12-3" stroke="#0f172a" stroke-width="2.4" stroke-linecap="round" />
+        <path d="M70 63c2 2 2 5 0 7" stroke="#f97316" stroke-width="2" stroke-linecap="round" />
+      </g>
+      <g class="leprechaun__body">
+        <path d="M38 88c-3-22 10-42 32-42s35 20 32 42c-2 17-15 28-32 28s-30-11-32-28z" fill="url(#lep-coat)" />
+        <rect x="58" y="72" width="24" height="28" rx="6" fill="#facc15" />
+        <rect x="60" y="74" width="20" height="14" rx="4" fill="#f97316" />
+        <circle class="leprechaun__button" cx="70" cy="92" r="2.8" fill="#0f172a" />
+        <circle class="leprechaun__button" cx="70" cy="102" r="2.4" fill="#0f172a" />
+      </g>
+      <g class="leprechaun__arm" transform="translate(34 76)">
+        <path d="M0 0c8-6 18-6 26 0l-4 8-12 6z" fill="#065f46" />
+        <circle cx="1" cy="8" r="4" fill="#fde4c8" />
+      </g>
+      <g class="leprechaun__arm" transform="translate(106 76) scale(-1 1)">
+        <path d="M0 0c8-6 18-6 26 0l-4 8-12 6z" fill="#065f46" />
+        <circle cx="1" cy="8" r="4" fill="#fde4c8" />
+      </g>
+      <g class="leprechaun__coinpot" transform="translate(50 90)">
+        <path d="M20 4c14 0 24 10 24 20s-10 20-24 20-26-9-24-24z" fill="url(#lep-pot)" />
+        <ellipse cx="20" cy="4" rx="18" ry="6" fill="#1f2937" />
+        <g fill="#facc15" opacity="0.65">
+          <circle cx="12" cy="8" r="3" />
+          <circle cx="20" cy="6" r="4" />
+          <circle cx="28" cy="9" r="3" />
         </g>
-        <path d="M86 46c1 7-3 12-10 13l-3-9z" fill="#ea580c" />
-        <path d="M48 46c-1 7 3 12 10 13l3-9z" fill="#ea580c" />
-        <circle cx="56" cy="44" r="2" fill="#1f2937" />
-        <circle cx="64" cy="44" r="2" fill="#1f2937" />
-        <path d="M54 52c2 3 5 4 8 4s6-1 8-4" stroke="#f97316" stroke-width="2.4" stroke-linecap="round" />
+      </g>
+      <g class="leprechaun__leg leprechaun__leg--right" transform="translate(56 90)">
+        <path d="M0 0c8 4 12 6 12 20 0 6-1 12-2 18h-10z" fill="#065f46" />
+        <path class="leprechaun__boot" d="M10 38h18c3 0 3 7-6 9H2l2-9z" fill="#1f2937" />
+      </g>
+      <g class="leprechaun__leg leprechaun__leg--left" transform="translate(78 90)">
+        <path d="M0 0c8 4 12 6 12 20 0 6-1 12-2 18h-10z" fill="#047857" />
+        <path class="leprechaun__boot" d="M10 38h18c3 0 3 7-6 9H2l2-9z" fill="#111827" />
       </g>
     </svg>
   </span>
@@ -200,20 +230,17 @@ function handleActivation(lep) {
 
   if (lep.clicks === 1) {
     lep.speed = Math.min(lep.speed * SPEED_STEP, MAX_SPEED);
+    lep.vx *= SPEED_STEP;
+    lep.vy *= SPEED_STEP;
     setState(lep, "boosted");
-  } else if (lep.clicks === 2) {
-    const diagonal = createVelocity(true);
-    lep.vx = diagonal.vx;
-    lep.vy = diagonal.vy;
-    lep.speed = Math.min(lep.speed * SPEED_STEP, MAX_SPEED);
-    setState(lep, "boosted");
-  } else {
-    explode(lep);
+    return;
   }
+
+  explode(lep);
 }
 
 function update(timestamp) {
-  const delta = Math.min(timestamp - lastFrame, 48) || 16;
+  const delta = Math.min((timestamp - lastFrame) || 16, 48);
   lastFrame = timestamp;
 
   leprechauns.forEach((lep) => {
@@ -287,7 +314,7 @@ export function initLeprechauns() {
   layer.style.opacity = "1";
   layerRef = layer;
 
-  const baseSpeed = reduceMotionQuery.matches ? 0.018 : 0.033;
+  const baseSpeed = reduceMotionQuery.matches ? 0.016 : 0.028;
 
   for (let i = 0; i < LEPRECHAUN_COUNT; i += 1) {
     const runner = createRunner(i);
@@ -326,3 +353,4 @@ export function initLeprechauns() {
     activeTimers.clear();
   });
 }
+

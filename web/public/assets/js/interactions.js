@@ -547,7 +547,7 @@ export function initCursorTrail() {
   if (!ctx) return;
 
   canvas.style.pointerEvents = "none";
-  canvas.style.mixBlendMode = "multiply";
+  canvas.style.mixBlendMode = "screen";
 
   const KEYWORDS = [
     { text: "CPC", color: "47, 128, 237" },
@@ -590,7 +590,7 @@ export function initCursorTrail() {
       wobble: Math.random() * Math.PI * 2,
       boost,
     });
-    if (glyphs.length > 56) {
+    if (glyphs.length > 72) {
       glyphs.shift();
     }
     if (!rafId) {
@@ -664,6 +664,66 @@ export function initCursorTrail() {
   });
 }
 
+export function initTiltTargets() {
+  if (prefersReducedMotion) return;
+  if (window.matchMedia("(pointer: coarse)").matches) return;
+
+  const selectors = [
+    ".panel__card",
+    ".revealcard",
+    ".svc",
+    ".timeline article",
+    ".media-orbit",
+    ".faq-list li",
+    ".proof-card",
+    ".hero__cluster",
+    ".value__card",
+    ".metric"
+  ];
+
+  const nodes = document.querySelectorAll(selectors.join(", "));
+  if (!nodes.length) return;
+
+  nodes.forEach((node) => {
+    if (node.dataset.tiltReady === "true") return;
+    node.dataset.tiltReady = "true";
+    node.setAttribute("data-tilt", "");
+
+    const handleMove = (event) => {
+      if (event.pointerType === "touch") return;
+      const rect = node.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      const ratioX = Math.min(Math.max(x / rect.width, 0), 1);
+      const ratioY = Math.min(Math.max(y / rect.height, 0), 1);
+      const tiltX = (0.5 - ratioY) * 12;
+      const tiltY = (ratioX - 0.5) * 14;
+
+      node.style.setProperty("--tiltX", tiltX.toFixed(2) + "deg");
+      node.style.setProperty("--tiltY", tiltY.toFixed(2) + "deg");
+      node.style.setProperty("--tilt-pointer-x", (ratioX * 100).toFixed(2) + "%");
+      node.style.setProperty("--tilt-pointer-y", (ratioY * 100).toFixed(2) + "%");
+      node.classList.add("tilt-active");
+    };
+
+    const resetTilt = () => {
+      node.style.setProperty("--tiltX", "0deg");
+      node.style.setProperty("--tiltY", "0deg");
+      node.classList.remove("tilt-active");
+    };
+
+    node.addEventListener("pointermove", handleMove);
+    node.addEventListener("pointerleave", resetTilt);
+    node.addEventListener("pointerup", () => {
+      window.setTimeout(resetTilt, 120);
+    });
+    node.addEventListener("pointerdown", (event) => {
+      if (event.pointerType === "touch") return;
+      node.classList.add("tilt-active");
+    });
+  });
+}
+
 export function initMediaOrbits() {
   const nodes = document.querySelectorAll(
     '[data-immersive-content] img, [data-immersive-content] video, [data-immersive-content] svg',
@@ -693,3 +753,5 @@ export function initMediaOrbits() {
     }
   });
 }
+
+

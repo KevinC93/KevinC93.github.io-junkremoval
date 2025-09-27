@@ -17,6 +17,7 @@ import {
   initTimelineProgress,
   initFounderOffer,
   initMediaOrbits,
+  initTiltTargets,
 } from "./interactions.js";
 
 document.documentElement.classList.remove("no-js");
@@ -44,6 +45,10 @@ initServiceHover();
 initRevealCards();
 initFounderOffer();
 initMediaOrbits();
+initTiltTargets();
+window.setTimeout(initTiltTargets, 400);
 initContactModal();
 
 window.__APP_LOADED__ = true;
+
+
