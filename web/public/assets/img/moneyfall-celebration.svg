@@ -1,0 +1,45 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" role="img" aria-labelledby="title desc">
+  <title id="title">Celebrating customer success</title>
+  <desc id="desc">Stylised illustration of a delighted woman surrounded by floating dollar bills.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#eef6ff" />
+      <stop offset="100%" stop-color="#cde7ff" />
+    </linearGradient>
+    <linearGradient id="dress" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1f2937" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+  </defs>
+  <rect width="320" height="320" fill="url(#sky)" />
+  <g fill="#0f172a" opacity="0.12">
+    <path d="M30 48l28-6 6 28-28 6z" />
+    <path d="M102 28l36 10-10 36-36-10z" />
+    <path d="M250 36l32 12-12 32-32-12z" />
+    <path d="M210 80l28 14-14 28-28-14z" />
+    <path d="M70 112l32-8 8 32-32 8z" />
+    <path d="M258 140l26-4 4 26-26 4z" />
+  </g>
+  <g transform="translate(160 190)">
+    <path d="M-36 48c4-22 18-38 36-38s32 16 36 38z" fill="#facc15" opacity="0.18" />
+    <path d="M-30 48c4-18 14-28 30-28s26 10 30 28z" fill="#f97316" opacity="0.16" />
+  </g>
+  <g transform="translate(160 160)">
+    <path d="M-42 92c0-48 18-68 42-68s42 20 42 68v18c0 10-8 18-18 18h-48c-10 0-18-8-18-18z" fill="url(#dress)" />
+    <path d="M-10 -46a26 26 0 0 1 52 0v12c0 20-16 36-36 36s-36-16-36-36v-12z" fill="#fde4cf" />
+    <path d="M-32 -52a32 32 0 0 1 64 0v8c-14-6-28-8-42-8s-28 2-42 8z" fill="#0f172a" />
+    <path d="M-18 22a22 22 0 0 0 44 0" stroke="#f87171" stroke-width="4" stroke-linecap="round" fill="none" />
+    <circle cx="-14" cy="-12" r="4" fill="#0f172a" />
+    <circle cx="14" cy="-12" r="4" fill="#0f172a" />
+    <path d="M-62 24c12-6 22-4 30 6" stroke="#fde68a" stroke-width="10" stroke-linecap="round" fill="none" />
+    <path d="M62 24c-12-6-22-4-30 6" stroke="#fde68a" stroke-width="10" stroke-linecap="round" fill="none" />
+  </g>
+  <g fill="#059669">
+    <rect x="46" y="206" width="36" height="18" rx="4" transform="rotate(12 64 215)" opacity="0.82" />
+    <rect x="240" y="210" width="44" height="20" rx="4" transform="rotate(-18 262 220)" opacity="0.9" />
+    <rect x="114" y="54" width="42" height="18" rx="4" transform="rotate(6 135 63)" opacity="0.75" />
+    <rect x="184" y="24" width="32" height="16" rx="4" transform="rotate(-10 200 32)" opacity="0.8" />
+    <rect x="34" y="126" width="42" height="18" rx="4" transform="rotate(-16 55 135)" opacity="0.78" />
+    <rect x="222" y="120" width="34" height="16" rx="4" transform="rotate(14 239 128)" opacity="0.85" />
+  </g>
+</svg>

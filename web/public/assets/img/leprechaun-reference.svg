@@ -1,0 +1,36 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" role="img" aria-labelledby="title desc">
+  <title id="title">Fleet leprechaun mascot</title>
+  <desc id="desc">Illustrated leprechaun sprinting with a pot of gold.</desc>
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#f5fbff" />
+      <stop offset="100%" stop-color="#d9f3ff" />
+    </radialGradient>
+  </defs>
+  <rect width="320" height="320" fill="url(#bg)" />
+  <g transform="translate(70 80)">
+    <ellipse cx="90" cy="196" rx="78" ry="26" fill="rgba(15, 23, 42, 0.15)" />
+    <path d="M98 12c34 0 58 20 58 54s-24 58-58 58-58-24-58-58 24-54 58-54z" fill="#047857" />
+    <path d="M130 16h-64l-6 34h76z" fill="#065f46" />
+    <rect x="94" y="-12" width="36" height="56" rx="10" fill="#0f5132" />
+    <rect x="80" y="22" width="64" height="18" rx="8" fill="#facc15" />
+    <circle cx="110" cy="70" r="34" fill="#fde4cf" />
+    <path d="M82 68c4-12 16-18 28-18s24 6 28 18" stroke="#0f172a" stroke-width="6" stroke-linecap="round" fill="none" />
+    <circle cx="96" cy="66" r="6" fill="#0f172a" />
+    <circle cx="124" cy="66" r="6" fill="#0f172a" />
+    <path d="M102 92c8 8 20 8 28 0" stroke="#f97316" stroke-width="6" stroke-linecap="round" fill="none" />
+    <path d="M10 128c24-22 58-32 90-24l28 56c8 16 0 36-18 40-36 8-72-20-100-44z" fill="#065f46" />
+    <path d="M174 102l48 36-32 46-52-30z" fill="#065f46" />
+    <path d="M62 166 30 220c-6 12 2 24 14 22l54-8z" fill="#0f172a" />
+    <path d="M162 178 210 226c10 10 26 6 30-6l-14-52z" fill="#0b172a" />
+    <g transform="translate(96 118)">
+      <path d="M72 14c30 0 54 18 54 42s-24 46-54 46-70-18-64-56 24-32 64-32z" fill="#111827" />
+      <ellipse cx="74" cy="20" rx="40" ry="14" fill="#1f2937" />
+      <g fill="#facc15">
+        <circle cx="40" cy="34" r="6" />
+        <circle cx="66" cy="24" r="8" />
+        <circle cx="96" cy="36" r="6" />
+      </g>
+    </g>
+  </g>
+</svg>

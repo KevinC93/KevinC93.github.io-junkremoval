@@ -1,4 +1,4 @@
-import { initAuroraBackground } from "./background.js";
+﻿import { initAuroraBackground } from "./background.js";
 import { initLeprechauns } from "./leprechauns.js";
 import {
   initContactForm,
@@ -41,6 +41,7 @@ initParallax();
 initMarquee();
 initCursorTrail();
 initCursorPops();
+initInfinityLoop();
 initServiceHover();
 initRevealCards();
 initFounderOffer();
@@ -50,5 +51,6 @@ window.setTimeout(initTiltTargets, 400);
 initContactModal();
 
 window.__APP_LOADED__ = true;
+
 
 

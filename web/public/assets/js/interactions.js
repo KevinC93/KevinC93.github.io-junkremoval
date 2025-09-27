@@ -1,4 +1,4 @@
-const prefersReducedMotion = window.matchMedia(
+﻿const prefersReducedMotion = window.matchMedia(
   "(prefers-reduced-motion: reduce)",
 ).matches;
 const GLOW_CLASS = "glow-active";
@@ -724,6 +724,66 @@ export function initTiltTargets() {
   });
 }
 
+export function initInfinityLoop() {
+  const loop = document.getElementById("cursor-loop");
+  if (!loop) return;
+
+  if (prefersReducedMotion) {
+    loop.style.setProperty("--loop-angle", "0deg");
+    loop.style.setProperty("--loop-progress", "0");
+    return;
+  }
+
+  const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+  let rafId = 0;
+  let targetAngle = 0;
+  let currentAngle = 0;
+  let autoSpinVelocity = coarsePointer ? 0.9 : 0;
+
+  const recalcCenter = () => {
+    const bounds = loop.getBoundingClientRect();
+    centerX = bounds.left + bounds.width / 2;
+    centerY = bounds.top + bounds.height / 2;
+  };
+
+  let centerX = window.innerWidth / 2;
+  let centerY = loop.getBoundingClientRect().top + loop.offsetHeight / 2;
+
+  const update = () => {
+    if (autoSpinVelocity) {
+      targetAngle += autoSpinVelocity;
+    }
+    const delta = ((targetAngle - currentAngle + 540) % 360) - 180;
+    currentAngle += delta * 0.12;
+    const normalized = (currentAngle % 360 + 360) % 360;
+    loop.style.setProperty("--loop-angle", normalized.toFixed(3) + "deg");
+    loop.style.setProperty("--loop-progress", (normalized / 360).toFixed(4));
+    rafId = window.requestAnimationFrame(update);
+  };
+
+  const handlePointer = (event) => {
+    if (event.pointerType && event.pointerType !== "mouse" && event.pointerType !== "pen") {
+      return;
+    }
+    autoSpinVelocity = 0;
+    const angle = Math.atan2(event.clientY - centerY, event.clientX - centerX);
+    targetAngle = angle * (180 / Math.PI);
+  };
+
+  recalcCenter();
+  loop.dataset.ready = "true";
+  rafId = window.requestAnimationFrame(update);
+  window.addEventListener("pointermove", handlePointer, { passive: true });
+  window.addEventListener("pointerdown", handlePointer, { passive: true });
+  window.addEventListener("resize", () => {
+    recalcCenter();
+  });
+  window.addEventListener("beforeunload", () => {
+    if (rafId) {
+      window.cancelAnimationFrame(rafId);
+    }
+  });
+}
 export function initMediaOrbits() {
   const nodes = document.querySelectorAll(
     '[data-immersive-content] img, [data-immersive-content] video, [data-immersive-content] svg',
@@ -753,5 +813,6 @@ export function initMediaOrbits() {
     }
   });
 }
+
 
 
