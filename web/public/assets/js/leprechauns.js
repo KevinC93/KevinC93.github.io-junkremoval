@@ -284,6 +284,7 @@ export function initLeprechauns() {
   layer.innerHTML = "";
   layer.style.pointerEvents = "none";
   layer.style.visibility = "visible";
+  layer.style.opacity = "1";
   layerRef = layer;
 
   const baseSpeed = reduceMotionQuery.matches ? 0.018 : 0.033;

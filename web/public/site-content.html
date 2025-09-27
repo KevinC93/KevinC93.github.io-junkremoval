@@ -5,7 +5,7 @@
     <div id="money-rain" aria-hidden="true"></div>
     <div id="leprechaun-layer" aria-hidden="true"></div>
 
-    <header class="site-header" data-parallax>
+    <header id="top" class="site-header" data-parallax>
       <nav class="nav container" data-reveal>
         <a class="logo" href="#top">
         <span class="logo__crown" aria-hidden="true">
@@ -100,7 +100,46 @@
         </div>
 
         <div class="hero__visual" data-parallax-layer data-depth="0.32">
-          <div class="hero__cluster" data-reveal data-reveal-delay="120">
+          <div class="hero__dna" data-reveal data-reveal-delay="180">
+            <div class="dna" aria-hidden="true">
+              <span class="dna__strand dna__strand--left"></span>
+              <span class="dna__strand dna__strand--right"></span>
+              <div class="dna__ribbons" aria-hidden="true">
+                <span style="--i:0"></span>
+                <span style="--i:1"></span>
+                <span style="--i:2"></span>
+                <span style="--i:3"></span>
+                <span style="--i:4"></span>
+                <span style="--i:5"></span>
+                <span style="--i:6"></span>
+                <span style="--i:7"></span>
+                <span style="--i:8"></span>
+                <span style="--i:9"></span>
+                <span style="--i:10"></span>
+                <span style="--i:11"></span>
+              </div>
+              <div class="dna__nodes" aria-hidden="true">
+                <span style="--i:0"></span>
+                <span style="--i:1"></span>
+                <span style="--i:2"></span>
+                <span style="--i:3"></span>
+                <span style="--i:4"></span>
+                <span style="--i:5"></span>
+                <span style="--i:6"></span>
+                <span style="--i:7"></span>
+                <span style="--i:8"></span>
+                <span style="--i:9"></span>
+                <span style="--i:10"></span>
+                <span style="--i:11"></span>
+                <span style="--i:12"></span>
+                <span style="--i:13"></span>
+                <span style="--i:14"></span>
+                <span style="--i:15"></span>
+              </div>
+            </div>
+            <span class="hero__dna-shadow" aria-hidden="true"></span>
+          </div>
+          <div class="hero__cluster" data-reveal data-reveal-delay="260">
             <div class="orb orb--primary"></div>
             <div class="orb orb--secondary"></div>
             <div class="orb orb--tertiary"></div>
@@ -615,7 +654,7 @@
           aria-label="Close contact form"
           data-close="contact-modal"
         >
-          ?
+          &times;
         </button>
         <h3 id="contact-modal-title">Contact Us</h3>
         <form action="https://formspree.io/f/xqaykddn" method="POST" accept-charset="UTF-8">

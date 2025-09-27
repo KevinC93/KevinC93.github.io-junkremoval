@@ -90,22 +90,39 @@ export function initInteractiveGlow() {
   if (!elements.length) return;
 
   elements.forEach((element) => {
-    element.addEventListener("pointermove", (event) => {
-      if (event.pointerType === "touch") return;
-      updateGlowPosition(element, event);
-    });
+    const activate = () => {
+      element.classList.add(GLOW_CLASS);
+      element.style.setProperty("--pointer-opacity", "1");
+    };
 
-@@ -88,102 +119,510 @@ export function initInteractiveGlow() {
+    const handlePointerUpdate = (event) => {
+      if (event.pointerType === "touch") return;
+      activate();
+      updateGlowPosition(element, event);
+    };
+
+    const handlePointerLeave = () => {
+      element.classList.remove(GLOW_CLASS);
+      resetGlow(element);
+    };
+
+    element.addEventListener("pointerenter", handlePointerUpdate);
+    element.addEventListener("pointermove", handlePointerUpdate);
+    element.addEventListener("pointerdown", handlePointerUpdate);
+    element.addEventListener("pointerleave", handlePointerLeave);
+
+    element.addEventListener("focus", () => {
+      element.classList.add(GLOW_CLASS);
+      element.style.setProperty("--pointer-x", "50%");
+      element.style.setProperty("--pointer-y", "50%");
       element.style.setProperty("--pointer-opacity", "1");
     });
 
     element.addEventListener("blur", () => {
-      element.classList.remove(GLOW_CLASS);
-      resetGlow(element);
+      handlePointerLeave();
     });
   });
 }
-
 export function initTimelineProgress() {
   const timeline = document.querySelector(".timeline");
   if (!timeline) return;
@@ -194,7 +211,7 @@ export function initContactForm() {
   const statusEl = form.querySelector("[data-submit-status]");
   if (statusEl) {
     form.addEventListener("submit", () => {
-      statusEl.textContent = "Transmitting…";
+      statusEl.textContent = "Transmitting...";
     });
   }
 }
