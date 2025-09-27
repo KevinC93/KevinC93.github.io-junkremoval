@@ -1,5 +1,4 @@
 import { initAuroraBackground } from "./background.js";
-import { initLeprechauns } from "./leprechauns.js";
 import {
   initContactForm,
   initContactModal,
@@ -18,6 +17,7 @@ import {
   initFounderOffer,
   initMediaOrbits,
   initTiltTargets,
+  initInfinityLoop,
 } from "./interactions.js";
 
 document.documentElement.classList.remove("no-js");
@@ -29,7 +29,6 @@ if (yearEl) {
 }
 
 initAuroraBackground();
-initLeprechauns();
 initScrollReveal();
 initInteractiveGlow();
 initTimelineProgress();

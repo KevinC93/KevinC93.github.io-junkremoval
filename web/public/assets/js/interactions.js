@@ -590,7 +590,7 @@ export function initCursorTrail() {
       wobble: Math.random() * Math.PI * 2,
       boost,
     });
-    if (glyphs.length > 72) {
+    if (glyphs.length > 48) {
       glyphs.shift();
     }
     if (!rafId) {
